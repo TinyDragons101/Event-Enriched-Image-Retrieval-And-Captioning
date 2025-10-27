@@ -36,7 +36,7 @@ To reproduce our results, please follow the instructions provided below.
 1. **Create Embeddings**
 
 ```bash
-python step_1_create_embeddings.py --input_folder data/database --output_folder embeddings/database
+python step_1_create_embeddings.py --input_folder data/database_images/database_images_compressed90_scaled05 --output_folder embeddings/database
 python step_1_create_embeddings.py --input_folder data/track1_private/query --output_folder embeddings/query
 ```
 
