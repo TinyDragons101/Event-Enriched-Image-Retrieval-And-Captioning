@@ -21,9 +21,13 @@ def main():
     with torch.no_grad():
         embedding_model = CustonInternVLRetrievalModel(device=device)
 
-        image_paths = [f for f in os.listdir(args.input_folder) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
+        # Get image list
+        image_paths = [os.path.join(args.input_folder, f)
+                       for f in os.listdir(args.input_folder)
+                       if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
         image_paths.sort()
 
+        # Split
         if args.part is not None:
             assert 1 <= args.part <= args.total_parts, "part must be between 1 and total_parts"
             total = len(image_paths)
@@ -35,16 +39,17 @@ def main():
         else:
             image_subset = image_paths
             print(f"🔹 Running Full Mode: Processing all {len(image_subset)} images")
+            
+        # Encode all images with batch
+        embeddings = embedding_model.encode_image(
+            image_subset,
+            is_path=True,
+        )
 
-        for image in tqdm(image_subset, desc="Generating Embeddings"):
-            name = os.path.splitext(image)[0]
-            image_path = os.path.join(args.input_folder, image)
-            if not os.path.isfile(image_path):
-                continue
-            embedding = embedding_model.encode_image([image_path], is_path=True).to(device)
-            embedding = embedding.squeeze(0)
+        for path, emb in zip(image_subset, embeddings):
+            name = os.path.splitext(os.path.basename(path))[0]
             output_path = os.path.join(args.output_folder, f"{name}.pt")
-            torch.save(embedding.cpu(), output_path)
+            torch.save(emb, output_path)
         
 if __name__ == "__main__":
     main()
