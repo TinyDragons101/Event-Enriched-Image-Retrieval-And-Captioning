@@ -9,29 +9,17 @@ from typing import List, Optional, Tuple, Union
 from transformers import (AutoModel, GenerationConfig, LlamaForCausalLM,
                           LlamaTokenizer, Qwen2ForCausalLM)
 import torch.nn as nn
-from torch.utils.data import DataLoader, Dataset
-from tqdm import tqdm
-import os
+
 
 class CustonInternVLRetrievalModel():
-    def __init__(self, model_name = "OpenGVLab/InternVL3-1B" , device='cuda:7'):
+    def __init__(self, model_name = "OpenGVLab/InternVL-14B-224px" , device='cuda:7'):
         
         self.device = torch.device(device)
         self.model = AutoModel.from_pretrained(
             model_name,
-            torch_dtype=torch.float16,
-            device_map="auto",
-            attn_implementation="eager",
-            use_flash_attn=False,
+            torch_dtype=torch.bfloat16,
             low_cpu_mem_usage=True,
             trust_remote_code=True).to(self.device).eval()
-        
-        self.transform = T.Compose([
-            T.Resize((224, 224), interpolation=InterpolationMode.BICUBIC),
-            T.ToTensor(),
-            T.Normalize(mean=[0.48145466, 0.4578275, 0.40821073],
-                        std=[0.26862954, 0.26130258, 0.27577711]),
-        ])
 
         self.image_processor = CLIPImageProcessor.from_pretrained(
             model_name, trust_remote_code=True)
@@ -39,38 +27,16 @@ class CustonInternVLRetrievalModel():
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name, use_fast=False, add_eos_token=True, trust_remote_code=True)
         self.tokenizer.pad_token_id = 0  
-    
-    def encode_image(self, images, mode="InternVL-G", is_path=False, batch_size=128, num_workers=8):
-        def collate_fn(batch_paths):
-            imgs, names = [], []
-            for p in batch_paths:
-                try:
-                    img = Image.open(p).convert("RGB")
-                    imgs.append(self.transform(img))
-                    names.append(os.path.basename(p))
-                except Exception as e:
-                    print(f"⚠️ Error open image {p}: {e}")
-            return torch.stack(imgs), names
 
-        dataloader = DataLoader(
-            images,
-            batch_size=batch_size,
-            num_workers=num_workers,
-            shuffle=False,
-            pin_memory=True,
-            collate_fn=collate_fn,
-            prefetch_factor=2,
-        )
+    def encode_image(self, images, mode='InternVL-G', is_path = False):
+        if is_path:
+            images = [Image.open(path).convert('RGB') for path in images]
 
-        embeddings = []
-        with torch.no_grad(), torch.autocast("cuda", dtype=torch.float16):
-            for imgs, names in tqdm(dataloader, desc="🔹 Encoding"):
-                imgs = imgs.to(self.device, non_blocking=True)
-                outputs = self.model.vision_model(imgs)
-                emb = outputs.last_hidden_state.mean(dim=1)
-                embeddings.append(emb.cpu())
-
-        return torch.cat(embeddings, dim=0)
+        pixel_values = self.image_processor(images=images, return_tensors='pt').pixel_values
+        pixel_values = pixel_values.to(torch.bfloat16).to(self.device)
+        embedding = self.model.encode_image(pixel_values, mode=mode)
+        embedding = embedding / embedding.norm(dim=-1, keepdim=True)
+        return embedding
     
     def encode_text(self, text):
         prefix = 'summarize:'
@@ -487,9 +453,3 @@ class CustonInternVLCaptionModel():
             **generation_config
         )
         return embeddings, attention_mask
-    
-        
-        
-
-        
-    

@@ -1,34 +1,15 @@
-# First Place in the EVENTA 2025 Track 1 (held at ACM MM 2025)
+pip3 install --cache-dir=/raid/ltnghia01/phucpv/Eventa/tmp -r requirements.txt
 
-# ENRIC: EveNt-AwaRe Captioning with Image Retrieval via UnCertainty-Guided Re-ranking and Semantic Ensemble Reasoning
+pip3 install --cache-dir=/raid/ltnghia01/phucpv/Eventa/tmp https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.0.post2/flash_attn-2.8.0.post2+cu12torch2.7cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
 
-[[Challenge]](https://ltnghia.github.io/eventa/) [Paper]
+pip3 install --upgrade pip wheel setuptools
 
-Team: cerebro (Members: Nam-Quan Nguyen, Minh-Hoang Le, Vinh-Toan Vong)
+coi gpu:
+nvidia-smi
 
-## Final Leaderboard
-
-| **Team**            | **Rank** | **Overall** | **AP**  | **R@1** | **R@10** | **CLIP** | **CIDEr** |
-|---------------------|----------|-------------|---------|---------|----------|----------|-----------|
-| **cerebro (Ours)**  | **1**    | **0.5501**  | **0.991** | **0.989** | **0.995** | 0.826    | **0.210** |
-| SodaBread           | 2        | 0.5457      | 0.982   | 0.977   | 0.988    | **0.870** | 0.204     |
-| Re: Zero Slavery    | 3        | 0.4515      | 0.955   | 0.945   | 0.973    | 0.732    | 0.156     |
-| ITxTK9              | 4        | 0.4200      | 0.966   | 0.955   | 0.983    | 0.828    | 0.133     |
-| noname\_            | 5        | 0.2824      | 0.708   | 0.663   | 0.801    | 0.783    | 0.081     |
-
-# Descriptions
-
-This repository contains the solution developed by the **cerebro** team from the University of Science - VNUHCM to address the challenge posed in EVENTA - Track 1: Event-Enriched Image Retrieval and Captioning.
-
-|<img width="1656" height="788" alt="image" src="https://github.com/user-attachments/assets/76848373-cc65-4577-a05d-2b85530c652c" />|
-|:--:|
-|Overview of the Retrieval and Re-ranking Module|
-
-|<img width="1684" height="676" alt="image" src="https://github.com/user-attachments/assets/5903cd1f-c33d-48f3-a22d-33cf3eb03984" />|
-|:--:|
-|Overview of the Captioning Module|
-
-To reproduce our results, please follow the instructions provided below.
+coi ổ đĩa:
+du -sh *
+dh -h
 
 # Instructions
 ### 🔹 Phase 1: Retrieval & Reranking
@@ -36,7 +17,7 @@ To reproduce our results, please follow the instructions provided below.
 1. **Create Embeddings**
 
 ```bash
-python step_1_create_embeddings.py --input_folder data/database_images/database_images_compressed90_scaled05 --output_folder embeddings/database
+python step_1_create_embeddings.py --input_folder data/database_images/database_images_compressed90 --output_folder embeddings/database
 python step_1_create_embeddings.py --input_folder data/track1_private/query --output_folder embeddings/query
 ```
 

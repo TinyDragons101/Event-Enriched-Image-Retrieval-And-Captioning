@@ -13,6 +13,7 @@ def load_wrong_queries(wrong_sample_json_path):
         wrong_samples = json.load(f)
     return {entry["query_id"] for entry in wrong_samples}
 
+
 def extract_rerank_inputs(csv_path, wrong_query_ids, pre_top_k):
     rerank_inputs = []
     with open(csv_path, 'r', encoding='utf-8') as f:
@@ -27,12 +28,13 @@ def extract_rerank_inputs(csv_path, wrong_query_ids, pre_top_k):
                 })
     return rerank_inputs
 
-def create_caption_json(rerank_inputs, output_path):
-    caption_model_query = CustonInternVLCaptionModel(model_name='OpenGVLab/InternVL2_5-4B', device='cuda:7')
-    caption_model_db = CustonInternVLCaptionModel(model_name='OpenGVLab/InternVL2_5-8B', device='cuda:7')
+    
+def create_caption_json(rerank_inputs, output_path, device='cuda:7'):
+    caption_model_query = CustonInternVLCaptionModel(model_name='OpenGVLab/InternVL2_5-4B', device=device)
+    caption_model_db = CustonInternVLCaptionModel(model_name='OpenGVLab/InternVL2_5-8B', device=device)
 
     query_image_path = 'data/track1_private/query/'
-    database_path = 'data/database/database_origin/database_img/'
+    database_path = 'data/database_images/database_images_compressed90/'
 
     results = []
 
@@ -69,13 +71,9 @@ def create_caption_json(rerank_inputs, output_path):
         print(f"✅ Captions saved to: {output_path} (total: {len(results)})")
 
 
-
-
-
 def rerank_embeddings(rerank_input_path, output_path):
     with open(rerank_input_path, 'r', encoding='utf-8') as f:
         rerank_inputs = json.load(f)
-    
 
     # Image similarity scores JSON
     image_similarity_path = "final_json_result/private_test_similarity_scores.json"
@@ -124,11 +122,9 @@ def rerank_embeddings(rerank_input_path, output_path):
             "reranked_candidates": reranked_ids
         })
   
-  
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(rerank_results, f, indent=2, ensure_ascii=False)
     print(f"✅ Reranked results saved to: {output_path} (total: {len(rerank_results)})")
-
 
 
 def update_csv_with_rerank_results(csv_path, rerank_results_path, output_path):
@@ -204,8 +200,6 @@ def create_context_json(csv_output_path):
                 new_row[f'article_id_{i}'] = article_id
             new_rows.append(new_row)
 
-
-
     context_json_path = "final_json_result/context_extraction_image_article.json"
     new_csv_output_path = "./final_csv_result/private_final_retrieval_merging_final_results.csv"
     os.makedirs(os.path.dirname(new_csv_output_path), exist_ok=True)
@@ -223,17 +217,11 @@ def create_context_json(csv_output_path):
     print(f"Context JSON saved to {context_json_path}")
     
 
-def main(args):
-    wrong_query_ids = load_wrong_queries(args.wrong_sample_json_path)
-    rerank_inputs = extract_rerank_inputs(args.csv_path, wrong_query_ids, args.pre_top_k)
-    create_caption_json(rerank_inputs, args.rerank_caption_output_path)
-    rerank_embeddings(args.rerank_caption_output_path, args.rerank_output_path)
-    update_csv_with_rerank_results(args.csv_path, args.rerank_output_path, args.rerank_final_path)
-    create_context_json(args.rerank_final_path)
-
-
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(description="Filter rerank queries from CSV using wrong-sample list")
+    parser.add_argument('--device', type=str, 
+                        default='cuda:7', 
+                        help="Torch device (e.g., 'cuda:0', 'cpu').")
     parser.add_argument('--wrong_sample_json_path', type=str,
                         default='./final_json_result/temp_three_ways_wrong_samples_set.json',
                         help="Path to JSON file containing wrong sample query_ids")
@@ -251,8 +239,16 @@ if __name__ == '__main__':
                         help="Path to save the reranked results as CSV")
     parser.add_argument('--output_dir', type=str, default='./private_test_final_elements_json',
                         help="Directory to save the final caption JSON")
-    
 
 
     args = parser.parse_args()
-    main(args)
+    wrong_query_ids = load_wrong_queries(args.wrong_sample_json_path)
+    rerank_inputs = extract_rerank_inputs(args.csv_path, wrong_query_ids, args.pre_top_k)
+    create_caption_json(rerank_inputs, args.rerank_caption_output_path, device=args.device)
+    rerank_embeddings(args.rerank_caption_output_path, args.rerank_output_path)
+    update_csv_with_rerank_results(args.csv_path, args.rerank_output_path, args.rerank_final_path)
+    create_context_json(args.rerank_final_path)
+
+
+if __name__ == '__main__':
+    main()

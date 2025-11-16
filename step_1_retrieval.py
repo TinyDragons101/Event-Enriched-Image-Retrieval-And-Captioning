@@ -9,15 +9,33 @@ import torch.nn.functional as F
 import os
 import json
 
-
 CUDA_VISIBLE_DEVICES=1
-def main(args):
+
+def main():
+    parser = argparse.ArgumentParser(description="Image retrieval based on embeddings")
+    parser.add_argument('--device', type=str, 
+                        default='cuda:7', 
+                        help="Torch device (e.g., 'cuda:0', 'cpu').")
+    parser.add_argument('--model_type', type=str, default= "internvl", choices=['clip', 'internvl'],
+                        help="Model type: 'clip' or 'internvl'")
+    parser.add_argument('--pre_top_k', type=int, default=15,
+                        help="Number of top similar items to retrieve per query")
+    parser.add_argument('--coeff_path', type=str, default='./logit_scale.pt',
+                        help="Path to coefficient tensor for internvl (required if model_type is internvl)")
+    parser.add_argument('--database_folder', type=str, default='./embeddings/database_image_internVL_g/',
+                        help="Path to folder containing database image embeddings (.pt files)")
+    parser.add_argument('--query_folder', type=str, default='./embeddings/track_1_private_internvlg/',
+                        help="Path to folder containing query image embeddings (.pt files)")
+    parser.add_argument('--top_k', type=int, default=10,
+                        help="Number of top similar items to retrieve per query")
+    args = parser.parse_args()    
+    
     database_folder = args.database_folder
     query_folder = args.query_folder
     pre_top_k = args.pre_top_k
     top_k = args.top_k
 
-    device = 'cuda:1' if torch.cuda.is_available() else 'cpu'
+    device = args.device if torch.cuda.is_available() else 'cpu'
 
     # --- Step 1: Load database embeddings ---
     db_embeddings = []
@@ -133,14 +151,10 @@ def main(args):
         all_top_matches.append(top_matches)
         all_top_matches_embeddings.append(top_matches_embeddings)
         
-    
 
     retrieval_results = {}
     for query_name, top_matches in zip(query_names, all_top_matches):
         retrieval_results[query_name] = top_matches[:args.pre_top_k]
-
-
-
 
     
     # --- Step 6: Write to CSV ---
@@ -167,18 +181,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Image retrieval based on embeddings")
-    parser.add_argument('--model_type', type=str, default= "internvl", choices=['clip', 'internvl'],
-                        help="Model type: 'clip' or 'internvl'")
-    parser.add_argument('--pre_top_k', type=int, default=15,
-                        help="Number of top similar items to retrieve per query")
-    parser.add_argument('--coeff_path', type=str, default='./logit_scale.pt',
-                        help="Path to coefficient tensor for internvl (required if model_type is internvl)")
-    parser.add_argument('--database_folder', type=str, default='./embeddings/database_image_internVL_g/',
-                        help="Path to folder containing database image embeddings (.pt files)")
-    parser.add_argument('--query_folder', type=str, default='./embeddings/track_1_private_internvlg/',
-                        help="Path to folder containing query image embeddings (.pt files)")
-    parser.add_argument('--top_k', type=int, default=10,
-                        help="Number of top similar items to retrieve per query")
-    args = parser.parse_args()
-    main(args)
+    main()

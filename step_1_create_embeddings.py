@@ -3,12 +3,17 @@ import os
 from tqdm import tqdm
 import torch
 from internvl import CustonInternVLRetrievalModel
+from PIL import Image
+from concurrent.futures import ThreadPoolExecutor
+
+BATCH_SIZE = 80
+NUM_WORKERS = 8
 
 def main():
     parser = argparse.ArgumentParser(description="Generate image embeddings using CustonInternVLRetrievalModel.")
     parser.add_argument("--part", type=int, default=None, help="Part number to process (1-based index).")
     parser.add_argument("--total_parts", type=int, default=4, help="Total number of parts to split workload.")
-    parser.add_argument("--device", type=str, default="cuda:0", help="Torch device (e.g., 'cuda:0', 'cpu').")
+    parser.add_argument("--device", type=str, default="cuda:6", help="Torch device (e.g., 'cuda:0', 'cpu').")
     parser.add_argument("--input_folder", type=str, default="./data/database/database_origin/database_img/", help="Folder containing input images.")
     parser.add_argument("--output_folder", type=str, default="./embeddings/database/", help="Folder to save output embeddings.")
 
@@ -21,13 +26,9 @@ def main():
     with torch.no_grad():
         embedding_model = CustonInternVLRetrievalModel(device=device)
 
-        # Get image list
-        image_paths = [os.path.join(args.input_folder, f)
-                       for f in os.listdir(args.input_folder)
-                       if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
+        image_paths = [f for f in os.listdir(args.input_folder) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
         image_paths.sort()
 
-        # Split
         if args.part is not None:
             assert 1 <= args.part <= args.total_parts, "part must be between 1 and total_parts"
             total = len(image_paths)
@@ -40,16 +41,40 @@ def main():
             image_subset = image_paths
             print(f"🔹 Running Full Mode: Processing all {len(image_subset)} images")
             
-        # Encode all images with batch
-        embeddings = embedding_model.encode_image(
-            image_subset,
-            is_path=True,
-        )
+        for i in tqdm(range(0, len(image_subset), BATCH_SIZE), desc="Embedding"):
+            batch_files = image_subset[i:i+BATCH_SIZE]
+            images, names = [], []
+            
+            with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
+                futures = [
+                    executor.submit(
+                        lambda name: (
+                            os.path.splitext(name)[0],
+                            Image.open(os.path.join(args.input_folder, name)).convert("RGB")
+                        ),
+                        name
+                    )
+                    for name in batch_files
+                ]
 
-        for path, emb in zip(image_subset, embeddings):
-            name = os.path.splitext(os.path.basename(path))[0]
-            output_path = os.path.join(args.output_folder, f"{name}.pt")
-            torch.save(emb, output_path)
+                images, names = [], []
+                for f in futures:
+                    try:
+                        name, img = f.result()
+                        names.append(name)
+                        images.append(img)
+                    except Exception as e:
+                        continue
+
+            if not images:
+                continue
+
+            emb = embedding_model.encode_image(images, is_path=False)
+            emb = emb.cpu()
+
+            for name, e in zip(names, emb):
+                torch.save(e, os.path.join(args.output_folder, f"{name}.pt"))
+
         
 if __name__ == "__main__":
     main()
