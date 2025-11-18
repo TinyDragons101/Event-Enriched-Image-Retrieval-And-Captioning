@@ -8,9 +8,9 @@ from tqdm import tqdm
 
 
 # Configuration
-ORIGIN_IMG_FOLDER = "./data/database/database_origin/database_img"
+ORIGIN_IMG_FOLDER = "./data/database_images/database_images_compressed90"
 NEW_IMG_FOLDER = "imgs"
-ORIGIN_DATABASE_JSON = "./data/database/database.json"
+ORIGIN_DATABASE_JSON = "./data/database.json"
 CRAWLED_FOLDER = Path("crawled")
 
 MATCHING_FOLDER = Path("matching-01-no-threshold")

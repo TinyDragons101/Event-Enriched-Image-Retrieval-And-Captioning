@@ -12,7 +12,7 @@ def preprocess_caption_query(args):
     else:
         caption_json = {}
 
-    db_base_path = 'data/database/database_origin/database_img'
+    db_base_path = 'data/database_images/database_images_compressed90'
     csv_file = 'final_csv_result/temp_final_rerank.csv'
     
     with open(csv_file, 'r', encoding='utf-8') as file:

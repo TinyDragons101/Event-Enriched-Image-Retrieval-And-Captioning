@@ -55,6 +55,6 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--result_folder', type=str, default="./final_csv_result/private_final_retrieval_merging_final_results.csv", help="CSV file with retrieval results.")
-    parser.add_argument('--database_file', type=str, default="./data/database/database.json", help="JSON file containing article contents.")
+    parser.add_argument('--database_file', type=str, default="./data/database.json", help="JSON file containing article contents.")
     args = parser.parse_args()
     main(args)

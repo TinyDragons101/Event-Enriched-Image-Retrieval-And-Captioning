@@ -13,9 +13,9 @@ THRESHOLD_PIXEL_DIFF = 0.01  # Threshold for pixel difference in image compariso
 OUTPUT_MATCHING_FOLDER = "matching-01-no-threshold"
 ORIGIN_EMBEDDING = "../embeddings/database_image_internVL_g"
 NEW_EMBEDDING = "../embeddings/maching_new_database_internvlg"
-ORIGIN_IMG_FOLDER = "./data/database/database_origin/database_img"
+ORIGIN_IMG_FOLDER = "./data/database_images/database_images_compressed90"
 NEW_IMG_FOLDER = "imgs"
-ORIGIN_DATABASE_JSON = "./data/database/database.json"
+ORIGIN_DATABASE_JSON = "./data/database.json"
 CRAWLED_FOLDER = Path("crawled")
 
 ##################################################

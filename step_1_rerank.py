@@ -157,9 +157,9 @@ def update_csv_with_rerank_results(csv_path, rerank_results_path, output_path):
 
 
 def create_context_json(csv_output_path):
-    with open('./data/database/matching_articles.json', 'r', encoding='utf-8') as f:
+    with open('./data/matching_articles.json', 'r', encoding='utf-8') as f:
         matching_image_article = json.load(f)
-    with open('./data/database/database.json', 'r', encoding='utf-8') as df:
+    with open('./data/database.json', 'r', encoding='utf-8') as df:
         database_data = json.load(df)
 
     new_rows = []
@@ -220,7 +220,7 @@ def create_context_json(csv_output_path):
 def main():
     parser = argparse.ArgumentParser(description="Filter rerank queries from CSV using wrong-sample list")
     parser.add_argument('--device', type=str, 
-                        default='cuda:7', 
+                        default='cuda:4', 
                         help="Torch device (e.g., 'cuda:0', 'cpu').")
     parser.add_argument('--wrong_sample_json_path', type=str,
                         default='./final_json_result/temp_three_ways_wrong_samples_set.json',

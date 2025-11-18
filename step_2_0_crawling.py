@@ -1,4 +1,6 @@
+import argparse
 import asyncio
+import random
 import aiohttp
 import async_timeout
 import json
@@ -11,13 +13,19 @@ from tqdm import tqdm
 
 
 # Configuration
-CONCURRENT_REQUESTS = 32
-TIMEOUT = 60
-ORIGIN_DATABASE_JSON = "./data/database/database.json"
+CONCURRENT_REQUESTS = 16
+TIMEOUT = 10
+ORIGIN_DATABASE_JSON = "./data/database.json"
 CRAWLED_FOLDER = Path("crawled")
 NEW_IMG_FOLDER = Path("imgs")
-RETRIES = 8  # retry attempts
-BACKOFF = [1, 3, 5, 7, 9, 11, 13, 15]  # seconds backoff for retries
+RETRIES = 3  # retry attempts
+BACKOFF = [1, 3, 5]  # seconds backoff for retries
+
+USER_AGENTS = [
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+  "Mozilla/5.0 (X11; Linux x86_64)"
+]
 
 ##################################################
 
@@ -37,13 +45,29 @@ def get_original_image_url(url):
     return urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
 
 
+def select_chunk(items, chunk_size, chunk_index):
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be positive")
+    total_items = len(items)
+    total_chunks = (total_items + chunk_size - 1) // chunk_size
+    if total_chunks == 0:
+        return [], total_chunks, 0, 0
+    if chunk_index < 0 or chunk_index >= total_chunks:
+        raise ValueError(
+            f"chunk_index {chunk_index} out of range (0 to {total_chunks - 1})"
+        )
+    start = chunk_index * chunk_size
+    end = min(start + chunk_size, total_items)
+    return items[start:end], total_chunks, start, end
+
+
 async def fetch(session, url, key):
     url = normalize_url(url)
     for attempt in range(RETRIES):
         try:
             async with async_timeout.timeout(TIMEOUT):
                 async with session.get(
-                    url, headers={"User-Agent": "Mozilla/5.0"}
+                    url, headers={"User-Agent": random.choice(USER_AGENTS)}
                 ) as resp:
                     if resp.status == 200:
                         html = await resp.text()
@@ -187,12 +211,21 @@ async def worker(session, queue, pbar):
         pbar.update(1)
 
 
-async def main():
+async def main(chunk_size, chunk_index):
     prepare_dirs()
     mapping = json.load(open(ORIGIN_DATABASE_JSON))
-    total = len(mapping)
+    items = list(mapping.items())
+    chunk, total_chunks, start, end = select_chunk(items, chunk_size, chunk_index)
+    if not chunk:
+        print("No records available to crawl.")
+        return
+    print(
+        f"Processing chunk {chunk_index + 1}/{max(total_chunks, 1)} "
+        f"covering records {start} to {end - 1}"
+    )
+    total = len(chunk)
     q = asyncio.Queue()
-    for k, e in mapping.items():
+    for k, e in chunk:
         q.put_nowait((k, e["url"]))
     async with aiohttp.ClientSession() as s:
         with tqdm(total=total, desc="Crawling") as p:
@@ -203,7 +236,25 @@ async def main():
             [t.cancel() for t in tasks]
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Chunked crawler runner.")
+    parser.add_argument(
+        "--chunk-size",
+        type=int,
+        default=20000,
+        help="Number of records per chunk (default: 20000)",
+    )
+    parser.add_argument(
+        "--chunk-index",
+        type=int,
+        default=1,
+        help="Zero-based chunk index to process (default: 0)",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
+    args = parse_args()
     start = time.time()
-    asyncio.run(main())
+    asyncio.run(main(args.chunk_size, args.chunk_index))
     print(f"Done in {time.time()-start:.2f}s")

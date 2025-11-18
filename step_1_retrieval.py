@@ -14,7 +14,7 @@ CUDA_VISIBLE_DEVICES=1
 def main():
     parser = argparse.ArgumentParser(description="Image retrieval based on embeddings")
     parser.add_argument('--device', type=str, 
-                        default='cuda:7', 
+                        default='cuda:4', 
                         help="Torch device (e.g., 'cuda:0', 'cpu').")
     parser.add_argument('--model_type', type=str, default= "internvl", choices=['clip', 'internvl'],
                         help="Model type: 'clip' or 'internvl'")
@@ -28,6 +28,8 @@ def main():
                         help="Path to folder containing query image embeddings (.pt files)")
     parser.add_argument('--top_k', type=int, default=10,
                         help="Number of top similar items to retrieve per query")
+    parser.add_argument('--db_chunk_size', type=int, default=100000,
+                        help="Number of database embeddings to load per chunk")
     args = parser.parse_args()    
     
     database_folder = args.database_folder
@@ -37,19 +39,16 @@ def main():
 
     device = args.device if torch.cuda.is_available() else 'cpu'
 
-    # --- Step 1: Load database embeddings ---
-    db_embeddings = []
-    db_image_names = []
+    # --- Step 1: Prepare database metadata ---
+    db_files = [
+        fname for fname in sorted(os.listdir(database_folder))
+        if fname.endswith('.pt')
+    ]
+    if not db_files:
+        raise FileNotFoundError(f"No .pt files found in database folder: {database_folder}")
 
-    for fname in tqdm(sorted(os.listdir(database_folder)),desc="Loading database embeddings"):
-        if fname.endswith('.pt'):
-            path = os.path.join(database_folder, fname)
-            embedding = torch.load(path, map_location=device).squeeze(0)
-            db_embeddings.append(embedding)
-            db_image_names.append(fname.replace('.pt', ''))
-
-    db_embeddings = torch.stack(db_embeddings).to(device)
-    print(f"Loaded {len(db_embeddings)} database embeddings of shape {db_embeddings.shape}")
+    db_image_names = [fname.replace('.pt', '') for fname in db_files]
+    print(f"Found {len(db_image_names)} database embeddings spread across chunks of size {args.db_chunk_size}")
 
     # --- Step 2: Load query embeddings ---
     query_embeddings = []
@@ -65,16 +64,41 @@ def main():
     query_embeddings = torch.stack(query_embeddings).to(device)
     print(f"Loaded {len(query_embeddings)} query embeddings of shape {query_embeddings.shape}")
 
-    # --- Step 3: Compute cosine similarity and retrieve pre-top-k ---
-    if args.model_type == 'clip':
-        similarities = query_embeddings @ db_embeddings.T / 0.7  # temperature scaling
-    elif args.model_type == 'internvl':
+    # --- Step 3: Compute cosine similarity chunk by chunk and keep full matrix ---
+    coeff = None
+    if args.model_type == 'internvl':
         if not os.path.exists(args.coeff_path):
             raise FileNotFoundError(f"Missing coefficient file: {args.coeff_path}")
         coeff = torch.load(args.coeff_path, map_location=device)
-        similarities = coeff * query_embeddings @ db_embeddings.T
-    else:
+    elif args.model_type != 'clip':
         raise ValueError("Unsupported model_type. Choose from: ['clip', 'internvl']")
+
+    cosine_similarity_chunks = []
+    total_db = len(db_files)
+    for start_idx in tqdm(range(0, total_db, args.db_chunk_size), desc="Processing database chunks"):
+        chunk_files = db_files[start_idx:start_idx + args.db_chunk_size]
+        chunk_embeddings = []
+        for fname in chunk_files:
+            path = os.path.join(database_folder, fname)
+            embedding = torch.load(path, map_location=device).squeeze(0)
+            chunk_embeddings.append(embedding)
+
+        chunk_embeddings = torch.stack(chunk_embeddings).to(device)
+
+        if args.model_type == 'clip':
+            chunk_similarities = query_embeddings @ chunk_embeddings.T / 0.7  # temperature scaling
+        else:  # internvl
+            chunk_similarities = coeff * query_embeddings @ chunk_embeddings.T
+
+        cosine_similarity_chunks.append(chunk_similarities.cpu())
+
+        del chunk_embeddings
+        del chunk_similarities
+        if device.startswith('cuda'):
+            torch.cuda.empty_cache()
+
+    similarities = torch.cat(cosine_similarity_chunks, dim=1).to(device)
+    del cosine_similarity_chunks
 
     topk_similarities, topk_indices = torch.topk(similarities, k=pre_top_k, dim=1)
     print(topk_indices.size())
@@ -147,7 +171,13 @@ def main():
     for i, query_name in enumerate(query_names):
         top_matches = [db_image_names[idx] for idx in topk_indices[i]]
         
-        top_matches_embeddings = torch.stack([db_embeddings[idx] for idx in topk_indices[i]])
+        top_matches_embeddings = torch.stack([
+            torch.load(
+                os.path.join(database_folder, f"{db_image_names[idx]}.pt"),
+                map_location=device
+            ).squeeze(0)
+            for idx in topk_indices[i]
+        ])
         all_top_matches.append(top_matches)
         all_top_matches_embeddings.append(top_matches_embeddings)
         
@@ -158,11 +188,6 @@ def main():
 
     
     # --- Step 6: Write to CSV ---
-    # with open("./data/database/private_test_detail_top1_caption.json", 'r', encoding='utf-8') as cap_f:
-    #     matching_captions = json.load(cap_f)
-    
-    # with open('./data/database/matching_articles.json', 'r', encoding='utf-8') as f:
-    #     matching_image_article = json.load(f)
     output_file = './final_csv_result/temp_private_test_image_first_step_retrieval_results_with_caption.csv'
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
