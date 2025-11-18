@@ -4,12 +4,20 @@ pip3 install --cache-dir=/raid/ltnghia01/phucpv/Eventa/tmp https://github.com/Da
 
 pip3 install --upgrade pip wheel setuptools
 
-coi gpu:
+### coi gpu:
 nvidia-smi
 
-coi ổ đĩa:
+### coi ổ đĩa:
 du -sh *
 dh -h
+
+## Trước khi chạy
+cd phucpv/Eventa
+conda deactivate
+source ./.venv/bin/activate
+
+## Vô nvidia-smi coi xem gpu nào trống: ví dụ cpu 5 thì vô set device cuda:5 (không được lấy con 1)
+## Vừa chạy vừa bật coi xem có bị tràn vram không
 
 # Instructions
 ### 🔹 Phase 1: Retrieval & Reranking
@@ -40,33 +48,33 @@ python step_1_rerank.py
 
 * Crawl articles and images from URLs in the origin database:
 
-  ```bash
-  python step_2_0_crawling.py
-  ```
+```bash
+python step_2_0_crawling.py
+```
 
 * Create Embeddings for crawled images:
 
-  ```bash
-  python step_1_create_embeddings.py --input_folder imgs --output_folder embeddings/maching_new_database_internvlg
-  ```
+```bash
+python step_1_create_embeddings.py --input_folder imgs --output_folder embeddings/maching_new_database_internvlg
+```
 
 * For each article, create a json file mapping the origin image and the crawled image
 
-  ```bash
-  python step_2_0_matching_image.py
-  ```
+```bash
+python step_2_0_matching_image.py
+```
 
 * Create database_new.json
 
-  ```bash
-  python step_2_0_new_database.py
-  ```
+```bash
+python step_2_0_new_database.py
+```
 
 * Create output corresponding to final_json_result/context_extraction_image_article.json
 
-  ```bash
-  python step_2_0_create_result.py
-  ```
+```bash
+python step_2_0_create_result.py
+```
 
 5. **Generate Query Captions**
 
@@ -84,21 +92,21 @@ python step_2_first_article_summary.py
 
 * Using Question Answering:
 
-  ```bash
-  python step_2_caption_process.py --qa --strategy questions_answers
-  ```
+```bash
+python step_2_caption_process.py --qa --strategy questions_answers
+```
 
 * Using Named Entity Extraction:
 
-  ```bash
-  python step_2_caption_process.py --name_entity --strategy name_entity
-  ```
+```bash
+python step_2_caption_process.py --name_entity --strategy name_entity
+```
 
 * Using Chain-of-Thought Reasoning:
 
-  ```bash
-  python step_2_caption_process.py --strategy cot_5_things_fact_more_event
-  ```
+```bash
+python step_2_caption_process.py --strategy cot_5_things_fact_more_event
+```
 
 ---
 

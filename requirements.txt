@@ -18,3 +18,5 @@ einops==0.8.1
 wheel
 flash_attn
 sentencepiece==0.2.0
+aiohttp
+bs4
