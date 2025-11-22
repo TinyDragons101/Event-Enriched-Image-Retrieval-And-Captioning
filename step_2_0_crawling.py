@@ -13,8 +13,8 @@ from tqdm import tqdm
 
 
 # Configuration
-CONCURRENT_REQUESTS = 16
-TIMEOUT = 10
+CONCURRENT_REQUESTS = 32
+TIMEOUT = 20
 ORIGIN_DATABASE_JSON = "./data/database.json"
 CRAWLED_FOLDER = Path("crawled")
 NEW_IMG_FOLDER = Path("imgs")
@@ -63,6 +63,7 @@ def select_chunk(items, chunk_size, chunk_index):
 
 async def fetch(session, url, key):
     url = normalize_url(url)
+    
     for attempt in range(RETRIES):
         try:
             async with async_timeout.timeout(TIMEOUT):
@@ -79,12 +80,14 @@ async def fetch(session, url, key):
                     else:
                         return None
         except Exception as e:
-            await asyncio.sleep(BACKOFF[min(attempt, len(BACKOFF) - 1)])
+            wait = BACKOFF[min(attempt, len(BACKOFF) - 1)]
+            await asyncio.sleep(wait)
     return None
 
 
 async def fetch_binary(session, url, key):
     url = get_original_image_url(url)
+
     for attempt in range(RETRIES):
         try:
             async with async_timeout.timeout(TIMEOUT):
@@ -92,16 +95,18 @@ async def fetch_binary(session, url, key):
                     url, headers={"User-Agent": "Mozilla/5.0"}
                 ) as resp:
                     if resp.status == 200:
-                        data = await resp.read()
-                        return data
+                        return await resp.read()
+
                     elif resp.status == 429:
                         wait = BACKOFF[min(attempt, len(BACKOFF) - 1)]
                         await asyncio.sleep(wait)
-                        continue
+
                     else:
                         return None
         except Exception as e:
-            await asyncio.sleep(BACKOFF[min(attempt, len(BACKOFF) - 1)])
+            wait = BACKOFF[min(attempt, len(BACKOFF) - 1)]
+            await asyncio.sleep(wait)
+
     return None
 
 
@@ -197,18 +202,31 @@ async def parse_and_download(html, key, url, session):
 async def worker(session, queue, pbar):
     while True:
         key, url = await queue.get()
-        out = CRAWLED_FOLDER / f"{key}.json"
-        if out.exists():
-            pbar.update(1)
+        if key is None:
             queue.task_done()
-            continue
-        html = await fetch(session, url, key)
-        if html:
-            data = await parse_and_download(html, key, url, session)
-            if data:
-                out.write_text(json.dumps(data, ensure_ascii=False))
-        queue.task_done()
-        pbar.update(1)
+            break
+
+        out = CRAWLED_FOLDER / f"{key}.json"
+        try:
+            if out.exists():
+                pbar.update(1)
+                queue.task_done()
+                continue
+
+            html = await fetch(session, url, key)
+            if html:
+                data = await parse_and_download(html, key, url, session)
+                if data:
+                    out.write_text(
+                        json.dumps(data, ensure_ascii=False, indent=2),
+                        encoding="utf-8"
+                    )
+
+        except Exception as e:
+            pass
+        finally:
+            queue.task_done()
+            pbar.update(1)
 
 
 async def main(chunk_size, chunk_index):
@@ -247,7 +265,7 @@ def parse_args():
     parser.add_argument(
         "--chunk-index",
         type=int,
-        default=1,
+        default=0,
         help="Zero-based chunk index to process (default: 0)",
     )
     return parser.parse_args()
