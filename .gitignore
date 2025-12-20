@@ -4,6 +4,7 @@ __pycache__
 data/database_images
 data/track1_private
 data/track1_public
+data/database.json
 
 embeddings
 
