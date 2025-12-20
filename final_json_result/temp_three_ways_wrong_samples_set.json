@@ -1,0 +1,848 @@
+[
+  {
+    "query_id": "a8f365960b68ef33",
+    "entropy": 2.5625,
+    "gap": 1.0,
+    "low_top1_sim": 70.0
+  },
+  {
+    "query_id": "f1995555e5ee9156",
+    "entropy": 2.46875,
+    "gap": 1.0,
+    "low_top1_sim": 72.5
+  },
+  {
+    "query_id": "d243ae5d57828abf",
+    "entropy": 2.453125,
+    "gap": 0.5,
+    "low_top1_sim": 73.5
+  },
+  {
+    "query_id": "d477f0f43f366dea",
+    "entropy": 2.421875,
+    "gap": 0.5,
+    "low_top1_sim": 69.0
+  },
+  {
+    "query_id": "de77ca8714eb2f46",
+    "entropy": 2.375,
+    "gap": 0.5,
+    "low_top1_sim": 74.0
+  },
+  {
+    "query_id": "076beb1c8907df56",
+    "entropy": 2.359375,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "53d91540c5147be8",
+    "entropy": 2.3125,
+    "gap": 0.0,
+    "low_top1_sim": 70.0
+  },
+  {
+    "query_id": "f925e7b50c4ad2ae",
+    "entropy": 2.3125,
+    "gap": 1.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "62fa30a0b1b6f918",
+    "entropy": 2.296875,
+    "gap": 0.0,
+    "low_top1_sim": 72.0
+  },
+  {
+    "query_id": "840534ffdfa15676",
+    "entropy": 2.296875,
+    "gap": 0.5,
+    "low_top1_sim": 72.5
+  },
+  {
+    "query_id": "f8eb5fa3b34e4adc",
+    "entropy": 2.296875,
+    "gap": 1.0,
+    "low_top1_sim": 71.5
+  },
+  {
+    "query_id": "3c7bda451584d612",
+    "entropy": 2.265625,
+    "gap": 0.0,
+    "low_top1_sim": 72.5
+  },
+  {
+    "query_id": "7cecd2fb906ec6d6",
+    "entropy": 2.25,
+    "gap": 0.0,
+    "low_top1_sim": 72.5
+  },
+  {
+    "query_id": "ea51eaf7cfdf4ff2",
+    "entropy": 2.25,
+    "gap": 1.0,
+    "low_top1_sim": 73.0
+  },
+  {
+    "query_id": "4659b72353b0adb5",
+    "entropy": 2.21875,
+    "gap": 1.0,
+    "low_top1_sim": 72.0
+  },
+  {
+    "query_id": "065e8e51fcdececa",
+    "entropy": 2.1875,
+    "gap": 1.5,
+    "low_top1_sim": 76.0
+  },
+  {
+    "query_id": "2ab8bf5464096b14",
+    "entropy": 2.1875,
+    "gap": 0.0,
+    "low_top1_sim": 70.5
+  },
+  {
+    "query_id": "d2c9ac948cbce184",
+    "entropy": 2.1875,
+    "gap": 1.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "274c3e6e0efaf385",
+    "entropy": 2.171875,
+    "gap": 1.0,
+    "low_top1_sim": 76.0
+  },
+  {
+    "query_id": "54b2111647e38701",
+    "entropy": 2.171875,
+    "gap": 0.5,
+    "low_top1_sim": 73.5
+  },
+  {
+    "query_id": "3bb8954b9f00850f",
+    "entropy": 2.15625,
+    "gap": 1.0,
+    "low_top1_sim": 71.0
+  },
+  {
+    "query_id": "f49e201451d318c2",
+    "entropy": 2.078125,
+    "gap": 1.5,
+    "low_top1_sim": 74.0
+  },
+  {
+    "query_id": "8c911327ad13123d",
+    "entropy": 2.046875,
+    "gap": 1.5,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "3fe5e2af769ee391",
+    "entropy": 2.0,
+    "gap": 0.5,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "33869a134bcf41f7",
+    "entropy": 1.992188,
+    "gap": 0.5,
+    "low_top1_sim": 74.0
+  },
+  {
+    "query_id": "3f4d53e164f1ecfa",
+    "entropy": 1.976562,
+    "gap": 0.5,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "f7593a2f5714d660",
+    "entropy": 1.960938,
+    "gap": 1.5,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "1668d9ddf1c0c0f2",
+    "entropy": 1.914062,
+    "gap": 0.5,
+    "low_top1_sim": 69.5
+  },
+  {
+    "query_id": "122872f6a8e9e626",
+    "entropy": 1.90625,
+    "gap": 1.5,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "81ab43cbbc7b13e3",
+    "entropy": 1.890625,
+    "gap": 1.5,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "13c3ecb85b1b99af",
+    "entropy": 1.882812,
+    "gap": 0.0,
+    "low_top1_sim": 70.0
+  },
+  {
+    "query_id": "c5ffb6379f7101ee",
+    "entropy": 1.882812,
+    "gap": 2.0,
+    "low_top1_sim": 73.5
+  },
+  {
+    "query_id": "0d1a6fde5478d7dc",
+    "entropy": 1.875,
+    "gap": 0.5,
+    "low_top1_sim": 73.0
+  },
+  {
+    "query_id": "f1c4e7a542026ad6",
+    "entropy": 1.867188,
+    "gap": 2.0,
+    "low_top1_sim": 75.5
+  },
+  {
+    "query_id": "a1d0d887d5b2498c",
+    "entropy": 1.859375,
+    "gap": 1.5,
+    "low_top1_sim": 76.0
+  },
+  {
+    "query_id": "ba77797ccfe53909",
+    "entropy": 1.859375,
+    "gap": 1.5,
+    "low_top1_sim": 70.0
+  },
+  {
+    "query_id": "d6fff2f2412ee960",
+    "entropy": 1.851562,
+    "gap": 0.5,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "0018afd8f3867f2c",
+    "entropy": 1.828125,
+    "gap": 1.5,
+    "low_top1_sim": 75.5
+  },
+  {
+    "query_id": "72b7d48626e8a0ac",
+    "entropy": 1.78125,
+    "gap": 1.0,
+    "low_top1_sim": 75.5
+  },
+  {
+    "query_id": "76c1ed2431b6486d",
+    "entropy": 1.78125,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "c359a1d35b7bebe3",
+    "entropy": 1.773438,
+    "gap": 1.0,
+    "low_top1_sim": 76.0
+  },
+  {
+    "query_id": "edde388409bbd429",
+    "entropy": 1.757812,
+    "gap": 1.0,
+    "low_top1_sim": 69.5
+  },
+  {
+    "query_id": "1742625a8981928b",
+    "entropy": 1.75,
+    "gap": 1.5,
+    "low_top1_sim": 76.0
+  },
+  {
+    "query_id": "e292be7c9e1f1e42",
+    "entropy": 1.75,
+    "gap": 1.0,
+    "low_top1_sim": 74.0
+  },
+  {
+    "query_id": "b21984ac7eeb6fdc",
+    "entropy": 1.742188,
+    "gap": 0.5,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "0eeade605ad0083d",
+    "entropy": 1.734375,
+    "gap": 2.0,
+    "low_top1_sim": 75.5
+  },
+  {
+    "query_id": "b920580cc5a28494",
+    "entropy": 1.726562,
+    "gap": 1.5,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "528ac01e8ef63aab",
+    "entropy": 1.71875,
+    "gap": 2.0,
+    "low_top1_sim": 72.0
+  },
+  {
+    "query_id": "16afb087d91feff8",
+    "entropy": 1.695312,
+    "gap": 2.0,
+    "low_top1_sim": 76.0
+  },
+  {
+    "query_id": "42643c716d73c950",
+    "entropy": 1.695312,
+    "gap": 2.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "06923c78eec8cba9",
+    "entropy": 0.695312,
+    "gap": 0.0,
+    "low_top1_sim": 71.5
+  },
+  {
+    "query_id": "0cbb0b67e64ee1d6",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 75.5
+  },
+  {
+    "query_id": "14768d9e2d358d88",
+    "entropy": 1.09375,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "1929553e1728a87e",
+    "entropy": 0.707031,
+    "gap": 0.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "1c403ed63abf455b",
+    "entropy": 0.769531,
+    "gap": 0.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "23b541e5a09f4608",
+    "entropy": 0.921875,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "2d588f86ef2b2ed2",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 73.5
+  },
+  {
+    "query_id": "3801643630d33d5a",
+    "entropy": 0.695312,
+    "gap": 0.0,
+    "low_top1_sim": 73.0
+  },
+  {
+    "query_id": "380ec5e6c58b6120",
+    "entropy": 0.695312,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "406f4b38606f9f56",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 71.0
+  },
+  {
+    "query_id": "408390403ddfde42",
+    "entropy": 0.894531,
+    "gap": 0.0,
+    "low_top1_sim": 75.5
+  },
+  {
+    "query_id": "426f92e5e530cc42",
+    "entropy": 1.0,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "44147a441d0dc8ef",
+    "entropy": 0.773438,
+    "gap": 0.0,
+    "low_top1_sim": 73.5
+  },
+  {
+    "query_id": "4443c71ac1d0bb78",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "44a9486ced118d19",
+    "entropy": 0.738281,
+    "gap": 0.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "481b832afffacc67",
+    "entropy": 0.914062,
+    "gap": 0.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "4e21900c38eef418",
+    "entropy": 1.125,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "5397e997a5ad858d",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "5a4f02c93da6670e",
+    "entropy": 1.140625,
+    "gap": 0.0,
+    "low_top1_sim": 74.0
+  },
+  {
+    "query_id": "5d02e89be5007c18",
+    "entropy": 1.085938,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "6059cf27b06c9a47",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 73.5
+  },
+  {
+    "query_id": "65b238c7622eb909",
+    "entropy": 1.28125,
+    "gap": 0.0,
+    "low_top1_sim": 76.0
+  },
+  {
+    "query_id": "864c8bf4a846e5eb",
+    "entropy": 0.90625,
+    "gap": 0.0,
+    "low_top1_sim": 73.5
+  },
+  {
+    "query_id": "930376977585aee9",
+    "entropy": 0.695312,
+    "gap": 0.0,
+    "low_top1_sim": 73.5
+  },
+  {
+    "query_id": "9c14f7d190be5095",
+    "entropy": 0.699219,
+    "gap": 0.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "9d22907062fb7a4c",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 73.5
+  },
+  {
+    "query_id": "9d900c7a77760bc3",
+    "entropy": 0.835938,
+    "gap": 0.0,
+    "low_top1_sim": 71.0
+  },
+  {
+    "query_id": "afad748efb93b4b9",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "b8848fb63764152d",
+    "entropy": 0.960938,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "b8f1f9661147cbb4",
+    "entropy": 1.242188,
+    "gap": 0.0,
+    "low_top1_sim": 75.5
+  },
+  {
+    "query_id": "b9de3980f86e5948",
+    "entropy": 1.65625,
+    "gap": 0.0,
+    "low_top1_sim": 74.5
+  },
+  {
+    "query_id": "bc7a84c8f4a982c0",
+    "entropy": 0.800781,
+    "gap": 0.0,
+    "low_top1_sim": 74.0
+  },
+  {
+    "query_id": "c9ec7211cb27bfc6",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 74.0
+  },
+  {
+    "query_id": "d407eee957d33d19",
+    "entropy": 0.824219,
+    "gap": 0.0,
+    "low_top1_sim": 72.5
+  },
+  {
+    "query_id": "da0b9fbe6d2ba040",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 74.0
+  },
+  {
+    "query_id": "dc23492fa7566bec",
+    "entropy": 0.691406,
+    "gap": 0.0,
+    "low_top1_sim": 73.0
+  },
+  {
+    "query_id": "e442f152a08b4cf5",
+    "entropy": 0.699219,
+    "gap": 0.0,
+    "low_top1_sim": 73.0
+  },
+  {
+    "query_id": "f36ff8f2a35bde8d",
+    "entropy": 1.054688,
+    "gap": 0.0,
+    "low_top1_sim": 75.0
+  },
+  {
+    "query_id": "0212a1ebd023f695",
+    "entropy": 0.792969,
+    "gap": 0.5,
+    "low_top1_sim": 76.0
+  },
+  {
+    "query_id": "0e2b0b8b480325e0",
+    "entropy": 1.53125,
+    "gap": 0.5,
+    "low_top1_sim": 71.5
+  },
+  {
+    "query_id": "14eb785bef2d6fd1",
+    "entropy": 1.015625,
+    "gap": 0.5,
+    "low_top1_sim": 76.0
+  },
+  {
+    "query_id": "2f1bf47074eb062b",
+    "entropy": 0.001289,
+    "gap": 11.0,
+    "low_top1_sim": 60.0
+  },
+  {
+    "query_id": "ca70db31f13f92ff",
+    "entropy": 0.196289,
+    "gap": 4.25,
+    "low_top1_sim": 61.0
+  },
+  {
+    "query_id": "66f896653a67746c",
+    "entropy": 0.000881,
+    "gap": 9.5,
+    "low_top1_sim": 64.0
+  },
+  {
+    "query_id": "f7f6036d0294455a",
+    "entropy": 0.063965,
+    "gap": 4.5,
+    "low_top1_sim": 64.0
+  },
+  {
+    "query_id": "0d96df32384b058b",
+    "entropy": 0.057617,
+    "gap": 6.5,
+    "low_top1_sim": 64.5
+  },
+  {
+    "query_id": "952049c488df6662",
+    "entropy": 1.335938,
+    "gap": 1.0,
+    "low_top1_sim": 65.5
+  },
+  {
+    "query_id": "1482109a638862d8",
+    "entropy": 0.00415,
+    "gap": 8.75,
+    "low_top1_sim": 66.0
+  },
+  {
+    "query_id": "6196c4933da960d5",
+    "entropy": 0.835938,
+    "gap": 0.5,
+    "low_top1_sim": 66.0
+  },
+  {
+    "query_id": "9791a09933b9985e",
+    "entropy": 0.007416,
+    "gap": 8.25,
+    "low_top1_sim": 66.0
+  },
+  {
+    "query_id": "a429df057bd219b8",
+    "entropy": 7.2e-05,
+    "gap": 12.25,
+    "low_top1_sim": 66.0
+  },
+  {
+    "query_id": "22cc67deb88c5631",
+    "entropy": 1.59375,
+    "gap": 2.0,
+    "low_top1_sim": 66.5
+  },
+  {
+    "query_id": "d9bc0afbb336b739",
+    "entropy": 0.439453,
+    "gap": 2.0,
+    "low_top1_sim": 66.5
+  },
+  {
+    "query_id": "0dd428f3355fe109",
+    "entropy": 0.002075,
+    "gap": 9.5,
+    "low_top1_sim": 67.0
+  },
+  {
+    "query_id": "3135234ef64078fd",
+    "entropy": 0.03064,
+    "gap": 7.0,
+    "low_top1_sim": 67.0
+  },
+  {
+    "query_id": "3afc1510f5053208",
+    "entropy": 0.002365,
+    "gap": 9.75,
+    "low_top1_sim": 67.0
+  },
+  {
+    "query_id": "73b858cf258b2492",
+    "entropy": 0.914062,
+    "gap": 2.0,
+    "low_top1_sim": 67.0
+  },
+  {
+    "query_id": "7402431d11a12f2b",
+    "entropy": 0.882812,
+    "gap": 3.5,
+    "low_top1_sim": 67.0
+  },
+  {
+    "query_id": "a88c5ba49fc8692e",
+    "entropy": 0.049316,
+    "gap": 6.0,
+    "low_top1_sim": 67.0
+  },
+  {
+    "query_id": "188a4e947c5e339c",
+    "entropy": 0.047363,
+    "gap": 5.0,
+    "low_top1_sim": 67.5
+  },
+  {
+    "query_id": "300cf6fb10a15ba2",
+    "entropy": 0.000767,
+    "gap": 9.75,
+    "low_top1_sim": 67.5
+  },
+  {
+    "query_id": "65bbd735cb25dab8",
+    "entropy": 0.00021,
+    "gap": 11.0,
+    "low_top1_sim": 67.5
+  },
+  {
+    "query_id": "9218f29127d7a6f1",
+    "entropy": 0.000801,
+    "gap": 10.25,
+    "low_top1_sim": 67.5
+  },
+  {
+    "query_id": "b60eff519db2f009",
+    "entropy": 4e-06,
+    "gap": 15.75,
+    "low_top1_sim": 67.5
+  },
+  {
+    "query_id": "c5a0f695e59d230d",
+    "entropy": 0.412109,
+    "gap": 3.75,
+    "low_top1_sim": 67.5
+  },
+  {
+    "query_id": "fdacb0510cb5b090",
+    "entropy": 0.018555,
+    "gap": 6.25,
+    "low_top1_sim": 67.5
+  },
+  {
+    "query_id": "238232f0b5791ed7",
+    "entropy": 0.012085,
+    "gap": 6.25,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "2fcc7517963f1b27",
+    "entropy": 0.002487,
+    "gap": 10.5,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "3449b105d3ceefcc",
+    "entropy": 0.515625,
+    "gap": 3.0,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "38bcd1d4bafc66d2",
+    "entropy": 1.2e-05,
+    "gap": 14.25,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "45457df4d1b98e8e",
+    "entropy": 0.000115,
+    "gap": 12.75,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "4e1514ea2723add6",
+    "entropy": 6.8e-05,
+    "gap": 12.25,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "7fc8467de7d9eeab",
+    "entropy": 0.003159,
+    "gap": 9.5,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "939748f17ad046f2",
+    "entropy": 1.367188,
+    "gap": 1.5,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "a8710fc24d587ea2",
+    "entropy": 0.022583,
+    "gap": 6.25,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "bb17e5f375d38fdd",
+    "entropy": 0.001854,
+    "gap": 10.25,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "dc873f0cd0e9da1c",
+    "entropy": 0.484375,
+    "gap": 3.5,
+    "low_top1_sim": 68.0
+  },
+  {
+    "query_id": "0245bb84ff27816f",
+    "entropy": 0.00325,
+    "gap": 9.0,
+    "low_top1_sim": 68.5
+  },
+  {
+    "query_id": "02878747f4b4750c",
+    "entropy": 1.085938,
+    "gap": 1.0,
+    "low_top1_sim": 68.5
+  },
+  {
+    "query_id": "16aca7d2a35e6349",
+    "entropy": 0.002151,
+    "gap": 9.5,
+    "low_top1_sim": 68.5
+  },
+  {
+    "query_id": "1f2bad5204b0d704",
+    "entropy": 0.011963,
+    "gap": 7.25,
+    "low_top1_sim": 68.5
+  },
+  {
+    "query_id": "4e7fc33d60e6b182",
+    "entropy": 1.273438,
+    "gap": 1.5,
+    "low_top1_sim": 68.5
+  },
+  {
+    "query_id": "6edf9627a9e5b0da",
+    "entropy": 1.101562,
+    "gap": 2.5,
+    "low_top1_sim": 68.5
+  },
+  {
+    "query_id": "8a4e66522a520484",
+    "entropy": 0.001503,
+    "gap": 9.75,
+    "low_top1_sim": 68.5
+  },
+  {
+    "query_id": "d3cb734f971ef2be",
+    "entropy": 0.004089,
+    "gap": 8.5,
+    "low_top1_sim": 68.5
+  },
+  {
+    "query_id": "0aa1878c23ed4206",
+    "entropy": 0.628906,
+    "gap": 2.5,
+    "low_top1_sim": 69.0
+  },
+  {
+    "query_id": "1c586de0bb7f493c",
+    "entropy": 2e-06,
+    "gap": 17.0,
+    "low_top1_sim": 69.0
+  },
+  {
+    "query_id": "36e6f8b3675fe73e",
+    "entropy": 0.00164,
+    "gap": 9.75,
+    "low_top1_sim": 69.0
+  },
+  {
+    "query_id": "69abe62507736d38",
+    "entropy": 0.064453,
+    "gap": 6.0,
+    "low_top1_sim": 69.0
+  },
+  {
+    "query_id": "8d678ff0007354e5",
+    "entropy": 0.19043,
+    "gap": 3.0,
+    "low_top1_sim": 69.0
+  },
+  {
+    "query_id": "8e77795c749035f3",
+    "entropy": 0.000123,
+    "gap": 12.75,
+    "low_top1_sim": 69.0
+  }
+]

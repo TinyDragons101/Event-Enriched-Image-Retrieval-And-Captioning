@@ -1,0 +1,6 @@
+usage: step_2_0_crawling.py [-h] [--chunk-size CHUNK_SIZE]
+                            [--chunk-index CHUNK_INDEX]
+step_2_0_crawling.py: error: argument --chunk-index: expected one argument
+usage: step_2_0_crawling.py [-h] [--chunk-size CHUNK_SIZE]
+                            [--chunk-index CHUNK_INDEX]
+step_2_0_crawling.py: error: argument --chunk-index: expected one argument

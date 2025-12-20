@@ -1,0 +1,6 @@
+nohup: ignoring input
+Warning: Failed to load ./assemble_result/name_entity_llama.json due to [Errno 2] No such file or directory: './assemble_result/name_entity_llama.json'
+Warning: Failed to load ./assemble_result/questions_answers_llama.json due to [Errno 2] No such file or directory: './assemble_result/questions_answers_llama.json'
+Final merged result saved to: public_test_final_elements_json/final_merge_result.json
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.83s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:02,  1.49s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.36s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.01s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.19s/it]
+Submission CSV saved to: final_csv_result/submission_final.csv

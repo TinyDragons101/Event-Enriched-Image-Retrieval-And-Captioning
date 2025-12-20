@@ -1,0 +1,13 @@
+nohup: ignoring input
+Warning: Failed to load ./assemble_result/name_entity_llama.json due to [Errno 2] No such file or directory: './assemble_result/name_entity_llama.json'
+Warning: Failed to load ./assemble_result/questions_answers_llama.json due to [Errno 2] No such file or directory: './assemble_result/questions_answers_llama.json'
+Final merged result saved to: public_test_final_elements_json/final_merge_result.json
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:03<00:09,  3.13s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:04<00:04,  2.32s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:06<00:02,  2.12s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:07<00:00,  1.52s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:07<00:00,  1.84s/it]
+Traceback (most recent call last):
+  File "/raid/ltnghia01/phucpv/Eventa/step_2_caption_process.py", line 155, in <module>
+    main(args)
+  File "/raid/ltnghia01/phucpv/Eventa/step_2_caption_process.py", line 95, in main
+    create_submission()
+  File "/raid/ltnghia01/phucpv/Eventa/step_2_merge_all_elements.py", line 68, in create_submission
+    with open(csv_path, "r", encoding="utf-8") as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'final_csv_result/temp_private_test_image_first_step_retrieval_results_with_caption.csv'

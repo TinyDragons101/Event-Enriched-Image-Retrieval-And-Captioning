@@ -1,0 +1,71 @@
+import os
+import json
+from pathlib import Path
+
+# Config paths
+IMG_FOLDER = Path("imgs")
+CRAWLED_FOLDER = Path("crawled")
+ORIGIN_IMG_FOLDER = Path("./data/database_images/database_images_compressed90")
+NEW_EMBEDDING_FOLDER = Path("./embeddings/maching_new_database_internvlg")
+
+# 1. Đọc danh sách ảnh gốc
+origin_images = set([f[:-4] for f in os.listdir(ORIGIN_IMG_FOLDER) if f.lower().endswith('.jpg')])
+print(f"Số lượng ảnh gốc: {len(origin_images)}")
+
+# 2. Đọc danh sách ảnh đã crawl từ file json
+crawled_images = set()
+for json_file in CRAWLED_FOLDER.glob("*.json"):
+    with open(json_file, encoding="utf-8") as f:  
+        data = json.load(f)
+    for img in data.get("images", []):
+        crawled_images.add(img["id"].replace('.jpg','').replace('.png',''))
+print(f"Số lượng ảnh đã crawl (theo json): {len(crawled_images)}")
+
+# 3. Đọc danh sách file thực tế trong imgs
+actual_imgs = set([f for f in os.listdir(IMG_FOLDER) if f.lower().endswith(('.jpg','.png'))])
+actual_imgs_noext = set([os.path.splitext(f)[0] for f in actual_imgs])
+print(f"Số lượng file ảnh thực tế trong imgs/: {len(actual_imgs)}")
+
+# 4. Đọc danh sách embedding mới
+new_embeddings = set([f[:-3] for f in os.listdir(NEW_EMBEDDING_FOLDER) if f.endswith('.pt')])
+print(f"Số lượng embedding mới: {len(new_embeddings)}")
+
+# 5. So sánh
+missing_in_imgs = crawled_images - actual_imgs_noext
+missing_in_embedding = crawled_images - new_embeddings
+matched_imgs = crawled_images & actual_imgs_noext
+matched_embeddings = crawled_images & new_embeddings
+
+print(f"Số ảnh khai báo trong json nhưng thiếu file thực tế: {len(missing_in_imgs)}")
+if missing_in_imgs:
+    print("Ví dụ ảnh thiếu:", list(missing_in_imgs)[:10])
+
+print(f"Số ảnh khai báo trong json nhưng thiếu embedding: {len(missing_in_embedding)}")
+if missing_in_embedding:
+    print("Ví dụ ảnh thiếu embedding:", list(missing_in_embedding)[:10])
+
+print(f"Số ảnh khớp giữa json và file thực tế: {len(matched_imgs)}")
+print(f"Số ảnh khớp giữa json và embedding: {len(matched_embeddings)}")
+
+# 6. So sánh với ảnh gốc
+missing_from_origin = origin_images - crawled_images
+print(f"Số ảnh gốc không xuất hiện trong json crawl: {len(missing_from_origin)}")
+if missing_from_origin:
+    print("Ví dụ ảnh gốc không xuất hiện:", list(missing_from_origin)[:10])
+# 7. So sánh tên ảnh giữa origin và json crawl (lấy ngẫu nhiên 1 id mỗi tập)
+import random
+if origin_images and crawled_images:
+    random_origin_id = random.choice(list(origin_images))
+    random_crawled_id = random.choice(list(crawled_images))
+    print(f"[LOG] Ví dụ tên ảnh từ origin: {random_origin_id}")
+    print(f"[LOG] Ví dụ tên ảnh từ json crawl: {random_crawled_id}")
+# 7. So sánh tên ảnh giữa origin và json crawl (lấy ngẫu nhiên 1 id mỗi tập)
+import random
+if crawled_images:
+    random_crawled_id = random.choice(list(crawled_images))
+    # Tách lấy phần id trước dấu _
+    base_id = random_crawled_id.split('_')[0]
+    found_in_origin = base_id in origin_images
+    print(f"[LOG] Ví dụ id từ json crawl: {random_crawled_id}")
+    print(f"[LOG] Tách id: {base_id}")
+    print(f"[LOG] Id này {'có' if found_in_origin else 'không'} tồn tại trong tập origin.")

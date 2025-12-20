@@ -1,0 +1,10 @@
+nohup: ignoring input
+🎯 Using device: cuda:4
+📖 Loading databases...
+📊 Processing 95813 queries...
+Matching:   0%|          | 0/95813 [00:00<?, ?it/s]Matching:  23%|██▎       | 21791/95813 [00:00<00:00, 217898.78it/s]Matching:  64%|██████▍   | 61504/95813 [00:00<00:00, 323318.24it/s]Matching:  99%|█████████▊| 94425/95813 [00:00<00:00, 325467.22it/s]Matching: 100%|██████████| 95813/95813 [00:00<00:00, 264640.03it/s]
+
+✅ Complete!
+   - Processed: 0
+   - Skipped: 95813
+📁 Results: matching-01-no-threshold

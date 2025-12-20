@@ -1,0 +1,16 @@
+nohup: ignoring input
+Warning: Failed to load ./public_test_final_elements_json/reranking_query_first_article_fact_summary.json due to [Errno 2] No such file or directory: './public_test_final_elements_json/reranking_query_first_article_fact_summary.json'
+Warning: Failed to load ./assemble_result/name_entity_llama.json due to [Errno 2] No such file or directory: './assemble_result/name_entity_llama.json'
+Warning: Failed to load ./assemble_result/questions_answers_llama.json due to [Errno 2] No such file or directory: './assemble_result/questions_answers_llama.json'
+Warning: Failed to load ./result-hoang.json due to [Errno 2] No such file or directory: './result-hoang.json'
+Final merged result saved to: public_test_final_elements_json/final_merge_result.json
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.90s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.70s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.61s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.12s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.33s/it]
+usage: step_2_caption_process.py [-h] --strategy
+                                 {test,cot_5_things_fact_more_event,name_entity,questions_answers}
+                                 [--template_test] [--qa]
+                                 [--generate_caption_path GENERATE_CAPTION_PATH]
+                                 [--question_answer_path QUESTION_ANSWER_PATH]
+                                 [--new_database_path NEW_DATABASE_PATH]
+                                 [--caption_input_path CAPTION_INPUT_PATH]
+                                 [--name_entity] [--model_type MODEL_TYPE]
+step_2_caption_process.py: error: unrecognized arguments: step_2_caption_process_2.log.txt

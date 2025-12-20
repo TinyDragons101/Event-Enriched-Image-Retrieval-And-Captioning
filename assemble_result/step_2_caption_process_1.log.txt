@@ -1,0 +1,2 @@
+nohup: ignoring input
+python: can't open file '/raid/ltnghia01/phucpv/Eventa/assemble_result/step_2_caption_process.py': [Errno 2] No such file or directory

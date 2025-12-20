@@ -1,0 +1,1 @@
+4X15CMD ohup python step_2_0_crawling.py --chunk-size 20000 --chunk-index 8 > step_2_0_crawling_8 4X15CMD4X15Fin4X15CMD [ -x /usr/lib/command-not-found ] 4X15CMD4X15Fin4X15CMD /usr/lib/command-not-found -- "$1" 4X15CMD4X15Fin4X15CMD return $? 4X15CMD4X15Fin

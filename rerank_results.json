@@ -1,0 +1,2822 @@
+[
+  {
+    "query_id": "0018afd8f3867f2c",
+    "reranked_candidates": [
+      "789e788f93b6e267",
+      "7c71007ce80a73c4",
+      "1b26f9a59e7b82f7",
+      "87427d26b121fd90",
+      "9e72ea220a0bc518",
+      "84e79bcf45c0f8f0",
+      "f8a3359f1d3c250a",
+      "cb1221536109da8c",
+      "99a5e241e0812332",
+      "4d1766724ec560fb",
+      "e53fd3652b2efb35",
+      "13a68f7ee531a8af",
+      "63965c1a12dcbc12",
+      "0bec74fb263d1e5b",
+      "6cbc0de01e4c6a7d"
+    ]
+  },
+  {
+    "query_id": "0212a1ebd023f695",
+    "reranked_candidates": [
+      "26c14277c86cdb78",
+      "774c9f18ee574d1f",
+      "892b62c88f244b1d",
+      "95add46ada2f09b4",
+      "caebba381a0813e3",
+      "12810aeafb1bfcb2",
+      "4270b66dfd4cbfe1",
+      "d687015e810b4011",
+      "36d7bf934bc9d2ce",
+      "dc1cd4993ca3b17c",
+      "ab47f3be9215a16b",
+      "0082c6499e90bbe0",
+      "9a22c033e9ffa9b0",
+      "5f8895486837d815",
+      "0916fab47a57e7be"
+    ]
+  },
+  {
+    "query_id": "0245bb84ff27816f",
+    "reranked_candidates": [
+      "7d63eaa00f055d45",
+      "d4d408a1f51965ed",
+      "671d90bea05f90fe",
+      "044270228fd60c5a",
+      "78c2aafc5916c83a",
+      "0ca1a65dd0fde19a",
+      "45e9bdc6646334c4",
+      "e36099a82b32baa8",
+      "51fa3b08a16eb1de",
+      "24e5eaff06c5ce19",
+      "eb0752a328309c66",
+      "844ac6fa928db186",
+      "49d60dcfc050a81d",
+      "c2ab4e1b6942b1a5",
+      "c7f14c0287eda436"
+    ]
+  },
+  {
+    "query_id": "02878747f4b4750c",
+    "reranked_candidates": [
+      "d4e6c0fcea8947bc",
+      "eb4699742cfd0f76",
+      "01c0ce30d38c8a72",
+      "0c13e3e36c207d98",
+      "97bfc1421749ba37",
+      "baa67a7f24ac4aa7",
+      "bdb454dc4a2e7c8b",
+      "5e524be1b36b029b",
+      "1b534f37145125aa",
+      "9318209316848d61",
+      "d865115e1aab9953",
+      "d28f7c172369ffca",
+      "5f2e4be743d0116c",
+      "927e911ddd2fcafe",
+      "09c03b7831c0e223"
+    ]
+  },
+  {
+    "query_id": "065e8e51fcdececa",
+    "reranked_candidates": [
+      "cb1221536109da8c",
+      "99b8cee5a1560fa1",
+      "7c71007ce80a73c4",
+      "700343eaa2b78b5b",
+      "1b26f9a59e7b82f7",
+      "9e72ea220a0bc518",
+      "63965c1a12dcbc12",
+      "e53fd3652b2efb35",
+      "4d1766724ec560fb",
+      "1f5a32e4a021b5fa",
+      "789e788f93b6e267",
+      "f8a3359f1d3c250a",
+      "87427d26b121fd90",
+      "99a5e241e0812332",
+      "6cbc0de01e4c6a7d"
+    ]
+  },
+  {
+    "query_id": "06923c78eec8cba9",
+    "reranked_candidates": [
+      "1e16ca10578990a8",
+      "f75e2f1a18cacf10",
+      "0b91dcdec04f9ed6",
+      "7eba734e1870cbc3",
+      "67adc7a659ba5405",
+      "0aba131a37de3a8c",
+      "5ebe500720dab00a",
+      "30b509daba66dc91",
+      "126db370e3d1e10b",
+      "363ec430100e32bb",
+      "e96c35b66bb22d7a",
+      "5024f61f723b275f",
+      "6d33eaa0006cb354",
+      "8e3993b3dc945c69",
+      "32cd0717d8e30d81"
+    ]
+  },
+  {
+    "query_id": "076beb1c8907df56",
+    "reranked_candidates": [
+      "5971cf6ec36a5a2b",
+      "a1d001ce35131fd2",
+      "6ab4e80c40a6aea5",
+      "ad6a7965a1678c79",
+      "0573d6638972cd0e",
+      "95a2596d770c0cef",
+      "4bd15af0c430b95d",
+      "99d0737f02af0024",
+      "273a65a3be889a86",
+      "06e8d92cff9c3024",
+      "6c768bd84ec20e1e",
+      "6e4f7eb863348c9d",
+      "2063b84885a751d5",
+      "144d825f3f35a33d",
+      "3ee1e8029945480c"
+    ]
+  },
+  {
+    "query_id": "0aa1878c23ed4206",
+    "reranked_candidates": [
+      "ea58a346b1bd3ed7",
+      "88f85035e7522070",
+      "e353d376332166fe",
+      "371309622d87eddb",
+      "123179e835c7c778",
+      "43bb6667e1117812",
+      "94a32bf98ca0a449",
+      "1830ab4e944ce4f2",
+      "91bef3a271e5e47f",
+      "9e0c6379e344ea1e",
+      "b6054900c6061e78",
+      "c4873d22b842127a",
+      "c147efd45f349e4d",
+      "a1f7f0c0510c295c",
+      "5f783f2ad0af4fdd"
+    ]
+  },
+  {
+    "query_id": "0cbb0b67e64ee1d6",
+    "reranked_candidates": [
+      "b1bf16378d799c16",
+      "e96e752b999faf03",
+      "c20cc7f17cbd4711",
+      "ad2e6303bdefc781",
+      "6d918d8c4c3fe52c",
+      "1956096a0bd02cb1",
+      "8e17996f2916d216",
+      "01b6d12a8ef25d20",
+      "2ecc01c77567d09d",
+      "419aeb705aba1a04",
+      "6e9444d9623f3f00",
+      "5ba90d1fd765ab7c",
+      "0cbefb52ef971a97",
+      "1e6fecc4fa85c020",
+      "138ef7175dd98f9b"
+    ]
+  },
+  {
+    "query_id": "0d1a6fde5478d7dc",
+    "reranked_candidates": [
+      "2aaa532638de269c",
+      "dd21e197643c587f",
+      "5d731c13a012066f",
+      "637821831babadf3",
+      "a5db63ecb530692c",
+      "5fc36bb9f67d7ce4",
+      "8a1afe762f2dab02",
+      "a795a943a866d20d",
+      "9c6ed67dd49bc171",
+      "1b436a64c2c74b7d",
+      "6283f5f90852e198",
+      "63a936bcd2306c8c",
+      "f83c31de511fb0e3",
+      "9ba68ff374cceb05",
+      "33b2657b813425ae"
+    ]
+  },
+  {
+    "query_id": "0d96df32384b058b",
+    "reranked_candidates": [
+      "ee9397d9975457ef",
+      "7d87edbd2b2d4c15",
+      "5935fe55bc3ba349",
+      "ccf1f17494825c9e",
+      "2c33e3f067a27c2b",
+      "a6b1aebe481bf195",
+      "7a15bee76b06923a",
+      "b5e2a8486f68b99b",
+      "f35e00151a40de7b",
+      "6a5dc7ec7da86576",
+      "8d5f134e103517fd",
+      "c1a4d6ea3bb86d78",
+      "9c4c2e254d714abd",
+      "7078b2e6ad4c8eb3",
+      "55f8404c01493b2e"
+    ]
+  },
+  {
+    "query_id": "0dd428f3355fe109",
+    "reranked_candidates": [
+      "19e78b8076d89cb9",
+      "34398698aed27305",
+      "6cbc0a84d1d8ca86",
+      "7e7c66b0b63aa7d9",
+      "cc991d32f29f8fdc",
+      "8bdb9cca70047469",
+      "71539f25966d695c",
+      "2636327da89db476",
+      "de2415841c3f9af8",
+      "2e33d55d1d0f6c35",
+      "1d189e1c71647933",
+      "f6975dc6908b18a7",
+      "21191e3c170f5e24",
+      "16b339ddc765283f",
+      "4ae5ebba941ee6e9"
+    ]
+  },
+  {
+    "query_id": "0e2b0b8b480325e0",
+    "reranked_candidates": [
+      "74333f1d9a3564bf",
+      "0a780050e8157a4a",
+      "02194dff58b78c3c",
+      "7aba54fe143a84ab",
+      "0592e5ef5c14bcca",
+      "9358148a337a7718",
+      "1e01a92013296ce0",
+      "0424397f0ce6991d",
+      "825b875aa0893170",
+      "99a9302d4c6b90cc",
+      "7d92c40476d9593f",
+      "0a0c4c4e375b828c",
+      "55e8afa488de542b",
+      "282dcb259bfc27ce",
+      "c5e455405c7f70ae"
+    ]
+  },
+  {
+    "query_id": "0eeade605ad0083d",
+    "reranked_candidates": [
+      "e53fd3652b2efb35",
+      "9e72ea220a0bc518",
+      "1b26f9a59e7b82f7",
+      "6cbc0de01e4c6a7d",
+      "99b8cee5a1560fa1",
+      "cb1221536109da8c",
+      "63965c1a12dcbc12",
+      "789e788f93b6e267",
+      "700343eaa2b78b5b",
+      "4d1766724ec560fb",
+      "1f5a32e4a021b5fa",
+      "3341a689659aeb91",
+      "87427d26b121fd90",
+      "99a5e241e0812332",
+      "7c71007ce80a73c4"
+    ]
+  },
+  {
+    "query_id": "122872f6a8e9e626",
+    "reranked_candidates": [
+      "88d27143ad1ed096",
+      "a795a943a866d20d",
+      "b1ab69febc72cfab",
+      "bb969272b3235f4d",
+      "f83c31de511fb0e3",
+      "6f431bd2b43b1c67",
+      "2de7693dff97ab50",
+      "f7b8be25f8f2fdc0",
+      "10343c5c9b5e67b6",
+      "32deb5ae49347555",
+      "69eafc9bad19a74c",
+      "0c0345c61253f269",
+      "a5db63ecb530692c",
+      "9ba68ff374cceb05",
+      "00362e16692250a7"
+    ]
+  },
+  {
+    "query_id": "13c3ecb85b1b99af",
+    "reranked_candidates": [
+      "26ceacc0c394c8df",
+      "529878a32c6ae42f",
+      "373e99c5b2e124af",
+      "085e96dbe364086e",
+      "12b0840eafd4a6d2",
+      "10c11f7b88634cb1",
+      "ded1edb0f23cad4b",
+      "965c0edf85a71085",
+      "13d81af22892b914",
+      "0f4389cd347fc56d",
+      "2047bc9d8003bbff",
+      "7cd25f15e218a54d",
+      "5c4494e145a30320",
+      "363f4e9e1798891a",
+      "3110ed5a3c692ac5"
+    ]
+  },
+  {
+    "query_id": "14768d9e2d358d88",
+    "reranked_candidates": [
+      "74597fc347ecbea1",
+      "5647e921f572b62c",
+      "c96d140bfb04e77b",
+      "758b1f894a568bc9",
+      "e219f34cc1d10916",
+      "577ea7a7a83012b0",
+      "5e81c615950ae30c",
+      "38967e71cdedd67d",
+      "2da4e5594efd8b12",
+      "c26a347991fd27d7",
+      "bb4d82a143d1bb04",
+      "169a663024714976",
+      "4804305d65de5901",
+      "54319c6ae47f6f13",
+      "4047f9ee59da24fd"
+    ]
+  },
+  {
+    "query_id": "1482109a638862d8",
+    "reranked_candidates": [
+      "be88e564aae13df8",
+      "55cc9e476545927c",
+      "6716a5b9d3ae11c5",
+      "e3ff64b0a93c81bf",
+      "674c7be524d1905d",
+      "c467efc38ebc76bc",
+      "e4d6bcba17faacba",
+      "6b8eacccb89f073b",
+      "4b4c42c7b78df5f6",
+      "168507424351f4cb",
+      "640d45d404e9033f",
+      "99d3c683750999c8",
+      "62b9bd59edd80877",
+      "5ebbb2d70b7a2fdd",
+      "650a56caae1d7ec6"
+    ]
+  },
+  {
+    "query_id": "14eb785bef2d6fd1",
+    "reranked_candidates": [
+      "66347afa70300bb7",
+      "9947efee7ab017ca",
+      "1d68e14ba8834e9d",
+      "f6f6647c8dc828c1",
+      "2669de120b9784fb",
+      "3072186d026392e3",
+      "584fec68bfc88795",
+      "1f18f0fe1b500ae5",
+      "cccd6ad8b7f95218",
+      "a77dd010d3601bf3",
+      "1008b0793eb1e314",
+      "ec5189d1cab6cda6",
+      "94193af7afb97bb9",
+      "84ac9b28d6f68a60",
+      "99a5e241e0812332"
+    ]
+  },
+  {
+    "query_id": "1668d9ddf1c0c0f2",
+    "reranked_candidates": [
+      "66a71adc54ee2f56",
+      "3403d4b6ee74a4dd",
+      "755e852841f2d6fe",
+      "afc70c9b4b1d9d08",
+      "000a3dd92b61ce26",
+      "604e089adc934f62",
+      "d35c8ed275a58697",
+      "76f9030d2d49cbed",
+      "021447abcf85ace1",
+      "62e08cc181c7cc59",
+      "a9c03306e7b67446",
+      "119eb3209431130c",
+      "68070fdc46712292",
+      "8f434dd770df6c52",
+      "0fd6653ce0cfd3f5"
+    ]
+  },
+  {
+    "query_id": "16aca7d2a35e6349",
+    "reranked_candidates": [
+      "8c9d5cf0aa6cb3c7",
+      "0e4d4c3745c682d5",
+      "c9d8b2660afc41b5",
+      "9349d77bb382d3b2",
+      "596f2e88577d3752",
+      "ecc88159de6ad9ea",
+      "83f4469f38da073f",
+      "e8821b4604773bea",
+      "c7dcf96814ea2171",
+      "d4c30b1e8d67c9a2",
+      "1ed9b2af47d23f02",
+      "102cd02760a32025",
+      "7a4fb34b4cc4859c",
+      "81271c3afb146b47",
+      "3b7bc8ef0cd6b36d"
+    ]
+  },
+  {
+    "query_id": "16afb087d91feff8",
+    "reranked_candidates": [
+      "f1da5a7fd0e6714b",
+      "c3506d086bb80f2a",
+      "679d18dd76cf48ba",
+      "683f15ed28d2ff46",
+      "335b717089d9f702",
+      "0da58e56dc71fa1e",
+      "dc83c6f879ebcc90",
+      "0c618090690564b4",
+      "4c37f024a5ae7d72",
+      "69e33e2726fdaa59",
+      "e75b2b7b118624f3",
+      "a3e9c974797bfdc0",
+      "8d3abc2ae6326e03",
+      "5bc146e9de4808e0",
+      "5282ad4d6a7f2c22"
+    ]
+  },
+  {
+    "query_id": "1742625a8981928b",
+    "reranked_candidates": [
+      "4a9c23441b485380",
+      "0be4669fb5e22be9",
+      "0965e9cf2961c479",
+      "3c03d743edd962b3",
+      "ab2a39523b2016ae",
+      "7f3d6ffe3e99786d",
+      "245aaf2b17dd044a",
+      "eb92da45fa66faaf",
+      "9bb5a4546be105c2",
+      "0afdda09e96d8078",
+      "b05bc821287447c0",
+      "42e13c3d999f807e",
+      "5e2b3044a00061ff",
+      "30e1ac753006c662",
+      "15aabbdba75392f8"
+    ]
+  },
+  {
+    "query_id": "188a4e947c5e339c",
+    "reranked_candidates": [
+      "2bd9d616ac2f02d7",
+      "80841d2ca02a6b93",
+      "af7e91e9e761374f",
+      "b75ad17b73619229",
+      "282efbaf78be65e6",
+      "243838bf870ee91b",
+      "4f874fa855619f00",
+      "b6fbc3b8575814d8",
+      "a9544b567f45a554",
+      "a841c207c6672cbe",
+      "0a5c670f851a58da",
+      "9117e680aa2b889c",
+      "ae115bd48cf8ad6c",
+      "d6c136aba7e68359",
+      "789f396e94c93da5"
+    ]
+  },
+  {
+    "query_id": "1929553e1728a87e",
+    "reranked_candidates": [
+      "b240334d60b0dc1c",
+      "0f79bed8f29c259f",
+      "b81c338e280aa138",
+      "fb3a644618423ecf",
+      "39b9d1649697079d",
+      "7b741c4f5794bf11",
+      "525976ec0ffd7a13",
+      "e51afe101f9255de",
+      "07efdf038ba2221c",
+      "4c5b0d027a2e0ef6",
+      "c6a829c353994340",
+      "913c802925df06ce",
+      "cc8d28c74901944b",
+      "7267b4696990fc9b",
+      "20f077403ce06562"
+    ]
+  },
+  {
+    "query_id": "1c403ed63abf455b",
+    "reranked_candidates": [
+      "6755f66c59f33419",
+      "207929f2be8fd96d",
+      "579750afa22bffe3",
+      "05c4919954116fc4",
+      "6e4f7eb863348c9d",
+      "9b672db060b7a5aa",
+      "797cdbd613b23910",
+      "2063b84885a751d5",
+      "0573d6638972cd0e",
+      "a1d001ce35131fd2",
+      "3ee0d171518d3f18",
+      "3fda9c8efbb854d3",
+      "273a65a3be889a86",
+      "06e8d92cff9c3024",
+      "4bd15af0c430b95d"
+    ]
+  },
+  {
+    "query_id": "1c586de0bb7f493c",
+    "reranked_candidates": [
+      "9fc9a806ea7e2969",
+      "9e91c55b06b4268f",
+      "6951848de2c4dbc8",
+      "be4f2da6fa778d7b",
+      "3c95718703a3f3d9",
+      "55dce623652f7faa",
+      "867ad83a89383652",
+      "c8fd6f51f044efc2",
+      "347021ce885bab5d",
+      "50d8143d2a71894a",
+      "00bdc38cbe760f23",
+      "1e93c430f7254481",
+      "d04429abe6a88bca",
+      "437f950eb5caabc1",
+      "b64f86ea72561b65"
+    ]
+  },
+  {
+    "query_id": "1f2bad5204b0d704",
+    "reranked_candidates": [
+      "249e90123ba5d4b0",
+      "c38aa3ed655131b5",
+      "f5be022182bf7448",
+      "7f3d6ffe3e99786d",
+      "3c03d743edd962b3",
+      "3a73e1e64bd54b9f",
+      "4a9c23441b485380",
+      "d182b9373294ce8b",
+      "0965e9cf2961c479",
+      "0be4669fb5e22be9",
+      "b05bc821287447c0",
+      "218969b060e31886",
+      "38e86eb6d02e2333",
+      "058ac30cebd758a2",
+      "5e2b3044a00061ff"
+    ]
+  },
+  {
+    "query_id": "22cc67deb88c5631",
+    "reranked_candidates": [
+      "92dc71f6f8dcad0d",
+      "e710d8978e46c9e6",
+      "579c074861bc8851",
+      "6045ec4bc8a905fb",
+      "4438a70430927a31",
+      "4e8986131d83292f",
+      "accbed56ea4228b9",
+      "b359fec448fe4ea5",
+      "2f5775eea0d1c68c",
+      "1e872f6dbc31146d",
+      "785b5e78d043f721",
+      "b24e6e6ce580417b",
+      "767c27c12b720ea9",
+      "7a102fde36176714",
+      "2aa788b493e4cbc1"
+    ]
+  },
+  {
+    "query_id": "238232f0b5791ed7",
+    "reranked_candidates": [
+      "a12f21e69e801775",
+      "7edb8bb6ab5be7d8",
+      "bf33be272ec6c4b4",
+      "9aee2d3102ee709f",
+      "6a479464f97d4b35",
+      "c72a2bd499bc2a86",
+      "223898d2bf669821",
+      "df4fc83448b3b637",
+      "61ddb4e498d4ee0f",
+      "ecc88159de6ad9ea",
+      "dc86795a244b9af5",
+      "9f63bfd365ec3c8c",
+      "ea2d29f30aa76aef",
+      "eb2077bc0e8464b0",
+      "31cfb9df9c76ee45"
+    ]
+  },
+  {
+    "query_id": "23b541e5a09f4608",
+    "reranked_candidates": [
+      "da4cd8c0d2f4ae63",
+      "c6b1eac2022c6fc5",
+      "a53cfc25ecc77e90",
+      "9657950058ced6d9",
+      "8a0fd90b38fbf0f4",
+      "7d58eebc9830e7fa",
+      "9312850d896ff668",
+      "c3ad30d962579184",
+      "2c28768f242a2c47",
+      "1f358eb3e003161f",
+      "6b988589ad40bd99",
+      "8176f1ee4e214836",
+      "80b4acb44a0b0b49",
+      "810922293828cfe5",
+      "0c612bfac58fab08"
+    ]
+  },
+  {
+    "query_id": "274c3e6e0efaf385",
+    "reranked_candidates": [
+      "0e32450931c2e4cc",
+      "599aff250d16e888",
+      "4d1766724ec560fb",
+      "c197910944650b4d",
+      "602582330a0168f3",
+      "1f5a32e4a021b5fa",
+      "fd627fe0eeb5b3f7",
+      "73f46f26b243ca99",
+      "3341a689659aeb91",
+      "99b8cee5a1560fa1",
+      "9e72ea220a0bc518",
+      "47a0da1032a8e88f",
+      "700343eaa2b78b5b",
+      "1b26f9a59e7b82f7",
+      "7b4577ea207269e7"
+    ]
+  },
+  {
+    "query_id": "2ab8bf5464096b14",
+    "reranked_candidates": [
+      "4b009f1d3d6d8145",
+      "ed4135d542e31a25",
+      "83944db548e00d43",
+      "6aa4409d5da1fede",
+      "898b8d5854c2b2ae",
+      "786e3c44837e4325",
+      "77a6bc493c3250b6",
+      "70309932366a1283",
+      "1dc98573a459d6a3",
+      "0ce93e8e9360ff0c",
+      "03ae4afc7cc72385",
+      "07cf25b8dd886b55",
+      "768a81ec496b7fb6",
+      "3400cedd091ef781",
+      "eacf39d4065c665f"
+    ]
+  },
+  {
+    "query_id": "2d588f86ef2b2ed2",
+    "reranked_candidates": [
+      "68ccc8456c9e1d27",
+      "0b6a71af5db37121",
+      "58e103ba43e8f789",
+      "34a0bb48345eed85",
+      "3af7837dc3c09964",
+      "f4fa5623fb7e01ce",
+      "b96541904a467d83",
+      "0e0597909a577da0",
+      "637de59d2a6a0126",
+      "cb9e32d6a5e3d90e",
+      "94ea21608758c72e",
+      "5abb94113c2cd7ab",
+      "ffa56e38f4e728e6",
+      "34071c7e7a4144f8",
+      "2a3ed00f08192446"
+    ]
+  },
+  {
+    "query_id": "2f1bf47074eb062b",
+    "reranked_candidates": [
+      "e7760a56f7900436",
+      "f0de55f8e05431cb",
+      "d4262b39f6b03e7b",
+      "a4ac30e3b524177e",
+      "777a39117faf62c6",
+      "a3ea135facdc9d0a",
+      "dcd618cb32ca4ae1",
+      "fd6ec59cf7f5d5b4",
+      "de25c260f8ea2d17",
+      "e8e8480f174f695d",
+      "4fccc12874261133",
+      "4ecf23064057c8f9",
+      "a0ba556adb22007b",
+      "b94b4a365a3ae64c",
+      "583137020d8a61fd"
+    ]
+  },
+  {
+    "query_id": "2fcc7517963f1b27",
+    "reranked_candidates": [
+      "93fddc1293b93ff0",
+      "d2d69b8508e3e984",
+      "93e422aa84178cf6",
+      "dbbf35234ae953fc",
+      "3d8170bcd2bb9388",
+      "782b34178e682360",
+      "824b5dc9bb54de71",
+      "3f30f437e1bc3f73",
+      "d6c47d9f879a6225",
+      "d689e1f0aebd8014",
+      "90f77eb8d4c7f9dd",
+      "d51f74671d9a3d39",
+      "c6520d0e7840ce17",
+      "93e1fed1177cfddb",
+      "71aee6e1df5fc342"
+    ]
+  },
+  {
+    "query_id": "300cf6fb10a15ba2",
+    "reranked_candidates": [
+      "e258827e1ab63a24",
+      "d0a85392526259dd",
+      "3938a98f3d199094",
+      "8c55452e352dc9be",
+      "7a24d92ecdbccc2c",
+      "5d1e6048efefdc08",
+      "3787b4b0da90d0dc",
+      "c844a291d2564568",
+      "fbe684691853ef72",
+      "f4ec48ec36af36c0",
+      "875074f2dd5ae1eb",
+      "8d2add505ca88993",
+      "67fab5002a687fc1",
+      "46ec140469af74e8",
+      "1fda322ce0cda4c1"
+    ]
+  },
+  {
+    "query_id": "3135234ef64078fd",
+    "reranked_candidates": [
+      "62055a2e8b9dec53",
+      "0919748fc9e2139d",
+      "06193c5ba679ac07",
+      "6df6af785501ccd6",
+      "f585978e7ba90b1b",
+      "028772da5b40a89e",
+      "b7502e3b5bfa8d06",
+      "86b3f5900e624500",
+      "0eecaca3e4700ad9",
+      "097dc3b5586a7422",
+      "15485c419eaefe5d",
+      "088987b68f7caed6",
+      "d2951439501facfb",
+      "8fb1bc06d5a465d3",
+      "341407d617822ab7"
+    ]
+  },
+  {
+    "query_id": "33869a134bcf41f7",
+    "reranked_candidates": [
+      "2e6bc66c112aa69a",
+      "dc83c6f879ebcc90",
+      "c3cb1fc651d0049f",
+      "8ac335012488bc43",
+      "24d2ad05ebe18707",
+      "683f15ed28d2ff46",
+      "335b717089d9f702",
+      "5fe762e4c8560e1d",
+      "f1da5a7fd0e6714b",
+      "0c618090690564b4",
+      "679d18dd76cf48ba",
+      "c9cd2fee7fcee2b7",
+      "69e33e2726fdaa59",
+      "274a2f0c64470101",
+      "0c1697938c5f3b41"
+    ]
+  },
+  {
+    "query_id": "3449b105d3ceefcc",
+    "reranked_candidates": [
+      "3fd3a93923c71ba5",
+      "b1130b212cd78cd6",
+      "51b2214ab71a52bc",
+      "21be4a94e26768e4",
+      "7397e76f4b6183da",
+      "d56a5cea46c9daa3",
+      "3640c82ba560e695",
+      "dbd2aabe814581ed",
+      "2761711d44ff4c0c",
+      "0c5a64b1e31ca1d4",
+      "31370cab6567ca9e",
+      "fe32b77f6f9da525",
+      "78a78edc95766235",
+      "64e9e054d67cbeed",
+      "95be474c7b62cb58"
+    ]
+  },
+  {
+    "query_id": "36e6f8b3675fe73e",
+    "reranked_candidates": [
+      "a10cf0bab55971de",
+      "d51622e5847580c4",
+      "23363544aee25c97",
+      "dba22b28ab07ddf6",
+      "614ea0b1c7f0daa7",
+      "05a50b11a166af76",
+      "3bbd897b6a4f65d9",
+      "35139039e9331302",
+      "b70c213b3bab9937",
+      "2492c0da8e875fb6",
+      "050fcc4d8113fe6d",
+      "c625a74cd19323f2",
+      "8256176c252f5db4",
+      "8254cb1a48b38fd4",
+      "2f752e5973cbcaa5"
+    ]
+  },
+  {
+    "query_id": "3801643630d33d5a",
+    "reranked_candidates": [
+      "0b55222ba2c4f86d",
+      "6717c1f3eb540b0d",
+      "0b529faaefa8a0d5",
+      "2772ac532baabd1a",
+      "344dee8ca62803a2",
+      "6ce1a68dd3b84859",
+      "5711cba732fd35ca",
+      "bb65a209439302f5",
+      "5e27ae74ebb58208",
+      "071d37ac2c108095",
+      "7f0b05bbe609076f",
+      "1fce97bb5c30f80c",
+      "7eb27e5357bd8afc",
+      "d7a4c2207f0e1445",
+      "994d37c84813533b"
+    ]
+  },
+  {
+    "query_id": "380ec5e6c58b6120",
+    "reranked_candidates": [
+      "b07d29717b2a036a",
+      "b32b8819fd12bcd1",
+      "61075d0a9fb12cf1",
+      "c625a74cd19323f2",
+      "0209e5b75b48fe15",
+      "8d51ec851b38487a",
+      "4a1718ec82e90d3e",
+      "6297785622e70373",
+      "756c568b2d73655e",
+      "90d6b11f83a42932",
+      "c83770159ca937aa",
+      "90601a487f6330bc",
+      "18f5598af516ddc5",
+      "09ac7d4dc9f0d908",
+      "7fcd393cf3774c31"
+    ]
+  },
+  {
+    "query_id": "38bcd1d4bafc66d2",
+    "reranked_candidates": [
+      "bf33be272ec6c4b4",
+      "7edb8bb6ab5be7d8",
+      "a12f21e69e801775",
+      "ef8a58f3ff3ccd56",
+      "b24ed58505304e9a",
+      "c877a7cc4a6abb19",
+      "ff93bf0d06572296",
+      "e69aa146fee385e3",
+      "c9d369e3d889cf35",
+      "e2b66683e9e89de0",
+      "cfb8cba9c4a24b1f",
+      "36dd5cf9bd1941a8",
+      "e1189aafb169393e",
+      "2111e24a7ef8dc23",
+      "076afd872ce56cec"
+    ]
+  },
+  {
+    "query_id": "3afc1510f5053208",
+    "reranked_candidates": [
+      "4bb5c3f07936eeba",
+      "be790c7d91dd7600",
+      "1109e903ad6223eb",
+      "505d4058f03704c7",
+      "dcb40c1e201df1d9",
+      "731ee42553753b89",
+      "9e53a7a33d0f9b3b",
+      "f219f07540a6173f",
+      "88019e01c82b5a2a",
+      "206f76986372970f",
+      "2974ece21c2ea7c4",
+      "a1da41c607ab49c6",
+      "ee13356b5361d2c1",
+      "87219e73b056b86e",
+      "f4b760a614f1a759"
+    ]
+  },
+  {
+    "query_id": "3bb8954b9f00850f",
+    "reranked_candidates": [
+      "f73f82207a0ae18b",
+      "a88a3f2740f95793",
+      "f337e70975bef3f1",
+      "8b9d74182269b64b",
+      "1ce16c22c12af576",
+      "67d3cc5e0f0eef2a",
+      "cd4ad80f43985029",
+      "eb3cb0441ccbbc27",
+      "77deffb39c01856b",
+      "5e0ae0324872c117",
+      "88d090517a17e665",
+      "912e9abefeda08c3",
+      "16b54b1fcd47aada",
+      "0972c7deea18e90d",
+      "3c88173f3b706d2a"
+    ]
+  },
+  {
+    "query_id": "3c7bda451584d612",
+    "reranked_candidates": [
+      "ad6a7965a1678c79",
+      "a1d001ce35131fd2",
+      "d04f6bf75cba20d0",
+      "6ab4e80c40a6aea5",
+      "4bd15af0c430b95d",
+      "6e4f7eb863348c9d",
+      "0573d6638972cd0e",
+      "95a2596d770c0cef",
+      "273a65a3be889a86",
+      "3ee1e8029945480c",
+      "37ab4575ede00f81",
+      "2063b84885a751d5",
+      "6c768bd84ec20e1e",
+      "7b288ea1b48ef087",
+      "72b374e46cf2cd2f"
+    ]
+  },
+  {
+    "query_id": "3f4d53e164f1ecfa",
+    "reranked_candidates": [
+      "592950037ce78746",
+      "5f7263285b1cc004",
+      "18c4266be15134a9",
+      "53062c63be31edb3",
+      "49df413839903b67",
+      "4eed19d4111e4d4d",
+      "b0b0630390c27b65",
+      "51304bbc6054e351",
+      "99b8d40a7afa0652",
+      "20866751f831e1e3",
+      "a19fe44ee5b79d49",
+      "00ecee07ff1e524e",
+      "5f34dd85f9e283cd",
+      "222f805e86315466",
+      "20286eafd9b2151c"
+    ]
+  },
+  {
+    "query_id": "3fe5e2af769ee391",
+    "reranked_candidates": [
+      "245aaf2b17dd044a",
+      "7f3d6ffe3e99786d",
+      "4a9c23441b485380",
+      "42e13c3d999f807e",
+      "0be4669fb5e22be9",
+      "0afdda09e96d8078",
+      "3c03d743edd962b3",
+      "eb92da45fa66faaf",
+      "8ef369c65ef5d70e",
+      "b05bc821287447c0",
+      "ab2a39523b2016ae",
+      "5e2b3044a00061ff",
+      "9bb5a4546be105c2",
+      "15aabbdba75392f8",
+      "0965e9cf2961c479"
+    ]
+  },
+  {
+    "query_id": "406f4b38606f9f56",
+    "reranked_candidates": [
+      "54b05a4a7b942bb4",
+      "01a9456b7dfbb2d5",
+      "e71815abdc0d044b",
+      "cb7af3b801d0f4f5",
+      "3092076ab50d1fd0",
+      "20f5922202a81aa2",
+      "edfa33f9037fadee",
+      "599706a93011d32e",
+      "965359089ea065ed",
+      "00061cc23be8c9ec",
+      "c50714b7026451aa",
+      "4b2faae5e31333cb",
+      "9ab40ff366b40b48",
+      "235a751eff2faa28",
+      "22dfebca99b4cf52"
+    ]
+  },
+  {
+    "query_id": "408390403ddfde42",
+    "reranked_candidates": [
+      "7b77d5905db7a8f8",
+      "d01610ca2c9fa3f7",
+      "3f4c00380aaf6c48",
+      "01e02f3e6f2c5853",
+      "2380f6354254fc8f",
+      "692b4365a81e4460",
+      "cd17ff8e045ed400",
+      "95d84601578eb0b4",
+      "0d851381192b089b",
+      "d6c7619e5486fa91",
+      "4cd74e8befce5aff",
+      "c22e70e13d64c95e",
+      "88177269a50ee361",
+      "a3de3ad5a4d427b0",
+      "8a2200989f4d79b6"
+    ]
+  },
+  {
+    "query_id": "42643c716d73c950",
+    "reranked_candidates": [
+      "9e273762459aec96",
+      "2e6bc66c112aa69a",
+      "11a31c66e608037e",
+      "c3cb1fc651d0049f",
+      "4feda0f7bf92eddb",
+      "24d2ad05ebe18707",
+      "dc83c6f879ebcc90",
+      "8ac335012488bc43",
+      "c3506d086bb80f2a",
+      "bccfeb0fc60aebdf",
+      "679d18dd76cf48ba",
+      "3aa0824235a80c7f",
+      "198c4d78f9237db3",
+      "9e2d1b019a4e3173",
+      "0c1697938c5f3b41"
+    ]
+  },
+  {
+    "query_id": "426f92e5e530cc42",
+    "reranked_candidates": [
+      "437d417ecd5cd032",
+      "2830b8e26a0620f7",
+      "62adcd1e1d00e9dd",
+      "47a1e4ed19aeac47",
+      "152883c73a6dd7f0",
+      "2fb65535e9034bd7",
+      "41c97ec35f154ee6",
+      "c126a5fe8501e394",
+      "b2ddb080d23e433f",
+      "f67da2fdd6c0e868",
+      "61e80ee103458ec1",
+      "1c912b0ac7bcece3",
+      "16d3df1b9f119e6a",
+      "8a0f75e02b98b266",
+      "14788027d746597a"
+    ]
+  },
+  {
+    "query_id": "44147a441d0dc8ef",
+    "reranked_candidates": [
+      "78f44555a16447b0",
+      "1f1c33087035cb02",
+      "7f593b2094ab2195",
+      "31233d862e3e79e9",
+      "e56c79b4f9373761",
+      "7be24487a03faaf5",
+      "810922293828cfe5",
+      "d55720cf8708e3cf",
+      "21360cfd5ac9530d",
+      "1995e90618c1ce17",
+      "57a8d7a98e1e43e6",
+      "9acb4002ba5cc263",
+      "fe22986dfbfd5252",
+      "6d9067fa89a60518",
+      "1fba5e3de86da1cc"
+    ]
+  },
+  {
+    "query_id": "4443c71ac1d0bb78",
+    "reranked_candidates": [
+      "2aec55af785b7d08",
+      "d4377865678197da",
+      "8d1fb14de7fb649a",
+      "332f2adfe782280b",
+      "c27ef28c3e367d08",
+      "a94a12313335f638",
+      "53a3fa0036a117be",
+      "a891c827f83aa93f",
+      "376d2d48b4d0fbe3",
+      "6dfaab70dbda8af5",
+      "8cded78415804cf6",
+      "1c54183b3bfc831f",
+      "bee91f4b43472116",
+      "7f8468f4e19fe986",
+      "05773bf72e303110"
+    ]
+  },
+  {
+    "query_id": "44a9486ced118d19",
+    "reranked_candidates": [
+      "78f44555a16447b0",
+      "1f1c33087035cb02",
+      "7be24487a03faaf5",
+      "7f593b2094ab2195",
+      "31233d862e3e79e9",
+      "e56c79b4f9373761",
+      "810922293828cfe5",
+      "d55720cf8708e3cf",
+      "1995e90618c1ce17",
+      "9acb4002ba5cc263",
+      "581c223faece7a1e",
+      "2c8ffa6d53bfe6d4",
+      "9312850d896ff668",
+      "7d58eebc9830e7fa",
+      "2078f4266505a5a7"
+    ]
+  },
+  {
+    "query_id": "45457df4d1b98e8e",
+    "reranked_candidates": [
+      "ce1a002288ddb556",
+      "376908578909f9c4",
+      "812503369bfeaf77",
+      "e9cf71a451f8bc71",
+      "861ccc597f118fce",
+      "92cfc725eabf5523",
+      "4608cc2ebe7bc6f2",
+      "dd8016d62ad925d2",
+      "a794314316f0cf98",
+      "c8f68b5a38d2116f",
+      "4bd667c940c58da2",
+      "5805233283eef7de",
+      "be2d98d2f37d3a59",
+      "160e965107f5d4f2",
+      "f6502354e7d803fe"
+    ]
+  },
+  {
+    "query_id": "4659b72353b0adb5",
+    "reranked_candidates": [
+      "3b913ab8eba0154b",
+      "21aaf26f9e2aaf44",
+      "430de4e2f41b439a",
+      "755e852841f2d6fe",
+      "eb455886e7694261",
+      "00313639a96e07d2",
+      "5b19d06230e1a160",
+      "f503f6ddbe6d5259",
+      "66a71adc54ee2f56",
+      "0d95e6ee3ba1d205",
+      "3846a3c43d656d61",
+      "aa972b7634a4621c",
+      "604e089adc934f62",
+      "0a21ae0a331b7648",
+      "06d98b64bd51a1fc"
+    ]
+  },
+  {
+    "query_id": "481b832afffacc67",
+    "reranked_candidates": [
+      "7b77d5905db7a8f8",
+      "d01610ca2c9fa3f7",
+      "01e02f3e6f2c5853",
+      "3f4c00380aaf6c48",
+      "2380f6354254fc8f",
+      "692b4365a81e4460",
+      "cd17ff8e045ed400",
+      "0d851381192b089b",
+      "d6c7619e5486fa91",
+      "95d84601578eb0b4",
+      "88177269a50ee361",
+      "c22e70e13d64c95e",
+      "4cd74e8befce5aff",
+      "8a2200989f4d79b6",
+      "a3de3ad5a4d427b0"
+    ]
+  },
+  {
+    "query_id": "4e1514ea2723add6",
+    "reranked_candidates": [
+      "3305e4af937a7cd9",
+      "57eee63f1af0d1ba",
+      "46c0ad4762e8dfed",
+      "6d5bcd5d356acb80",
+      "1ff3cfab15b21cd5",
+      "0a433b84cd9fd032",
+      "1c74d626d08de2b7",
+      "2510c7a9ad2838d2",
+      "e4c9f0a0858f8e50",
+      "247ad9b715698b51",
+      "15758b24599a26cb",
+      "0f7e4b7284adff02",
+      "6a75c2f3087a3ec1",
+      "d005fef6dc480cdd",
+      "0e052432f324849c"
+    ]
+  },
+  {
+    "query_id": "4e21900c38eef418",
+    "reranked_candidates": [
+      "6a9c729f73c2181a",
+      "1bf36cd232c7ad91",
+      "ede7b01f54e586f3",
+      "080d4a035e5f20ae",
+      "f5d66ae6893328c8",
+      "291007bf57678a05",
+      "06ba9b9ed5bacf0c",
+      "7176a968703b8eff",
+      "65ca8538d0b6fd33",
+      "673f657a515df520",
+      "b06fc57b84adccf1",
+      "3dac23cc538c3c8e",
+      "0d31209046efa76b",
+      "0666da9a8ffff8df",
+      "33df227e8cd40ed1"
+    ]
+  },
+  {
+    "query_id": "4e7fc33d60e6b182",
+    "reranked_candidates": [
+      "7d6f01959c28ae97",
+      "0a2452894e1e4478",
+      "8463bf9d49e759e8",
+      "490e91f9a22da444",
+      "243838bf870ee91b",
+      "1be3ddb79647024f",
+      "927e911ddd2fcafe",
+      "a9544b567f45a554",
+      "5f2e4be743d0116c",
+      "3716c741000ec811",
+      "b70c213b3bab9937",
+      "6a60f5739ede0221",
+      "3880a6b44a665d17",
+      "289afc77514ee70e",
+      "273840fd84ea65a2"
+    ]
+  },
+  {
+    "query_id": "528ac01e8ef63aab",
+    "reranked_candidates": [
+      "46c7fadefb0cba95",
+      "5fe762e4c8560e1d",
+      "8ac335012488bc43",
+      "c3cb1fc651d0049f",
+      "c9cd2fee7fcee2b7",
+      "b66f1e5cc1b33bc1",
+      "dc83c6f879ebcc90",
+      "63e49aa706ba5108",
+      "5a3b3cc695a055df",
+      "74522df6cc7b6490",
+      "4f8410b9421ca30c",
+      "0c1697938c5f3b41",
+      "9e273762459aec96",
+      "9e2d1b019a4e3173",
+      "679d18dd76cf48ba"
+    ]
+  },
+  {
+    "query_id": "5397e997a5ad858d",
+    "reranked_candidates": [
+      "541c69685dee11db",
+      "5cf98bd0aafbe3ed",
+      "1a86c1fd0cc627ea",
+      "45f7ea33ac144abe",
+      "15b70fe307533c52",
+      "83d5ac4af686fe9c",
+      "75c2a6a5efc82ace",
+      "90a1961913bea7ee",
+      "dc024fbc2186077e",
+      "4494ae6927fcc5c2",
+      "a5b0c6e49cf4e6fe",
+      "92d815b863cdcbd8",
+      "358ac463691fa05c",
+      "1888e0d73d76c792",
+      "7299203d98a08929"
+    ]
+  },
+  {
+    "query_id": "53d91540c5147be8",
+    "reranked_candidates": [
+      "6c262ad9a55d1075",
+      "c64f307bd7dece2a",
+      "d1ce7fd13bd9c83f",
+      "ad6a7965a1678c79",
+      "2ef1cbedf4983588",
+      "c04816796cea0364",
+      "95a2596d770c0cef",
+      "2c64d34bc8c566a8",
+      "0977e947063a3598",
+      "0573d6638972cd0e",
+      "144d825f3f35a33d",
+      "16ced11a5d333e7e",
+      "024830e336d0584d",
+      "021cdba59ea565ea",
+      "6e4f7eb863348c9d"
+    ]
+  },
+  {
+    "query_id": "54b2111647e38701",
+    "reranked_candidates": [
+      "5f34dd85f9e283cd",
+      "5f7263285b1cc004",
+      "592950037ce78746",
+      "99b8d40a7afa0652",
+      "49df413839903b67",
+      "51304bbc6054e351",
+      "b0b0630390c27b65",
+      "53062c63be31edb3",
+      "a19fe44ee5b79d49",
+      "20866751f831e1e3",
+      "4eed19d4111e4d4d",
+      "18c4266be15134a9",
+      "6cacb1cdc123422a",
+      "00ecee07ff1e524e",
+      "94cd0dc42532d2ef"
+    ]
+  },
+  {
+    "query_id": "5a4f02c93da6670e",
+    "reranked_candidates": [
+      "14773f22dbf35a09",
+      "330f7709d0d4dd71",
+      "e145f4b4aed6c02f",
+      "2e55145f99848a6b",
+      "d888fa09cf8c21e5",
+      "faac43101191da88",
+      "2ef62a66b387a16b",
+      "1af1135d7c803533",
+      "19533fc8e8f8efd6",
+      "8f21ca033f4fa82b",
+      "217e14331e73e2e1",
+      "252654fad93c6f4e",
+      "2c1b7b084405ac74",
+      "5f3295bcc9083e06",
+      "4f2cc401b98d3585"
+    ]
+  },
+  {
+    "query_id": "5d02e89be5007c18",
+    "reranked_candidates": [
+      "3fa3dd352bce041e",
+      "18d94a6afcc9a410",
+      "3fce9d1c562dfaef",
+      "43a663b8092eb2f6",
+      "142d3a1b49dafad5",
+      "6e47538528238627",
+      "3381b9af9ff41f67",
+      "9d7da4b5d05e3c30",
+      "196176e39d5aa32e",
+      "61b2001e6b817752",
+      "266c28109767ca11",
+      "005e9f905d1e3e3a",
+      "21071ae98ae1a925",
+      "39016c375438815e",
+      "180d210ef11fd2f7"
+    ]
+  },
+  {
+    "query_id": "6059cf27b06c9a47",
+    "reranked_candidates": [
+      "cb7eb7f6669c0c4a",
+      "ffbe488132e06a4d",
+      "1e4eb8a92a4a279e",
+      "f334a703aa97bea7",
+      "20f4444b3c57f769",
+      "ce0c0b1978949f56",
+      "55666e3f3a85adaf",
+      "46f4e5595ea68b72",
+      "e636b834fcb5ef65",
+      "0547e64bd1bb838d",
+      "54721a0fc3b53951",
+      "77b1226e31c17f02",
+      "8b6104dca99c7f48",
+      "5df68966053d720e",
+      "1f7596e36e3a1df7"
+    ]
+  },
+  {
+    "query_id": "6196c4933da960d5",
+    "reranked_candidates": [
+      "28463168821bd2d3",
+      "8d0a5425e7c29faa",
+      "ed39b69b76966e6b",
+      "f505b1f4a572c4b6",
+      "0ede785bb35a7604",
+      "c782c71f2eebfcaf",
+      "197cd9254280ff74",
+      "122925e4572da57e",
+      "324f41569a5cebaf",
+      "f711fee77b7a2de0",
+      "4a1e872c01329f21",
+      "b3ce2ab083e99add",
+      "960f548e055efdb5",
+      "9034ed44dd15290c",
+      "029036d4d78b49a3"
+    ]
+  },
+  {
+    "query_id": "62fa30a0b1b6f918",
+    "reranked_candidates": [
+      "a171f77fc397fb6a",
+      "0316807624993414",
+      "02a2593b36c51457",
+      "a67b644cc2f226f3",
+      "8219fc5706941bcf",
+      "0f85910c37b9e6b9",
+      "cc3694a52bc7a635",
+      "0298148510105b4a",
+      "c5528c89b79873b4",
+      "f8342aeaaf5c023c",
+      "222280fb017956a9",
+      "4739475a5b45b850",
+      "b519b69ae00e73b0",
+      "9935f4304fdf2e53",
+      "15dcf61d5cfa0aab"
+    ]
+  },
+  {
+    "query_id": "65b238c7622eb909",
+    "reranked_candidates": [
+      "072cbb3755e8202c",
+      "970a2a3df93712a7",
+      "1baa234f0b3c1de3",
+      "228f1ea2815e12d5",
+      "b13cbb03765c508b",
+      "6fcf0ba85692cdc7",
+      "ebc6d1af8e9c914b",
+      "a8532a2ae9894245",
+      "0a5c3a42f2dca01d",
+      "eab75f529ac59090",
+      "6a0d7022fd3b44a6",
+      "0f4b4a18e3d52b97",
+      "fbd51b348e951fac",
+      "2073d106bd8bcd4a",
+      "765b3f4d88c4c9e3"
+    ]
+  },
+  {
+    "query_id": "65bbd735cb25dab8",
+    "reranked_candidates": [
+      "e4101bd65eb19cb3",
+      "ca4ed0ff272d48ef",
+      "510df0b98c316d40",
+      "72588c48cb63cdee",
+      "998f23fbc4a61321",
+      "4592488a429649e2",
+      "48377294b952abc0",
+      "010909ce10486bc8",
+      "0cf14fc1446ac896",
+      "9bda4b64dd01173c",
+      "182a65d5af4970ce",
+      "0ede785bb35a7604",
+      "845685dd86bb8bec",
+      "2182c07e9877038a",
+      "10c86b58cbbb7c6f"
+    ]
+  },
+  {
+    "query_id": "66f896653a67746c",
+    "reranked_candidates": [
+      "a6b91e5156901965",
+      "842d01aa767869ed",
+      "f0bf1432d687e3be",
+      "6da3d9fdb9c57f54",
+      "2be1af59262f736d",
+      "d2fd491f02e28b65",
+      "5b3bd0380a780eb5",
+      "556851e51a4be2ca",
+      "194360e8ffbc7ff2",
+      "11ce202a53f2203d",
+      "8ed85bc7b7e4f8b8",
+      "00068ad996b2def0",
+      "3f3e77c7eedff2e6",
+      "a3c2cf61c411f98a",
+      "0212b9c5fa5b6813"
+    ]
+  },
+  {
+    "query_id": "69abe62507736d38",
+    "reranked_candidates": [
+      "eb2b2cf42acd1dc4",
+      "b7e14509822a81c3",
+      "8189174de41b5ac9",
+      "0d688a7afe1e7757",
+      "6137d5e434993c43",
+      "edc1686f8454c02f",
+      "c59feedfec90ff4b",
+      "7ad3ddfb8342da8d",
+      "9fe179f8c011357e",
+      "cd0322ef3d481f44",
+      "afebc6e487054a04",
+      "04af280cdb8d8ca4",
+      "b835b23eae6b28c9",
+      "399054741e7926da",
+      "0fd5fb3f21bf9e65"
+    ]
+  },
+  {
+    "query_id": "6edf9627a9e5b0da",
+    "reranked_candidates": [
+      "e7ca34d429c20a93",
+      "b7490e55ade7dc5b",
+      "2f8b2f3e9ae002dd",
+      "d86bbd16e8915312",
+      "33c8c39a9c3cfc16",
+      "119eb3209431130c",
+      "5ee27284ab0ab701",
+      "9f766c85b31193a4",
+      "0b1a4a286bebfa5a",
+      "7cc473c287e7bca7",
+      "5c1536586fb2f1e9",
+      "66a71adc54ee2f56",
+      "953c69cb8ce8cca6",
+      "fb024cdb7faf3ba9",
+      "0e2c491c703c87f8"
+    ]
+  },
+  {
+    "query_id": "72b7d48626e8a0ac",
+    "reranked_candidates": [
+      "7c71007ce80a73c4",
+      "789e788f93b6e267",
+      "1b26f9a59e7b82f7",
+      "87427d26b121fd90",
+      "cb1221536109da8c",
+      "9e72ea220a0bc518",
+      "f8a3359f1d3c250a",
+      "4d1766724ec560fb",
+      "99b8cee5a1560fa1",
+      "13a68f7ee531a8af",
+      "99a5e241e0812332",
+      "700343eaa2b78b5b",
+      "63965c1a12dcbc12",
+      "e53fd3652b2efb35",
+      "0bec74fb263d1e5b"
+    ]
+  },
+  {
+    "query_id": "73b858cf258b2492",
+    "reranked_candidates": [
+      "c486505e88e9bc97",
+      "58551c5f70b21d92",
+      "7458f18737c0a3f2",
+      "1b77b1c7d1248cee",
+      "a0a6824b8f5a8360",
+      "57b163fd0738dad0",
+      "bc3f5df3e5ab94b3",
+      "6ad01b64818a30bf",
+      "7831e1a0fb8f6324",
+      "5ed3711c212f38e5",
+      "70cf3ca90aa4d434",
+      "bb274478922f6847",
+      "5a3b3cc695a055df",
+      "ee4bef226c71365d",
+      "d160fb75a127dfce"
+    ]
+  },
+  {
+    "query_id": "7402431d11a12f2b",
+    "reranked_candidates": [
+      "6147e04f90ec9778",
+      "002c1ff9edace6b9",
+      "9bbe89c80b379bb7",
+      "edb3617fcf961bbc",
+      "0758316c14c411f7",
+      "31dbd01e24ede502",
+      "92ab19bf484aa2f0",
+      "9c0c0f8b14f4675f",
+      "d70fb194dbc23d73",
+      "4563bdbc639e4ea0",
+      "60f2e975a48da3b7",
+      "770c226d6e88bf8d",
+      "e5eb3e4a7c68eb4f",
+      "a9047fe462a9b123",
+      "4462d9ddf4f80697"
+    ]
+  },
+  {
+    "query_id": "76c1ed2431b6486d",
+    "reranked_candidates": [
+      "4eed19d4111e4d4d",
+      "18c4266be15134a9",
+      "5f7263285b1cc004",
+      "592950037ce78746",
+      "99b8d40a7afa0652",
+      "51304bbc6054e351",
+      "53062c63be31edb3",
+      "49df413839903b67",
+      "b0b0630390c27b65",
+      "20866751f831e1e3",
+      "00ecee07ff1e524e",
+      "a19fe44ee5b79d49",
+      "5f34dd85f9e283cd",
+      "093758993ffbb78d",
+      "6cacb1cdc123422a"
+    ]
+  },
+  {
+    "query_id": "7cecd2fb906ec6d6",
+    "reranked_candidates": [
+      "268823612ba1431d",
+      "a050deec5a464af9",
+      "2f245a6ea4422697",
+      "ab13a8f03118b3ca",
+      "3ddfb36b1027a680",
+      "bdc5166f16da09be",
+      "bcc3c554df5c138f",
+      "87427d26b121fd90",
+      "3761ddcb1725d0be",
+      "2b2f55d573915df8",
+      "789e788f93b6e267",
+      "135184520c84107a",
+      "3efc0cdc30c9d37a",
+      "9ca00bbaaa1866d3",
+      "5998d68cf5584525"
+    ]
+  },
+  {
+    "query_id": "7fc8467de7d9eeab",
+    "reranked_candidates": [
+      "5b03ec1e21dc4f26",
+      "03c749fab9ce1203",
+      "f1e62a10a1d8f727",
+      "793eefa8f59d6450",
+      "48fad8e157199e43",
+      "1cb30495b2b36eab",
+      "5da5d8624296bfca",
+      "36de55e16e476d75",
+      "1c8ac99f789ee68a",
+      "213017831694de2a",
+      "3cc0ad44935cc088",
+      "08d8b2bbfa471eb3",
+      "f05d1466c4d9f880",
+      "16531c2037dd7250",
+      "1349ca23788b4134"
+    ]
+  },
+  {
+    "query_id": "81ab43cbbc7b13e3",
+    "reranked_candidates": [
+      "1f5a32e4a021b5fa",
+      "c197910944650b4d",
+      "7ef899789c77b34e",
+      "599aff250d16e888",
+      "0e32450931c2e4cc",
+      "4d1766724ec560fb",
+      "922e9adba84a475a",
+      "9e72ea220a0bc518",
+      "73f46f26b243ca99",
+      "700343eaa2b78b5b",
+      "602582330a0168f3",
+      "47a0da1032a8e88f",
+      "99b8cee5a1560fa1",
+      "3341a689659aeb91",
+      "cb1221536109da8c"
+    ]
+  },
+  {
+    "query_id": "840534ffdfa15676",
+    "reranked_candidates": [
+      "21709756d4c0f182",
+      "506f948a05f3ffa5",
+      "acfdf184640b46d1",
+      "0f956eccf49f0f83",
+      "1d9e1ad003ebcb99",
+      "d0c6e1f163bec115",
+      "362c6529d8f7f0e6",
+      "813909b25e91c383",
+      "246ea1aa58f3d42a",
+      "393f37bf4b7d63b9",
+      "c82fc4f6155c17fd",
+      "285399f3d1d1cdb4",
+      "b938ffa7757262fa",
+      "3b152da0df4c8c77",
+      "1f360f82b089d0c5"
+    ]
+  },
+  {
+    "query_id": "864c8bf4a846e5eb",
+    "reranked_candidates": [
+      "a5686886d8fbdfb6",
+      "e786003db78df2dc",
+      "fb024cdb7faf3ba9",
+      "e7ca34d429c20a93",
+      "4f9bc2eb6b4c9d93",
+      "d35c8ed275a58697",
+      "4450ed88ef7f364d",
+      "9f766c85b31193a4",
+      "021447abcf85ace1",
+      "8a557978a0cd9c7b",
+      "8f434dd770df6c52",
+      "5daef75f85b05e01",
+      "7cc473c287e7bca7",
+      "38d275897fe4b38c",
+      "95395a58495323a2"
+    ]
+  },
+  {
+    "query_id": "8a4e66522a520484",
+    "reranked_candidates": [
+      "c779d8048acb9835",
+      "fcd0651ec94bd9ae",
+      "055af752fa664986",
+      "1c7d8b6b2a8364c9",
+      "9ca739bd4f611cde",
+      "56fa47dfc886ecf7",
+      "574f51fa33eaf5a5",
+      "ba43f6db5888f817",
+      "626fd6bb9eaa4426",
+      "a149ab766c27b293",
+      "45ce068f9208930b",
+      "71e8266995b4df3a",
+      "fa89cfbaf3144a23",
+      "8b3450b25dcddd63",
+      "86af1e40375711a6"
+    ]
+  },
+  {
+    "query_id": "8c911327ad13123d",
+    "reranked_candidates": [
+      "4d1766724ec560fb",
+      "73f46f26b243ca99",
+      "f8a3359f1d3c250a",
+      "9e72ea220a0bc518",
+      "1b26f9a59e7b82f7",
+      "7c71007ce80a73c4",
+      "1a284d6da63f84dd",
+      "fd627fe0eeb5b3f7",
+      "99b8cee5a1560fa1",
+      "602582330a0168f3",
+      "63965c1a12dcbc12",
+      "cb1221536109da8c",
+      "789e788f93b6e267",
+      "87427d26b121fd90",
+      "3341a689659aeb91"
+    ]
+  },
+  {
+    "query_id": "8d678ff0007354e5",
+    "reranked_candidates": [
+      "09a050e434694c0c",
+      "17c6d43d9b333dfe",
+      "2b8fc9d7a84e15a5",
+      "002ca121e616b583",
+      "68e68332b8b6f092",
+      "de4d7eaaaa552d77",
+      "e9139411afc4bc91",
+      "7f6f6da737e40931",
+      "528d4f715f2e1c98",
+      "f6db0c632cae66c8",
+      "0ab6a27458ee7226",
+      "04c7882648b6c901",
+      "34710e4950113f70",
+      "0a0623cb0e57119d",
+      "61c6b88540dfe51e"
+    ]
+  },
+  {
+    "query_id": "8e77795c749035f3",
+    "reranked_candidates": [
+      "835547ed7ca12d96",
+      "6df5529ca4a72928",
+      "034cb0bf66384bdb",
+      "7af05b7536392252",
+      "8ceb1585ed842ac7",
+      "d05775aa72c3cbef",
+      "2b4fcb6b6ab2c0dd",
+      "e14f760c4ae59f36",
+      "421815c3a65934ec",
+      "4592488a429649e2",
+      "c8b95af192208687",
+      "5ede9299f9c48a1f",
+      "1e8ed4f27d377752",
+      "0ca1e5bfd718552c",
+      "0c1312affc9750ed"
+    ]
+  },
+  {
+    "query_id": "9218f29127d7a6f1",
+    "reranked_candidates": [
+      "7156f059fb869ec2",
+      "21f95ce4f6c56d49",
+      "095be0b646343bc3",
+      "ee9bcbd4c8be2017",
+      "e0aee3a64a03e552",
+      "64eff69ff7de72d0",
+      "87a96bd026ff2f79",
+      "057dcea01f55a16e",
+      "824a64c3cce89dae",
+      "c04afb58c765d22d",
+      "900ea2e8959215b9",
+      "e811a5c8115b9d00",
+      "60727b8e5139d39f",
+      "b31f1990a786b8e1",
+      "70fee5b308a54ce8"
+    ]
+  },
+  {
+    "query_id": "930376977585aee9",
+    "reranked_candidates": [
+      "90d6b11f83a42932",
+      "6297785622e70373",
+      "97bfc1421749ba37",
+      "ff82c4996732a80b",
+      "aceb12c380d8794b",
+      "9b356c9343f18ffc",
+      "6d768b346fbfa909",
+      "1c75e56fff1252bb",
+      "09c03b7831c0e223",
+      "70082edbbd535020",
+      "3366e055a24c1a32",
+      "bdb454dc4a2e7c8b",
+      "8463bf9d49e759e8",
+      "75eeef7839e15393",
+      "5d514560a8c74d2e"
+    ]
+  },
+  {
+    "query_id": "939748f17ad046f2",
+    "reranked_candidates": [
+      "e382446d9381e592",
+      "ed569a66d660a398",
+      "37c04f257abc2dad",
+      "b056895a4c86a35f",
+      "f34da0cd534106f1",
+      "3166705748cd1fb7",
+      "a655b600829f1ab8",
+      "366c0485e13de057",
+      "29d8b7c2c12eac05",
+      "20f5a99218ea067e",
+      "6c5d97c300b31f49",
+      "431de37fbc129c7a",
+      "937532f7d571e889",
+      "8020b5b6675909d4",
+      "ad653e2fdaf7d6c7"
+    ]
+  },
+  {
+    "query_id": "952049c488df6662",
+    "reranked_candidates": [
+      "463bde75ffe25ddc",
+      "f3ffd8ab848102a0",
+      "77a6bc493c3250b6",
+      "5de22c774413f1a5",
+      "cba199aecc31c79f",
+      "a4aa12872397394f",
+      "786e3c44837e4325",
+      "1dc98573a459d6a3",
+      "f0456585b60d1cc3",
+      "f310ec9796685050",
+      "1f951e4722462b21",
+      "a55eb82c1c645edd",
+      "65b3ab582b1a35a9",
+      "4806e8f71899f860",
+      "758ed8e2ebcfea0d"
+    ]
+  },
+  {
+    "query_id": "9791a09933b9985e",
+    "reranked_candidates": [
+      "1f0260e4ac7a3832",
+      "fa2f54cd0185aa86",
+      "1d71c8d0e5cc7d0b",
+      "4d64ea64201314f8",
+      "1328deb79695379c",
+      "e007087293c931df",
+      "efdab81d283fedd2",
+      "cd596e17fc9f6fdf",
+      "2cdc4252b7ed1563",
+      "bd6b9a8088ab4dac",
+      "38d9a8bf01bfef83",
+      "35795b540c7108d4",
+      "a9119d71d81dcaf0",
+      "3c24560de9dc574b",
+      "1948b62baed7f235"
+    ]
+  },
+  {
+    "query_id": "9c14f7d190be5095",
+    "reranked_candidates": [
+      "57341069016173c0",
+      "0e64580ad44768d0",
+      "583f47811ca2331e",
+      "210202ada14ee838",
+      "144f96ba74acd1d1",
+      "085c644c3135d40d",
+      "3817b63349713b9a",
+      "9b7b8db7b1770725",
+      "756cf38cfa5f9076",
+      "2915b0eb464c0d7a",
+      "db03839718834fa2",
+      "cc513793db067440",
+      "58c98a80d96d5fd1",
+      "7e37a79b3f703b7c",
+      "d6611230fe13ab24"
+    ]
+  },
+  {
+    "query_id": "9d22907062fb7a4c",
+    "reranked_candidates": [
+      "90d6b11f83a42932",
+      "6297785622e70373",
+      "ff82c4996732a80b",
+      "6d768b346fbfa909",
+      "aceb12c380d8794b",
+      "9b356c9343f18ffc",
+      "70082edbbd535020",
+      "c7de737ec4bb29a2",
+      "97bfc1421749ba37",
+      "1c75e56fff1252bb",
+      "09c03b7831c0e223",
+      "c264c8a76c758330",
+      "b2f855f4e9bc279c",
+      "8463bf9d49e759e8",
+      "3366e055a24c1a32"
+    ]
+  },
+  {
+    "query_id": "9d900c7a77760bc3",
+    "reranked_candidates": [
+      "8eeb13fc223fff8d",
+      "9b0c6eae219d1fe7",
+      "9272fe2bea4e6c7b",
+      "c6e193c2990cd481",
+      "7458e3b2aa74302d",
+      "b24ed58505304e9a",
+      "c3e1ef0b6f410ead",
+      "4721af28cd930b71",
+      "0a4e553fb6479a66",
+      "f98fc4f44b42618e",
+      "3bc909acc5a83be6",
+      "1ed5a902939c02d3",
+      "5a21e26105bc5490",
+      "ec3e2f23daee1d1c",
+      "e69aa146fee385e3"
+    ]
+  },
+  {
+    "query_id": "a1d0d887d5b2498c",
+    "reranked_candidates": [
+      "679d18dd76cf48ba",
+      "c3506d086bb80f2a",
+      "dc83c6f879ebcc90",
+      "335b717089d9f702",
+      "0c618090690564b4",
+      "f1da5a7fd0e6714b",
+      "8d3abc2ae6326e03",
+      "a3e9c974797bfdc0",
+      "c3cb1fc651d0049f",
+      "0da58e56dc71fa1e",
+      "99cc39e2c82b1763",
+      "e24f368b1e53e359",
+      "bccfeb0fc60aebdf",
+      "4c37f024a5ae7d72",
+      "274a2f0c64470101"
+    ]
+  },
+  {
+    "query_id": "a429df057bd219b8",
+    "reranked_candidates": [
+      "25454d6baefd1e70",
+      "eb7f7ccccb2b29a9",
+      "140df5fb4552a8fd",
+      "1524b455c368135a",
+      "50b1f351783ff55a",
+      "120d138a080fec62",
+      "fd5f27f06ba47e56",
+      "d575ec2a7dbb4831",
+      "602dd6344c560b9b",
+      "1368666e5bb8230e",
+      "a07dbe336f6ee193",
+      "5425186351860dd1",
+      "8dcc09797c223940",
+      "d215709ded76851f",
+      "0ab55f82cfa452e6"
+    ]
+  },
+  {
+    "query_id": "a8710fc24d587ea2",
+    "reranked_candidates": [
+      "60a94e848838426c",
+      "3270757dcb6f28ff",
+      "e3e27405bb41085f",
+      "5fb9e8743f7b09b2",
+      "6ffb8a8bee13f9f1",
+      "6b8eacccb89f073b",
+      "8b748c1fd0298ab4",
+      "fae533e7f5a275a7",
+      "1889f88e054c63bf",
+      "55cc9e476545927c",
+      "43a895ae849e9a57",
+      "f87548c1cb4f26e6",
+      "7d2abdd756341114",
+      "62b9bd59edd80877",
+      "76ef649ee0c062dd"
+    ]
+  },
+  {
+    "query_id": "a88c5ba49fc8692e",
+    "reranked_candidates": [
+      "7a579babbb30ee5c",
+      "f73d15a26489deff",
+      "204589de6437c07b",
+      "e17ec9b9bdb9b0a8",
+      "6c4bb1949ffe236f",
+      "17a7772d7e73cfb7",
+      "6987425736747d7c",
+      "3257ad77a22caf16",
+      "a09fceff5845b3cb",
+      "ee59f863e5b03482",
+      "e3ad7d0d54a81762",
+      "12032374a9d5fb1b",
+      "fd3acd469aa17843",
+      "d257efa663384a41",
+      "38625492e3499336"
+    ]
+  },
+  {
+    "query_id": "a8f365960b68ef33",
+    "reranked_candidates": [
+      "7aaed31f01be4950",
+      "00962c92c18a93cb",
+      "39f0f19f5a11b881",
+      "2138325e3fe1824d",
+      "039c91bb742ca936",
+      "16e25c592dc05c95",
+      "ab89bd6c50574299",
+      "6eafb81757e88276",
+      "4f02f5ea2b0e4aeb",
+      "19b2ffb0b4ef7269",
+      "1f8141bf000317c7",
+      "58f86a3de62e5e82",
+      "2ab3ef953b6a5b9f",
+      "1016e61d543841a7",
+      "00db2c55c0d5578d"
+    ]
+  },
+  {
+    "query_id": "afad748efb93b4b9",
+    "reranked_candidates": [
+      "8f326088effcfb46",
+      "e7dce65b0eeab9f3",
+      "0e64580ad44768d0",
+      "57341069016173c0",
+      "3817b63349713b9a",
+      "2915b0eb464c0d7a",
+      "d9f8e1947399329b",
+      "db03839718834fa2",
+      "ce8b6ff4ada09104",
+      "210202ada14ee838",
+      "462751d20a73eb79",
+      "2dee919439e4191e",
+      "3cfc3b2a10fef554",
+      "16172d81aa6781ec",
+      "e81a724ccd7a6070"
+    ]
+  },
+  {
+    "query_id": "b21984ac7eeb6fdc",
+    "reranked_candidates": [
+      "0e8c7e98ef68b0b1",
+      "18d2b8054bd63921",
+      "3a854e7e74c9baff",
+      "881888b68dccbbe5",
+      "0a6d301adb9b632f",
+      "b875d7c7e67acdae",
+      "7f817aa762bf8cd1",
+      "02a08a73f40e2235",
+      "025e769c5e8fd7b5",
+      "0d41dca59f1c107b",
+      "c139743b38ec7b4d",
+      "8e8e54101f994836",
+      "1c1ae52b16e05151",
+      "0dc4c799ef9bbfd4",
+      "01c79dac422aeedb"
+    ]
+  },
+  {
+    "query_id": "b60eff519db2f009",
+    "reranked_candidates": [
+      "a06c6e2f6fd64630",
+      "19e77f5c4d75f065",
+      "6415e22dd2a66c1e",
+      "1ac75f82fd2c7605",
+      "5254158cab672f22",
+      "19e78b8076d89cb9",
+      "4ebfde939481e2c6",
+      "a1ab18c4f527813d",
+      "712961003fc68f97",
+      "302c0e34dce12f7d",
+      "ba185c9a84e36f94",
+      "26838331963fd788",
+      "bdf7e7175d3a5ca8",
+      "0c67ccfc5ad18e2a",
+      "01636717ed16a7ed"
+    ]
+  },
+  {
+    "query_id": "b8848fb63764152d",
+    "reranked_candidates": [
+      "9657950058ced6d9",
+      "a53cfc25ecc77e90",
+      "c6b1eac2022c6fc5",
+      "da4cd8c0d2f4ae63",
+      "9312850d896ff668",
+      "7d58eebc9830e7fa",
+      "1f358eb3e003161f",
+      "c3ad30d962579184",
+      "2c28768f242a2c47",
+      "cb2918c990793fda",
+      "6b988589ad40bd99",
+      "0c612bfac58fab08",
+      "810922293828cfe5",
+      "8176f1ee4e214836",
+      "ba8ce6950127c42f"
+    ]
+  },
+  {
+    "query_id": "b8f1f9661147cbb4",
+    "reranked_candidates": [
+      "3fce9d1c562dfaef",
+      "43a663b8092eb2f6",
+      "142d3a1b49dafad5",
+      "18d94a6afcc9a410",
+      "3fa3dd352bce041e",
+      "6e47538528238627",
+      "61b2001e6b817752",
+      "9d7da4b5d05e3c30",
+      "3381b9af9ff41f67",
+      "2982099a54e2bd33",
+      "21071ae98ae1a925",
+      "5e406a8e2a29cc39",
+      "11b1c3a0d98bcf0a",
+      "39016c375438815e",
+      "196176e39d5aa32e"
+    ]
+  },
+  {
+    "query_id": "b920580cc5a28494",
+    "reranked_candidates": [
+      "c1f4cde4a4f816e2",
+      "20be91c6ba237e74",
+      "1cdfcc723e276ee1",
+      "1e6fecc4fa85c020",
+      "2ecc01c77567d09d",
+      "3117ff9727e6b230",
+      "24cc651884c9a0b1",
+      "01b6d12a8ef25d20",
+      "0a9e6ba2caf444f8",
+      "138ef7175dd98f9b",
+      "48bff82937bc2a31",
+      "1040a1a60ed8a9af",
+      "3f83d8611736cefd",
+      "01529a6a0d888802",
+      "0229e6cd024c4145"
+    ]
+  },
+  {
+    "query_id": "b9de3980f86e5948",
+    "reranked_candidates": [
+      "765b3f4d88c4c9e3",
+      "fbd51b348e951fac",
+      "eab75f529ac59090",
+      "a8532a2ae9894245",
+      "6fcf0ba85692cdc7",
+      "0f4b4a18e3d52b97",
+      "6a0d7022fd3b44a6",
+      "4062320c03cbd817",
+      "0a5c3a42f2dca01d",
+      "7a37e277243aa0e0",
+      "706f6378e35b2800",
+      "454940cf58a59e6a",
+      "1baa234f0b3c1de3",
+      "970a2a3df93712a7",
+      "072cbb3755e8202c"
+    ]
+  },
+  {
+    "query_id": "ba77797ccfe53909",
+    "reranked_candidates": [
+      "77c91e88cb5249ba",
+      "07e78e492d2adf0c",
+      "145938f7ee208bb1",
+      "7572cc3699f174ea",
+      "3540adab0a29c38c",
+      "1e7caa1fa560be2f",
+      "8025d077637f7cfb",
+      "006c6d22eeb083a1",
+      "337d548148ffdbe4",
+      "cc638f0a7d0f47cd",
+      "268e738657c8a3ed",
+      "8f48f2fef9d4cf41",
+      "116826a5e99019cf",
+      "0a2bafc8fcdbd53d",
+      "46d0aa1c1c015bc9"
+    ]
+  },
+  {
+    "query_id": "bb17e5f375d38fdd",
+    "reranked_candidates": [
+      "3caec1daeeebccec",
+      "7fab9e6cd06a2c5f",
+      "8af3ead4d35c458f",
+      "fb0ed5b57ae957f5",
+      "ace5cb01ae322b39",
+      "21481f7255e2c618",
+      "ac9e015dddcf0828",
+      "daf8af42d48c5b5f",
+      "b3f03ed2eddaab3e",
+      "429f9c6eb4f64520",
+      "8e9063bd09a4b8d2",
+      "fbbf013a34a1da0a",
+      "d9f58f58b0422cd1",
+      "17929e974bc670ae",
+      "b2bf23467c43b795"
+    ]
+  },
+  {
+    "query_id": "bc7a84c8f4a982c0",
+    "reranked_candidates": [
+      "79d4cf3e5e4c388a",
+      "44251f4b0e5a391a",
+      "cfdc459c6c247d79",
+      "d29a3581f030797d",
+      "f9ff878a24410217",
+      "24e59c0abe2b92de",
+      "65d2fcaf5023e09a",
+      "2268ca8961c975a7",
+      "d38cf6c92cecc9aa",
+      "f21121533c565135",
+      "5040dcfb72946653",
+      "a137d5b35003cd0e",
+      "137a012f2ed9792c",
+      "114cb8ad08230649",
+      "2163583d3b7aa7c5"
+    ]
+  },
+  {
+    "query_id": "c359a1d35b7bebe3",
+    "reranked_candidates": [
+      "ae2d5e624fe89e9c",
+      "cd9353c87cd7724c",
+      "40941219914403fd",
+      "19ea202523e9c91b",
+      "1f77b6778db83c60",
+      "959c0510f151e4e8",
+      "466360649f94b820",
+      "e4247e55e68e54c4",
+      "02ca79031d9a5bd0",
+      "0f1c4f12a90b429a",
+      "98e31eea2c5d2827",
+      "051b22c27a5bf169",
+      "2f63713bd0782ab3",
+      "3acd6f231e9a6445",
+      "0bf0efb0b2a650b9"
+    ]
+  },
+  {
+    "query_id": "c5a0f695e59d230d",
+    "reranked_candidates": [
+      "0758316c14c411f7",
+      "2c9417c891001699",
+      "8dba92d32c5ca8bf",
+      "38fdd94a89f6337b",
+      "f219f050dfc60d4e",
+      "0fd6653ce0cfd3f5",
+      "f503f6ddbe6d5259",
+      "d17eeced5de5b800",
+      "60f2e975a48da3b7",
+      "2bdaa7eff92ca3aa",
+      "0eecaca3e4700ad9",
+      "00313639a96e07d2",
+      "615495ea98664c32",
+      "7c3156800b8098f8",
+      "be0b5d55da9397e0"
+    ]
+  },
+  {
+    "query_id": "c5ffb6379f7101ee",
+    "reranked_candidates": [
+      "27e79a3da2079cfd",
+      "6a51f49e485c6de2",
+      "0b0ee84867cffd03",
+      "bccfeb0fc60aebdf",
+      "8d3abc2ae6326e03",
+      "c22eea8ddcbd4c6f",
+      "c3506d086bb80f2a",
+      "24d2ad05ebe18707",
+      "0bc6a6205ee11da1",
+      "095b4e101d0e3975",
+      "11a31c66e608037e",
+      "3aa0824235a80c7f",
+      "0c618090690564b4",
+      "0082c6499e90bbe0",
+      "0da58e56dc71fa1e"
+    ]
+  },
+  {
+    "query_id": "c9ec7211cb27bfc6",
+    "reranked_candidates": [
+      "1e16ca10578990a8",
+      "f75e2f1a18cacf10",
+      "0b91dcdec04f9ed6",
+      "7eba734e1870cbc3",
+      "67adc7a659ba5405",
+      "6d33eaa0006cb354",
+      "0aba131a37de3a8c",
+      "363ec430100e32bb",
+      "5024f61f723b275f",
+      "126db370e3d1e10b",
+      "5ebe500720dab00a",
+      "e96c35b66bb22d7a",
+      "30b509daba66dc91",
+      "0eac7a8b77b6b3d5",
+      "1d64da3289e41bf4"
+    ]
+  },
+  {
+    "query_id": "ca70db31f13f92ff",
+    "reranked_candidates": [
+      "b48e90d87da1e448",
+      "91b9c9e247a9181d",
+      "ef31be593715a0e4",
+      "7816069237c4759e",
+      "b2f0fd3a9cf08d58",
+      "a86632d180a267de",
+      "14bbf57e661470f3",
+      "96a22d80660e8444",
+      "0e20329b3e2f7e30",
+      "19144c9308d53696",
+      "142499d491b5cd6b",
+      "3eef9607326b2cba",
+      "a152f414fdd9b23f",
+      "69c865fdcb5426d5",
+      "1957549c76e81d79"
+    ]
+  },
+  {
+    "query_id": "d243ae5d57828abf",
+    "reranked_candidates": [
+      "8f1c010bdb8df67d",
+      "287dcbc4d9012d22",
+      "227c13d3044d7794",
+      "3d3188ffc51fcdab",
+      "1ed22913b234f221",
+      "ca4453a23f0ff702",
+      "3debd754a4816b02",
+      "ecdfadab2bcb8e47",
+      "58d1a453f1af8052",
+      "9927463ad13724b4",
+      "0c1b6aefa53c35fc",
+      "398da28f81d7df48",
+      "d5c2b2f64ebfc398",
+      "5bb8631432173586",
+      "2941071d24f39898"
+    ]
+  },
+  {
+    "query_id": "d2c9ac948cbce184",
+    "reranked_candidates": [
+      "7f3d6ffe3e99786d",
+      "4a9c23441b485380",
+      "245aaf2b17dd044a",
+      "0be4669fb5e22be9",
+      "15aabbdba75392f8",
+      "0afdda09e96d8078",
+      "b05bc821287447c0",
+      "3c03d743edd962b3",
+      "9bb5a4546be105c2",
+      "ab2a39523b2016ae",
+      "0965e9cf2961c479",
+      "42e13c3d999f807e",
+      "eb92da45fa66faaf",
+      "5e2b3044a00061ff",
+      "30e1ac753006c662"
+    ]
+  },
+  {
+    "query_id": "d3cb734f971ef2be",
+    "reranked_candidates": [
+      "47be6d80f02178b6",
+      "88825f665df9944f",
+      "9b91c6be8b03f5a3",
+      "5942a291b0cd7132",
+      "2c94e90207c4af50",
+      "4da2e2094735dc17",
+      "8de3df2f521af688",
+      "ce9d9b5aff521194",
+      "fb419f7e3bafad35",
+      "2c939d09b1725352",
+      "af24758b929aa888",
+      "9da8b621a52162d9",
+      "7578ac0a26591e9a",
+      "6aa4409d5da1fede",
+      "0a2fa4e2959fc214"
+    ]
+  },
+  {
+    "query_id": "d407eee957d33d19",
+    "reranked_candidates": [
+      "11b1c3a0d98bcf0a",
+      "6e47538528238627",
+      "3381b9af9ff41f67",
+      "3fce9d1c562dfaef",
+      "9d7da4b5d05e3c30",
+      "61b2001e6b817752",
+      "142d3a1b49dafad5",
+      "43a663b8092eb2f6",
+      "2982099a54e2bd33",
+      "3fa3dd352bce041e",
+      "18d94a6afcc9a410",
+      "21071ae98ae1a925",
+      "7541dd4cdb02aa97",
+      "0550d050493e43e7",
+      "180d210ef11fd2f7"
+    ]
+  },
+  {
+    "query_id": "d477f0f43f366dea",
+    "reranked_candidates": [
+      "0a05ec54e9b0ce06",
+      "0c66d1a935a038dd",
+      "70cf19d911f63725",
+      "799db1e7dcbdd91c",
+      "36302fcbf846ceaf",
+      "52de3990c93d19cd",
+      "64c580232103ad96",
+      "4ed4ad8075fe8ce1",
+      "1b5d9897b326ea22",
+      "29e728de111aec53",
+      "3d577651cd55a141",
+      "030f8c3dcff3eae0",
+      "c93ab39552803fb8",
+      "516cc5b8e13f79ae",
+      "2414f6befb072bce"
+    ]
+  },
+  {
+    "query_id": "d6fff2f2412ee960",
+    "reranked_candidates": [
+      "5f7263285b1cc004",
+      "592950037ce78746",
+      "18c4266be15134a9",
+      "4eed19d4111e4d4d",
+      "49df413839903b67",
+      "51304bbc6054e351",
+      "53062c63be31edb3",
+      "b0b0630390c27b65",
+      "99b8d40a7afa0652",
+      "a19fe44ee5b79d49",
+      "20866751f831e1e3",
+      "5f34dd85f9e283cd",
+      "00ecee07ff1e524e",
+      "222f805e86315466",
+      "20286eafd9b2151c"
+    ]
+  },
+  {
+    "query_id": "d9bc0afbb336b739",
+    "reranked_candidates": [
+      "2983a3f40f7e045d",
+      "9b389761ef673e34",
+      "95c1b99defec5664",
+      "7b92edbe6256e835",
+      "cd2410a9673cb1ea",
+      "56370ea43db6f363",
+      "f5b4a2a7cb790f67",
+      "a4aa0e210f3736b3",
+      "6dc5100fb51f5055",
+      "714a576bafaa05f0",
+      "040fc0a9b2ad1dd8",
+      "15ccc4f925222b61",
+      "ddacd73cf140615e",
+      "d95ac1be378dbb4f",
+      "2a96e7902d8a25e6"
+    ]
+  },
+  {
+    "query_id": "da0b9fbe6d2ba040",
+    "reranked_candidates": [
+      "8f326088effcfb46",
+      "e7dce65b0eeab9f3",
+      "3817b63349713b9a",
+      "2915b0eb464c0d7a",
+      "2dee919439e4191e",
+      "d9f8e1947399329b",
+      "0e64580ad44768d0",
+      "57341069016173c0",
+      "462751d20a73eb79",
+      "db03839718834fa2",
+      "ce8b6ff4ada09104",
+      "3cfc3b2a10fef554",
+      "e81a724ccd7a6070",
+      "210202ada14ee838",
+      "16172d81aa6781ec"
+    ]
+  },
+  {
+    "query_id": "dc23492fa7566bec",
+    "reranked_candidates": [
+      "5f5fb4c92cc6652c",
+      "41fa52a25225ccab",
+      "cb087380b570980b",
+      "0a184daea06c73e1",
+      "3c8ddfe2bc48bffa",
+      "991a93f02bdceb0b",
+      "073f02ad89ed24d9",
+      "ffbd270ba204a0e9",
+      "1c9b065ed9ba6c81",
+      "78eb8de37387db34",
+      "36b4e04a5ad8bcf0",
+      "6c7202872312b572",
+      "c9aeebc4e49d0527",
+      "a62aeba731141593",
+      "07098d6538a0bf68"
+    ]
+  },
+  {
+    "query_id": "dc873f0cd0e9da1c",
+    "reranked_candidates": [
+      "c486505e88e9bc97",
+      "58551c5f70b21d92",
+      "a0a6824b8f5a8360",
+      "7458f18737c0a3f2",
+      "1b77b1c7d1248cee",
+      "57b163fd0738dad0",
+      "7831e1a0fb8f6324",
+      "bb274478922f6847",
+      "bc3f5df3e5ab94b3",
+      "5ed3711c212f38e5",
+      "70cf3ca90aa4d434",
+      "5702924e4c7feba3",
+      "6ad01b64818a30bf",
+      "2b4c83f1bc52ec80",
+      "1ff46c671f10fedd"
+    ]
+  },
+  {
+    "query_id": "de77ca8714eb2f46",
+    "reranked_candidates": [
+      "fd627fe0eeb5b3f7",
+      "7c71007ce80a73c4",
+      "4d1766724ec560fb",
+      "1b26f9a59e7b82f7",
+      "789e788f93b6e267",
+      "c197910944650b4d",
+      "8e8e73816adaa048",
+      "9e72ea220a0bc518",
+      "602582330a0168f3",
+      "0e32450931c2e4cc",
+      "cb1221536109da8c",
+      "99b8cee5a1560fa1",
+      "73f46f26b243ca99",
+      "87427d26b121fd90",
+      "0bec74fb263d1e5b"
+    ]
+  },
+  {
+    "query_id": "e292be7c9e1f1e42",
+    "reranked_candidates": [
+      "53062c63be31edb3",
+      "5f7263285b1cc004",
+      "592950037ce78746",
+      "99b8d40a7afa0652",
+      "51304bbc6054e351",
+      "18c4266be15134a9",
+      "49df413839903b67",
+      "b0b0630390c27b65",
+      "4eed19d4111e4d4d",
+      "20866751f831e1e3",
+      "a19fe44ee5b79d49",
+      "00ecee07ff1e524e",
+      "5f34dd85f9e283cd",
+      "6cacb1cdc123422a",
+      "66dc27764be1de4f"
+    ]
+  },
+  {
+    "query_id": "e442f152a08b4cf5",
+    "reranked_candidates": [
+      "852b7dac8f2c84f3",
+      "e3b2512847cc1a74",
+      "3c63e29782d6eb80",
+      "7eeea78fb0539365",
+      "18c19d21729d5cc5",
+      "f7b1a7cf59eead3d",
+      "6f6cf760887a599c",
+      "af7e91e9e761374f",
+      "2862d9d91d4d1976",
+      "d52c804624f8a04f",
+      "48eeb649ce0e47f1",
+      "b5088b6209a526d0",
+      "98ae6dfdcc34cc84",
+      "2988066e674f9e14",
+      "66bb374b3926839e"
+    ]
+  },
+  {
+    "query_id": "ea51eaf7cfdf4ff2",
+    "reranked_candidates": [
+      "daa1f304849d6d71",
+      "9bb5cc7b57aa4599",
+      "1db4901b3908a16a",
+      "a527e0df920d569f",
+      "06812ced0d766993",
+      "7bb405f4a2e23b57",
+      "d89bedfdcaf38242",
+      "c696188bdb1a3d54",
+      "35a95a0e87f1348f",
+      "3880a6b44a665d17",
+      "4193b3764d97be92",
+      "72ecb64714f42bdc",
+      "833f9874cfd54c5f",
+      "4a8e6d4d7cd81178",
+      "8d3a3e505fa79d15"
+    ]
+  },
+  {
+    "query_id": "edde388409bbd429",
+    "reranked_candidates": [
+      "94e98ca7a894e584",
+      "2829980c39d647e3",
+      "20095659ad9d4d62",
+      "f8fe9074da338a16",
+      "646904baeb515dd5",
+      "e18f98345a66c3ac",
+      "1cf1aadb763df099",
+      "3633ed5cb994dc8c",
+      "925a9d5c642ccae6",
+      "0a82a7e6914ca4d7",
+      "c6e1b1ce8b0b4e82",
+      "03ae4afc7cc72385",
+      "d7a4c2207f0e1445",
+      "995defc158539a61",
+      "3de1624d2ebdbd55"
+    ]
+  },
+  {
+    "query_id": "f1995555e5ee9156",
+    "reranked_candidates": [
+      "bbc5943aede3ab64",
+      "dd28823fdebbb31f",
+      "5db42f3cd6f12800",
+      "0d19639525fab5fa",
+      "9e8de5309be54eeb",
+      "628a0c4f400926c3",
+      "40b9be814516616a",
+      "29e15df20f084592",
+      "00313639a96e07d2",
+      "fe80564e5bcd5285",
+      "887f180b32b813a7",
+      "885f59b09bf7aa40",
+      "0fd6653ce0cfd3f5",
+      "c73729466df12dc5",
+      "006f37c2170b961c"
+    ]
+  },
+  {
+    "query_id": "f1c4e7a542026ad6",
+    "reranked_candidates": [
+      "9bb5a4546be105c2",
+      "4a9c23441b485380",
+      "0be4669fb5e22be9",
+      "3c03d743edd962b3",
+      "7f3d6ffe3e99786d",
+      "0965e9cf2961c479",
+      "0afdda09e96d8078",
+      "eb92da45fa66faaf",
+      "5e2b3044a00061ff",
+      "42e13c3d999f807e",
+      "15aabbdba75392f8",
+      "245aaf2b17dd044a",
+      "b05bc821287447c0",
+      "ab2a39523b2016ae",
+      "30e1ac753006c662"
+    ]
+  },
+  {
+    "query_id": "f36ff8f2a35bde8d",
+    "reranked_candidates": [
+      "7d58eebc9830e7fa",
+      "9312850d896ff668",
+      "c3ad30d962579184",
+      "1f358eb3e003161f",
+      "2c28768f242a2c47",
+      "d3a7a3f5e941681f",
+      "6b988589ad40bd99",
+      "810922293828cfe5",
+      "0c612bfac58fab08",
+      "2c8ffa6d53bfe6d4",
+      "581c223faece7a1e",
+      "9acb4002ba5cc263",
+      "9657950058ced6d9",
+      "ba8ce6950127c42f",
+      "315fcebd8b2191c5"
+    ]
+  },
+  {
+    "query_id": "f49e201451d318c2",
+    "reranked_candidates": [
+      "c3cb1fc651d0049f",
+      "dc83c6f879ebcc90",
+      "679d18dd76cf48ba",
+      "0c1697938c5f3b41",
+      "69e33e2726fdaa59",
+      "335b717089d9f702",
+      "8ac335012488bc43",
+      "c9cd2fee7fcee2b7",
+      "c3506d086bb80f2a",
+      "5282ad4d6a7f2c22",
+      "0c618090690564b4",
+      "2e6bc66c112aa69a",
+      "683f15ed28d2ff46",
+      "4f8410b9421ca30c",
+      "0da58e56dc71fa1e"
+    ]
+  },
+  {
+    "query_id": "f7593a2f5714d660",
+    "reranked_candidates": [
+      "700343eaa2b78b5b",
+      "1f5a32e4a021b5fa",
+      "99b8cee5a1560fa1",
+      "9e72ea220a0bc518",
+      "cb1221536109da8c",
+      "789e788f93b6e267",
+      "e53fd3652b2efb35",
+      "99a5e241e0812332",
+      "4d1766724ec560fb",
+      "1b26f9a59e7b82f7",
+      "6cbc0de01e4c6a7d",
+      "7ef899789c77b34e",
+      "3341a689659aeb91",
+      "0e32450931c2e4cc",
+      "63965c1a12dcbc12"
+    ]
+  },
+  {
+    "query_id": "f7f6036d0294455a",
+    "reranked_candidates": [
+      "c8f68b5a38d2116f",
+      "a794314316f0cf98",
+      "ce1a002288ddb556",
+      "873fd42c782c0224",
+      "5489a65d1f8376c4",
+      "9e61d100a4bc415a",
+      "9767afb313c1c9c5",
+      "f71a2acba9bd9b1a",
+      "16caacbbea207a7a",
+      "3c9804210f86546c",
+      "c570a2796218dd50",
+      "f38780f267f48e6b",
+      "d0063a33a49883ac",
+      "68297fd0a32997ee",
+      "481e74c403b58b4b"
+    ]
+  },
+  {
+    "query_id": "f8eb5fa3b34e4adc",
+    "reranked_candidates": [
+      "a77dd010d3601bf3",
+      "71dadc9e4fb1e596",
+      "ee58a60dd581851c",
+      "1f18f0fe1b500ae5",
+      "1d68e14ba8834e9d",
+      "f36d68bfa0a85a40",
+      "4c665d11cfa0bdfb",
+      "f6f6647c8dc828c1",
+      "2669de120b9784fb",
+      "1008b0793eb1e314",
+      "a14a64a4604e6d68",
+      "8fd6d602b902219f",
+      "9f7f04737c4a8fdb",
+      "584fec68bfc88795",
+      "fd627fe0eeb5b3f7"
+    ]
+  },
+  {
+    "query_id": "f925e7b50c4ad2ae",
+    "reranked_candidates": [
+      "63965c1a12dcbc12",
+      "99b8cee5a1560fa1",
+      "cb1221536109da8c",
+      "9e72ea220a0bc518",
+      "1b26f9a59e7b82f7",
+      "4d1766724ec560fb",
+      "f8a3359f1d3c250a",
+      "87427d26b121fd90",
+      "7c71007ce80a73c4",
+      "700343eaa2b78b5b",
+      "789e788f93b6e267",
+      "1f5a32e4a021b5fa",
+      "e53fd3652b2efb35",
+      "6cbc0de01e4c6a7d",
+      "3341a689659aeb91"
+    ]
+  },
+  {
+    "query_id": "fdacb0510cb5b090",
+    "reranked_candidates": [
+      "bae815c2ecb2a9a0",
+      "e6f7d8977eabc7e3",
+      "0e492c46322b3e3e",
+      "789f396e94c93da5",
+      "121a02882067cf19",
+      "82d44c56848e9335",
+      "030e70a62fbcbe17",
+      "c84466f87ed142d7",
+      "5c59cf499ea2aebe",
+      "5615b735c0775d93",
+      "1ba81c134023e0f0",
+      "05b637719f5918fc",
+      "d3aff8978f9bf8bf",
+      "7a62eec8daa00c22",
+      "edf648b376cb0cbc"
+    ]
+  }
+]
