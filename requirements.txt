@@ -20,3 +20,4 @@ flash_attn
 sentencepiece==0.2.0
 aiohttp
 bs4
+lxml

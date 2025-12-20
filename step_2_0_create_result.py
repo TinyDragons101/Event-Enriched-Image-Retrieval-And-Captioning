@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 # Configuration
-OUTPUT_PATH = "result-hoang.json"
+OUTPUT_PATH = "result-tanphuc.json"
 DATABASE_NEW_JSON = "./database_new.json"
 CRAWLED_FOLDER = Path("crawled")
 CONTEXT_EXTRACTION_IMAGE_ARTICLE = "./final_json_result/context_extraction_image_article.json"

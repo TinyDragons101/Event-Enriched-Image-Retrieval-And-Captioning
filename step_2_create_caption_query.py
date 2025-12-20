@@ -5,7 +5,7 @@ from tqdm import tqdm
 import csv
 
 def preprocess_caption_query(args):
-    model = CustonInternVLCaptionModel(model_name=args.model, device="cuda:5")
+    model = CustonInternVLCaptionModel(model_name=args.model, device=args.device)
     if os.path.exists(args.output_file):
         with open(args.output_file, 'r') as f:
             caption_json = json.load(f)
@@ -46,7 +46,7 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description="Preprocess captions for InternVL model")
     parser.add_argument('--model', type=str, default='OpenGVLab/InternVL2_5-8B', help='Model to use for caption generation')
-    parser.add_argument('--output_file', type=str, default='./private_test_final_elements_json/final_rerank_private_test_detail_top1_caption.json', help='Output file to save the captions')
+    parser.add_argument('--output_file', type=str, default='./public_test_final_elements_json/final_rerank_public_test_detail_top1_caption.json', help='Output file to save the captions')
     parser.add_argument('--start_index', type=int, default=0, help='Start index to resume processing from')
     parser.add_argument('--device', type=str, default='cuda:0', help='Device to run the model on')
     parser.add_argument('--batch', type=bool, default=False, help='Batch size for processing images')

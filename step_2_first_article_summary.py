@@ -9,11 +9,11 @@ from llama3 import Llama  # Make sure Llama class is correctly implemented
 def main(args):
     retrieval_results_folder = args.result_folder
     database_file = args.database_file
-    output_file = "./private_test_final_elements_json/reranking_query_first_article_question_answer.json"
+    output_file = "./public_test_final_elements_json/reranking_query_first_article_question_answer.json"
 
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
-    llms_bot = Llama(device= 'cuda:3')
+    llms_bot = Llama(device= 'cuda:7')
 
     # Read CSV
     with open(retrieval_results_folder, newline='') as csvfile:
@@ -54,7 +54,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--result_folder', type=str, default="./final_csv_result/private_final_retrieval_merging_final_results.csv", help="CSV file with retrieval results.")
+    parser.add_argument('--result_folder', type=str, default="./final_csv_result/public_final_retrieval_merging_final_results.csv", help="CSV file with retrieval results.")
     parser.add_argument('--database_file', type=str, default="./data/database.json", help="JSON file containing article contents.")
     args = parser.parse_args()
     main(args)

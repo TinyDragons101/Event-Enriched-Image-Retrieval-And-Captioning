@@ -14,7 +14,7 @@ CUDA_VISIBLE_DEVICES=1
 def main():
     parser = argparse.ArgumentParser(description="Image retrieval based on embeddings")
     parser.add_argument('--device', type=str, 
-                        default='cuda:4', 
+                        default='cuda:6', 
                         help="Torch device (e.g., 'cuda:0', 'cpu').")
     parser.add_argument('--model_type', type=str, default= "internvl", choices=['clip', 'internvl'],
                         help="Model type: 'clip' or 'internvl'")
@@ -22,10 +22,13 @@ def main():
                         help="Number of top similar items to retrieve per query")
     parser.add_argument('--coeff_path', type=str, default='./logit_scale.pt',
                         help="Path to coefficient tensor for internvl (required if model_type is internvl)")
+    
     parser.add_argument('--database_folder', type=str, default='./embeddings/database_image_internVL_g/',
                         help="Path to folder containing database image embeddings (.pt files)")
-    parser.add_argument('--query_folder', type=str, default='./embeddings/track_1_private_internvlg/',
+    
+    parser.add_argument('--query_folder', type=str, default='./embeddings/track_1_public_internvlg/',
                         help="Path to folder containing query image embeddings (.pt files)")
+    
     parser.add_argument('--top_k', type=int, default=10,
                         help="Number of top similar items to retrieve per query")
     parser.add_argument('--db_chunk_size', type=int, default=100000,
@@ -113,7 +116,7 @@ def main():
             scores[db_image_id] = round(score, 6)  
         similarity_dict[query_name] = scores
 
-    similarity_output_path = './final_json_result/private_test_similarity_scores.json'
+    similarity_output_path = './final_json_result/public_test_similarity_scores.json'
     os.makedirs(os.path.dirname(similarity_output_path), exist_ok=True)
     with open(similarity_output_path, 'w', encoding='utf-8') as f:
         json.dump(similarity_dict, f, indent=2)
@@ -188,7 +191,7 @@ def main():
 
     
     # --- Step 6: Write to CSV ---
-    output_file = './final_csv_result/temp_private_test_image_first_step_retrieval_results_with_caption.csv'
+    output_file = './final_csv_result/temp_public_test_image_first_step_retrieval_results_with_caption.csv'
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
     with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:

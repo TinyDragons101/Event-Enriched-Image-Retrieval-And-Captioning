@@ -33,7 +33,7 @@ def create_caption_json(rerank_inputs, output_path, device='cuda:7'):
     caption_model_query = CustonInternVLCaptionModel(model_name='OpenGVLab/InternVL2_5-4B', device=device)
     caption_model_db = CustonInternVLCaptionModel(model_name='OpenGVLab/InternVL2_5-8B', device=device)
 
-    query_image_path = 'data/track1_private/query/'
+    query_image_path = 'data/track1_public/query/'
     database_path = 'data/database_images/database_images_compressed90/'
 
     results = []
@@ -71,16 +71,15 @@ def create_caption_json(rerank_inputs, output_path, device='cuda:7'):
         print(f"✅ Captions saved to: {output_path} (total: {len(results)})")
 
 
-def rerank_embeddings(rerank_input_path, output_path):
+def rerank_embeddings(rerank_input_path, output_path, device='cuda:7'):
     with open(rerank_input_path, 'r', encoding='utf-8') as f:
         rerank_inputs = json.load(f)
 
     # Image similarity scores JSON
-    image_similarity_path = "final_json_result/private_test_similarity_scores.json"
+    image_similarity_path = "final_json_result/public_test_similarity_scores.json"
     with open(image_similarity_path, 'r', encoding='utf-8') as f:
         image_similarity_dict = json.load(f)
 
-    device = 'cuda:7' if torch.cuda.is_available() else 'cpu'
     model = CustonInternVLRetrievalModel(device=device)
 
     rerank_results = []
@@ -201,7 +200,7 @@ def create_context_json(csv_output_path):
             new_rows.append(new_row)
 
     context_json_path = "final_json_result/context_extraction_image_article.json"
-    new_csv_output_path = "./final_csv_result/private_final_retrieval_merging_final_results.csv"
+    new_csv_output_path = "./final_csv_result/public_final_retrieval_merging_final_results.csv"
     os.makedirs(os.path.dirname(new_csv_output_path), exist_ok=True)
 
     with open(context_json_path, 'w', encoding='utf-8') as out_json:
@@ -220,32 +219,41 @@ def create_context_json(csv_output_path):
 def main():
     parser = argparse.ArgumentParser(description="Filter rerank queries from CSV using wrong-sample list")
     parser.add_argument('--device', type=str, 
-                        default='cuda:4', 
+                        default='cuda:6', 
                         help="Torch device (e.g., 'cuda:0', 'cpu').")
+    
     parser.add_argument('--wrong_sample_json_path', type=str,
                         default='./final_json_result/temp_three_ways_wrong_samples_set.json',
                         help="Path to JSON file containing wrong sample query_ids")
+    
     parser.add_argument('--csv_path', type=str,
-                        default='./final_csv_result/temp_private_test_image_first_step_retrieval_results_with_caption.csv',
+                        default='./final_csv_result/temp_public_test_image_first_step_retrieval_results_with_caption.csv',
                         help="Path to CSV file with retrieval results")
+    
     parser.add_argument('--pre_top_k', type=int, default=15,
                         help="Number of top-k candidates per query in the CSV")
+    
     parser.add_argument('--rerank_input_path', type=str, default='rerank_inputs.json',
                         help="Path to save the filtered rerank inputs as JSON")
+    
     parser.add_argument('--rerank_caption_output_path', type=str, default='./rerank_caption.json',
                         help="Path to save the filtered rerank inputs as JSON")
-    parser.add_argument('--rerank_output_path', type=str, default='./rerank_results.json', help="Path to save the reranked results as JSON")
+    
+    parser.add_argument('--rerank_output_path', type=str, default='./rerank_results.json', 
+                        help="Path to save the reranked results as JSON")
+    
     parser.add_argument('--rerank_final_path', type=str, default='./final_csv_result/temp_final_rerank.csv',
                         help="Path to save the reranked results as CSV")
-    parser.add_argument('--output_dir', type=str, default='./private_test_final_elements_json',
+    
+    parser.add_argument('--output_dir', type=str, default='./public_test_final_elements_json',
                         help="Directory to save the final caption JSON")
 
 
     args = parser.parse_args()
-    wrong_query_ids = load_wrong_queries(args.wrong_sample_json_path)
-    rerank_inputs = extract_rerank_inputs(args.csv_path, wrong_query_ids, args.pre_top_k)
-    create_caption_json(rerank_inputs, args.rerank_caption_output_path, device=args.device)
-    rerank_embeddings(args.rerank_caption_output_path, args.rerank_output_path)
+    # wrong_query_ids = load_wrong_queries(args.wrong_sample_json_path)
+    # rerank_inputs = extract_rerank_inputs(args.csv_path, wrong_query_ids, args.pre_top_k)
+    # create_caption_json(rerank_inputs, args.rerank_caption_output_path, device=args.device)
+    rerank_embeddings(args.rerank_caption_output_path, args.rerank_output_path, device=args.device)
     update_csv_with_rerank_results(args.csv_path, args.rerank_output_path, args.rerank_final_path)
     create_context_json(args.rerank_final_path)
 

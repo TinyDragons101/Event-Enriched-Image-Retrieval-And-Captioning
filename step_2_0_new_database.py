@@ -68,8 +68,12 @@ def process_key(key):
         }
     matching_file = MATCHING_FOLDER / f"{key}.json"
     if matching_file.exists():
-        with open(matching_file, "r", encoding="utf-8") as f:
-            matching_data = json.load(f)
+        try:
+            with open(matching_file, "r", encoding="utf-8") as f:
+                matching_data = json.load(f)
+        except json.JSONDecodeError:
+            print(f"Warning: Invalid JSON in {matching_file}, skipping matching data for {key}")
+            matching_data = {}
     else:
         matching_data = {}
 
@@ -102,9 +106,28 @@ def process_key(key):
 
         my_image_id = matching_data[origin_id]["filename"]
         my_image_score = matching_data[origin_id]["score"]
-        # get id in my_db
-        # get corresponding object in my_db
-        my_image_info = my_images[my_image_id]
+        
+        # Handle both with and without extension
+        # Try exact match first
+        if my_image_id in my_images:
+            my_image_info = my_images[my_image_id]
+        # Try adding common extensions
+        elif f"{my_image_id}.jpg" in my_images:
+            my_image_info = my_images[f"{my_image_id}.jpg"]
+        elif f"{my_image_id}.png" in my_images:
+            my_image_info = my_images[f"{my_image_id}.png"]
+        # Try removing extension
+        elif my_image_id.rsplit(".", 1)[0] in my_images:
+            my_image_info = my_images[my_image_id.rsplit(".", 1)[0]]
+        else:
+            # Image not found in crawled JSON
+            origin_mapping_my.append({
+                "id": origin_id,
+                "url": "",
+                "position": None,
+                "score": my_image_score,
+            })
+            continue
         # my_image_info["position"] is the #part in my_content_parts
         pos = my_image_info["position"]
         # Find prev_idx: the index of the text is in front of the marker

@@ -3,7 +3,7 @@ from pathlib import Path
 from jinja2 import Template
 import json
 from tqdm import tqdm
-from llmassemblers import LLMAssembler
+from llamassemblers import LLMAssembler
 import time
 from step_2_merge_all_elements import merge_function, create_submission
 import os
@@ -11,16 +11,16 @@ import os
 PROMPT_TEMPLATE_DIR = Path('./assemble_caption_prompt_template')
 RESULT_DIR = Path('./assemble_result')
 FEWSHOT_EXAMPLE_PATH = Path('./assemble_caption_prompt_template/test.json')
-CAPTION_INPUT_PATH = Path('./private_test_final_elements_json/final_merge_result.json')
+CAPTION_INPUT_PATH = Path('./public_test_final_elements_json/final_merge_result.json')
 TEST_FEWSHOT_EXAMPLE_PATH = PROMPT_TEMPLATE_DIR / 'test.json'
 TEST_CAPTION_INPUT_PATH = PROMPT_TEMPLATE_DIR / 'test.json'
 
 merge_function(
-    generative_caption_path= './private_test_final_elements_json/final_rerank_private_test_detail_top1_caption.json',
-    query_first_article_path = './private_test_final_elements_json/reranking_query_first_article_fact_summary.json',
+    generative_caption_path= './public_test_final_elements_json/final_rerank_public_test_detail_top1_caption.json',
+    query_first_article_path = './public_test_final_elements_json/reranking_query_first_article_question_answer.json',
     entity_name_path="./assemble_result/name_entity_llama.json",
     question_answer_path="./assemble_result/questions_answers_llama.json",
-    new_database_path="./result-hoang.json",
+    new_database_path="./result-tanphuc.json",
     output_path=CAPTION_INPUT_PATH
 )
 
@@ -139,7 +139,7 @@ if __name__ == "__main__":
                         help="Test and print loaded template strategies")
     parser.add_argument('--qa', action='store_true',
                         help="Test and print loaded template strategies")
-    parser.add_argument('--generate_caption_path', type=Path, default=RESULT_DIR / 'final_rerank_private_test_detail_top1_caption.json',
+    parser.add_argument('--generate_caption_path', type=Path, default=RESULT_DIR / 'final_rerank_public_test_detail_top1_caption.json',
                         help="Path to the generated caption JSON file")
     parser.add_argument('--question_answer_path', type=Path, default=RESULT_DIR / 'question_answer.json',
                         help="Path to the question answer JSON file")

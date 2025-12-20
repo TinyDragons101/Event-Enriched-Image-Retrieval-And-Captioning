@@ -22,9 +22,9 @@ RETRIES = 3  # retry attempts
 BACKOFF = [1, 3, 5]  # seconds backoff for retries
 
 USER_AGENTS = [
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
-  "Mozilla/5.0 (X11; Linux x86_64)"
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+    "Mozilla/5.0 (X11; Linux x86_64)",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
 ]
 
 ##################################################
@@ -198,19 +198,16 @@ async def parse_and_download(html, key, url, session):
     except Exception as e:
         return None
 
-
 async def worker(session, queue, pbar):
     while True:
         key, url = await queue.get()
-        if key is None:
-            queue.task_done()
-            break
-
-        out = CRAWLED_FOLDER / f"{key}.json"
         try:
+            if key is None:
+                break
+
+            out = CRAWLED_FOLDER / f"{key}.json"
+
             if out.exists():
-                pbar.update(1)
-                queue.task_done()
                 continue
 
             html = await fetch(session, url, key)
@@ -224,10 +221,10 @@ async def worker(session, queue, pbar):
 
         except Exception as e:
             pass
+
         finally:
             queue.task_done()
             pbar.update(1)
-
 
 async def main(chunk_size, chunk_index):
     prepare_dirs()

@@ -1,1 +1,12 @@
 .env
+__pycache__
+
+data/database_images
+data/track1_private
+data/track1_public
+
+embeddings
+
+imgs
+
+matching-01-no-threshold
