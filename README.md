@@ -1,24 +1,3 @@
-pip3 install --cache-dir=/raid/ltnghia01/phucpv/Eventa/tmp -r requirements.txt
-
-pip3 install --cache-dir=/raid/ltnghia01/phucpv/Eventa/tmp https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.0.post2/flash_attn-2.8.0.post2+cu12torch2.7cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
-
-pip3 install --upgrade pip wheel setuptools
-
-### coi gpu:
-nvidia-smi
-
-### coi ổ đĩa:
-du -sh *
-dh -h
-
-## Trước khi chạy
-cd phucpv/Eventa
-conda deactivate
-source ./.venv/bin/activate
-
-## Vô nvidia-smi coi xem gpu nào trống: ví dụ cpu 5 thì vô set device cuda:5 (không được lấy con 1)
-## Vừa chạy vừa bật coi xem có bị tràn vram không
-
 # Instructions
 ### 🔹 Phase 1: Retrieval & Reranking
 
@@ -125,17 +104,3 @@ You can use the provided [`post_processing.py`](post_processing.py) script to au
 - Nam-Quan Nguyen (nnquan23@apcs.fitus.edu.vn)
 - Minh-Hoang Le (lmhoang22@apcs.fitus.edu.vn)
 - Vinh-Toan Vong (vvtoan22@apcs.fitus.edu.vn)
-
-
-  "f8097c7d27a8aac6": 
-
-"ce24fe0263ef141f",
-      "3eef9607326b2cba",
-      "739f701a93b7ca13",
-      "be1ea34f22dbd811",
-      "228d72213d7a1651",
-      "38f7b2209694b55e",
-      "0f30a45329e423b2",
-      "81d0b968ee9988cd"
-
-find database_images -name 3eef9607326b2cba*

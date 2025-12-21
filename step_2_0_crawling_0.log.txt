@@ -1,4 +1,0 @@
-nohup: ignoring input
-Processing chunk 1/11 covering records 0 to 19999
-Crawling:   0%|          | 0/20000 [00:00<?, ?it/s]Crawling:  56%|█████▌    | 11119/20000 [00:00<00:00, 111189.31it/s]Crawling: 100%|██████████| 20000/20000 [00:12<00:00, 1644.52it/s]  
-Done in 29.68s
