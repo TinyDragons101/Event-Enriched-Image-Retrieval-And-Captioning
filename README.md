@@ -88,8 +88,53 @@ python step_2_caption_process.py --name_entity --strategy name_entity
 python step_2_caption_process.py --strategy cot_5_things_fact_more_event
 ```
 
+### Run caption process with Qwen3-14B
+```
+# Xóa các file output trước đó
+rm -f assemble_result/cot_5_things_fact_more_event_llama.json
+rm -f assemble_result/normalized_captions.json
+rm -f assemble_result/entity_heuristic_scores.json
+rm -f final_csv_result/submission_final.csv
+
+# Chạy lại
+python step_2_caption_process.py \
+    --strategy cot_5_things_fact_more_event \
+    --model_type qwen3 \
+    --normalize_output \
+
+# Với entity score
+python step_2_caption_process.py \
+    --strategy cot_5_things_fact_more_event \
+    --model_type qwen3 \
+    --normalize_output \
+    --use_entity_scoring
+
+```
 ---
 
+* add heuristic entity score for caption normalizer
+Edit:
+```
+step_2_caption_normalizer.py
+step_2_caption_process.py - Thêm arguments + pass params
+```
+Created:
+```
+step_2_entity_scorer.py
+configs/entity_scoring_config.json
+```
+Commands:
+```
+# defaut - no heuristic
+python step_2_caption_process.py --strategy cot_5_things_fact_more_event --model_type llama --normalize_output
+
+#entity scoring
+python step_2_caption_process.py --strategy cot_5_things_fact_more_event --model_type llama --normalize_output --use_entity_scoring
+
+#custom config
+python step_2_caption_process.py --strategy cot_5_things_fact_more_event --model_type llama --normalize_output --use_entity_scoring --entity_config_path configs/entity_scoring_config.json
+```
+---
 ## Note:
 
 After generating captions using `cot_5_things_fact_more_event`, ensure your submission captions are clean:

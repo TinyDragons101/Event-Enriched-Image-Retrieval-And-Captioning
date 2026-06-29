@@ -13,7 +13,7 @@ def main(args):
 
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
-    llms_bot = Llama(device= 'cuda:7')
+    llms_bot = Llama(device= 'cuda:5')
 
     # Read CSV
     with open(retrieval_results_folder, newline='') as csvfile:

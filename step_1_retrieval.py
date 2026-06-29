@@ -164,7 +164,7 @@ def main():
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(unique_wrong_samples, f, indent=2)
 
-    print(f"✅ Final unique wrong samples saved to: {output_path} (total: {len(unique_wrong_samples)})")
+    print(f" Final unique wrong samples saved to: {output_path} (total: {len(unique_wrong_samples)})")
 
     
     # --- Step 4: Map indices back to names, and embeddings ---
@@ -205,7 +205,7 @@ def main():
             row = [query_name] + top_k_image_ids + [caption]
             writer.writerow(row)
 
-    print(f"📄 CSV results (with image_ids only) saved to: {output_file}")
+    print(f"CSV results (with image_ids only) saved to: {output_file}")
 
 
 if __name__ == '__main__':

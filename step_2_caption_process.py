@@ -6,6 +6,7 @@ from tqdm import tqdm
 from llamassemblers import LLMAssembler
 import time
 from step_2_merge_all_elements import merge_function, create_submission
+from step_2_caption_normalizer import CaptionNormalizer
 import os
 
 PROMPT_TEMPLATE_DIR = Path('./assemble_caption_prompt_template')
@@ -14,17 +15,20 @@ FEWSHOT_EXAMPLE_PATH = Path('./assemble_caption_prompt_template/test.json')
 CAPTION_INPUT_PATH = Path('./public_test_final_elements_json/final_merge_result.json')
 TEST_FEWSHOT_EXAMPLE_PATH = PROMPT_TEMPLATE_DIR / 'test.json'
 TEST_CAPTION_INPUT_PATH = PROMPT_TEMPLATE_DIR / 'test.json'
+COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH = RESULT_DIR / 'cot_5_things_fact_more_event_llama.json'
+NORMALIZED_OUTPUT_PATH = RESULT_DIR / 'normalized_captions.json'
 
 merge_function(
-    generative_caption_path= './public_test_final_elements_json/final_rerank_public_test_detail_top1_caption.json',
-    query_first_article_path = './public_test_final_elements_json/reranking_query_first_article_question_answer.json',
+    generative_caption_path='./public_test_final_elements_json/final_rerank_public_test_detail_top1_caption.json',
+    query_first_article_path='./public_test_final_elements_json/reranking_query_first_article_question_answer.json',
     entity_name_path="./assemble_result/name_entity_llama.json",
     question_answer_path="./assemble_result/questions_answers_llama.json",
     new_database_path="./result-tanphuc.json",
     output_path=CAPTION_INPUT_PATH
 )
 
-assembler = LLMAssembler(device = 'cuda:5', model_type = 'llama3')
+# Global assembler (will be initialized in main with model_type from args)
+assembler = None
 template_strats: dict[str, Template] = {}
 
 RESULT_DIR.mkdir(exist_ok=True)
@@ -42,17 +46,20 @@ for path in PROMPT_TEMPLATE_DIR.rglob("*.j2"):
         template_strats[str(path.stem)] = template
 
 
-
 def assemble(input: dict, strat: str) -> str:
     template = template_strats[strat]
     prompt = template.render(**input)
     enhanced_caption = assembler.assemble(prompt)
     return enhanced_caption
+
+
 def model_qa(input: dict, strat: str) -> str:
     template = template_strats[strat]
     prompt = template.render(**input)
     enhanced_caption = assembler.question_answer(prompt)
     return enhanced_caption
+
+
 def model_name_entity(input: dict, strat: str) -> str:
     template = template_strats[strat]
     prompt = template.render(**input)
@@ -60,10 +67,7 @@ def model_name_entity(input: dict, strat: str) -> str:
     return enhanced_caption
 
 
-
 def compose_input(batch: dict, examples: list[dict]) -> dict:
-    # TODO: Fill in the Nones
-    
     example_contexts = [None] * len(examples)
     return {
         "article": batch.get("article", ""),
@@ -90,12 +94,88 @@ def compose_input(batch: dict, examples: list[dict]) -> dict:
         ],
     }
 
+
+def normalize_captions(
+    llm_output_path: Path,
+    merge_data_path: Path,
+    output_path: Path,
+    max_words: int = 105,
+    expected_length: int = 104,
+    use_entity_scoring: bool = False,
+    entity_config_path: str = None
+):
+    """
+    Bước normalize caption sau khi assemble
+    Tương tự như sematicNorm + entityEnricker
+    """
+    print("STARTING CAPTION NORMALIZATION")
+
+    # Print entity scoring mode
+    if use_entity_scoring:
+        print("🔥 Entity Heuristic Scoring: ENABLED")
+    else:
+        print("ℹ️  Entity Heuristic Scoring: DISABLED (using default extraction)")
+
+    normalizer = CaptionNormalizer(
+        max_words=max_words,
+        expected_length=expected_length,
+        use_entity_scoring=use_entity_scoring,
+        entity_config_path=entity_config_path
+    )
+
+    results = normalizer.normalize_batch(
+        llm_output_path=str(llm_output_path),
+        merge_data_path=str(merge_data_path),
+        output_path=str(output_path),
+        verbose=True
+    )
+
+    print(f"\nNormalized captions saved to: {output_path}")
+
+    return results
+
+
 def main(args):
-    if os.path.exists('./assemble_result/cot_5_things_fact_more_event_llama.json'):
-        create_submission()
+    global assembler
+
+    # Initialize assembler with model_type from args
+    print(f"🚀 Initializing LLMAssembler with model_type={args.model_type}")
+    assembler = LLMAssembler(device='cuda:5', model_type=args.model_type)
+
+    # Nếu đã tồn tại file normalized captions thì chỉ cần tạo submission
+    if args.normalize_output and os.path.exists(NORMALIZED_OUTPUT_PATH):
+        print(f"Normalized file already exists: {NORMALIZED_OUTPUT_PATH}")
+        print("Creating submission with normalization...")
+        create_submission(final_caption_json_path=NORMALIZED_OUTPUT_PATH)
         return
 
     CAPTION_INPUT_PATH = args.caption_input_path
+
+    # Nếu đã tồn tại file cot_5_things_fact_more_event_output.json thì chỉ cần normalize captions rồi tạo submission
+    if os.path.exists(COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH):
+        print(f"Found existing LLM output: {COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH}")
+        print("Skipping LLM generation, proceeding to normalization...")
+
+        if args.normalize_output:
+            normalize_captions(
+                llm_output_path=COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH,
+                merge_data_path=CAPTION_INPUT_PATH,
+                output_path=NORMALIZED_OUTPUT_PATH,
+                max_words=args.max_words,
+                expected_length=args.expected_length,
+                use_entity_scoring=args.use_entity_scoring,
+                entity_config_path=args.entity_config_path
+            )
+
+            print("Creating submission with normalization...")
+            create_submission(final_caption_json_path=NORMALIZED_OUTPUT_PATH)
+
+        else:
+            print("Creating submission without normalization...")
+            create_submission(final_caption_json_path=COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH)
+
+        return
+
     strat = args.strategy
     template_test = args.template_test
     qa = args.qa
@@ -111,32 +191,48 @@ def main(args):
         with open(PROMPT_TEMPLATE_DIR / f"{strat}.md", 'w') as f:
             f.write(prompt)
         return
-    
+
     result = {}
-    
+
     for batch in tqdm(inputs, desc="Processing batches"):
-        input = compose_input(batch, examples)
+        input_data = compose_input(batch, examples)
         if qa:
-            enhanced_caption = model_qa(input, strat)
+            enhanced_caption = model_qa(input_data, strat)
         elif name_entity:
-            enhanced_caption = model_name_entity(input, strat)
+            enhanced_caption = model_name_entity(input_data, strat)
         else:
-            enhanced_caption = assemble(input, strat)
-        
+            enhanced_caption = assemble(input_data, strat)
+
         result[batch['query_id']] = enhanced_caption
 
         with open(RESULT_DIR / f"{strat}_{model_name}.json", "w", encoding="utf-8") as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
 
     if not args.qa and not args.name_entity:
-        create_submission()
+        if args.normalize_output:
+            print("Normalizing captions...")
+            normalize_captions(
+                llm_output_path=RESULT_DIR / f"{strat}_{model_name}.json",
+                merge_data_path=CAPTION_INPUT_PATH,
+                output_path=NORMALIZED_OUTPUT_PATH,
+                max_words=args.max_words,
+                expected_length=args.expected_length,
+                use_entity_scoring=args.use_entity_scoring,
+                entity_config_path=args.entity_config_path
+            )
+            print("Creating submission with normalization...")
+            create_submission(final_caption_json_path=NORMALIZED_OUTPUT_PATH)
+
+        else:
+            print("Creating submission without normalization...")
+            create_submission(final_caption_json_path=RESULT_DIR / f"{strat}_{model_name}.json")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--strategy', type=str, choices=template_strats.keys(), required=True,
-                        help="Reranking strategy to use")
+                        help="Strategy to use for caption assembly")
     parser.add_argument('--template_test', action='store_true',
-                        help="Test and print loaded template strategies")
+                        help="Test and print loaded template")
     parser.add_argument('--qa', action='store_true',
                         help="Test and print loaded template strategies")
     parser.add_argument('--generate_caption_path', type=Path, default=RESULT_DIR / 'final_rerank_public_test_detail_top1_caption.json',
@@ -144,12 +240,23 @@ if __name__ == "__main__":
     parser.add_argument('--question_answer_path', type=Path, default=RESULT_DIR / 'question_answer.json',
                         help="Path to the question answer JSON file")
     parser.add_argument('--new_database_path', type=Path, default=RESULT_DIR / 'new_database.json',
-                        help="Path to the new database JSON file")  
+                        help="Path to the new database JSON file")
     parser.add_argument('--caption_input_path', type=Path, default=CAPTION_INPUT_PATH,
                         help="Path to the caption input JSON file")
     parser.add_argument('--name_entity', action='store_true',
                         help="Test and print loaded template strategies")
-    parser.add_argument('--model_type',type=str, default='llama',
-                        help="Test and print loaded template strategies")
+    parser.add_argument('--model_type',type=str, default='llama3',
+                        help="Model type: llama3 (Llama-3-8B), qwen3 (Qwen2.5-14B), or full names llama3-8b/qwen3-14b")
+    parser.add_argument('--normalize_output',action='store_true', default=True,
+                        help="Whether to normalize captions after generation")
+    parser.add_argument('--max_words', type=int, default=105,
+                        help="Maximum words for normalization")
+    parser.add_argument('--expected_length', type=int, default=104,
+                        help="Expected caption length after normalization")
+    parser.add_argument('--use_entity_scoring', action='store_true', default=False,
+                        help="Enable entity heuristic scoring to filter entities before enrichment")
+    parser.add_argument('--entity_config_path', type=str, default=None,
+                        help="Path to entity scoring config JSON (optional, uses default if not specified)")
+
     args = parser.parse_args()
     main(args)

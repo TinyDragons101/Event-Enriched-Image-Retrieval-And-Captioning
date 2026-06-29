@@ -33,7 +33,7 @@ def create_caption_json(rerank_inputs, output_path, device='cuda:7'):
     caption_model_query = CustonInternVLCaptionModel(model_name='OpenGVLab/InternVL2_5-4B', device=device)
     caption_model_db = CustonInternVLCaptionModel(model_name='OpenGVLab/InternVL2_5-8B', device=device)
 
-    query_image_path = 'data/track1_public/query/'
+    query_image_path = 'data/train_images_compressed90_1000/'
     database_path = 'data/database_images/database_images_compressed90/'
 
     results = []

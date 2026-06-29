@@ -267,7 +267,7 @@ python step_2_caption_process.py --name_entity --strategy name_entity
 **Using Chain-of-Thought Reasoning:**
 
 ```bash
-python step_2_caption_process.py --strategy cot_5_things_fact_more_event
+python step_2_caption_process.py --strategy cot_5_things_fact_more_event --normalize_output
 ```
 
 ---

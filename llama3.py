@@ -7,18 +7,59 @@ import os
 
 load_dotenv()
 HUGGINGFACE_TOKEN = os.environ.get("HUGGING_FACE_TOKEN")
+
+# Model configurations
+MODEL_CONFIGS = {
+    "llama3-8b": {
+        "model_id": "meta-llama/Meta-Llama-3-8B-Instruct",
+        "trust_remote_code": False,
+        "special_tokens": ["<|eot_id|>"]
+    },
+    "qwen3-14b": {
+        "model_id": "Qwen/Qwen2.5-14B-Instruct",
+        "trust_remote_code": True,
+        "special_tokens": []  # Qwen only uses eos_token_id
+    }
+}
+
 class Llama:
-    def __init__(self, model_id = "meta-llama/Meta-Llama-3-8B-Instruct" , hf_token = HUGGINGFACE_TOKEN, device = 'cuda:5'):
-        self.model_id = model_id
+    def __init__(self, model_id = "meta-llama/Meta-Llama-3-8B-Instruct", hf_token = HUGGINGFACE_TOKEN, device = 'cuda:5', model_type = "llama3-8b"):
+        """
+        Args:
+            model_id: Hugging Face model ID (will be overridden if model_type is specified)
+            hf_token: Hugging Face token
+            device: CUDA device
+            model_type: One of ["llama3-8b", "qwen3-14b"] - uses predefined configs
+        """
+        self.model_type = model_type
         self.hf_token = hf_token
 
+        # Use predefined config if model_type is recognized
+        if model_type in MODEL_CONFIGS:
+            config = MODEL_CONFIGS[model_type]
+            self.model_id = config["model_id"]
+            self.trust_remote_code = config["trust_remote_code"]
+            self.special_tokens = config["special_tokens"]
+            print(f"🔥 Using {model_type}: {self.model_id}")
+        else:
+            # Fallback to manual model_id
+            self.model_id = model_id
+            self.trust_remote_code = False
+            self.special_tokens = ["<|eot_id|>"]
+            print(f"⚠️  Using custom model: {self.model_id}")
+
         # Load tokenizer and model
-        self.tokenizer = AutoTokenizer.from_pretrained(model_id, token=hf_token)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            self.model_id,
+            token=hf_token,
+            trust_remote_code=self.trust_remote_code
+        )
         self.model = AutoModelForCausalLM.from_pretrained(
-            model_id,
+            self.model_id,
             torch_dtype=torch.bfloat16,
             device_map=device,
-            token=hf_token
+            token=hf_token,
+            trust_remote_code=self.trust_remote_code
         )
 
         # Set up generation pipeline
@@ -27,6 +68,19 @@ class Llama:
             model=self.model,
             tokenizer=self.tokenizer,
         )
+
+    def _get_terminators(self):
+        """Get termination tokens based on model type"""
+        terminators = [self.tokenizer.eos_token_id]
+
+        # Add special tokens if they exist
+        for token in self.special_tokens:
+            token_id = self.tokenizer.convert_tokens_to_ids(token)
+            # Only add if token was found (not unk_token_id)
+            if token_id != self.tokenizer.unk_token_id:
+                terminators.append(token_id)
+
+        return terminators
     def summarize_news(self, article_content: str, max_new_tokens: int = 1024) -> str:
         user_message = f"""
         You are a specialist in restructuring news articles with accuracy, clarity, and context awareness.
@@ -63,10 +117,7 @@ class Llama:
         prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
         # Define termination tokens
-        terminators = [
-            self.tokenizer.eos_token_id,
-            self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
-        ]
+        terminators = self._get_terminators()
 
         # Run the generation
         outputs = self.generator(
@@ -175,10 +226,7 @@ class Llama:
         prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
         # Define termination tokens
-        terminators = [
-            self.tokenizer.eos_token_id,
-            self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
-        ]
+        terminators = self._get_terminators()
 
         # Run the generation
         outputs = self.generator(
@@ -327,10 +375,7 @@ class Llama:
         prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
         # Define termination tokens
-        terminators = [
-            self.tokenizer.eos_token_id,
-            self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
-        ]
+        terminators = self._get_terminators()
 
         # Run the generation
         outputs = self.generator(
@@ -355,10 +400,7 @@ class Llama:
         
         prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         # Define termination tokens
-        terminators = [
-            self.tokenizer.eos_token_id,
-            self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
-        ]
+        terminators = self._get_terminators()
         outputs = self.generator(
             prompt,
             max_new_tokens=max_new_tokens,
@@ -431,10 +473,7 @@ class Llama:
         prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
         # Define termination tokens
-        terminators = [
-            self.tokenizer.eos_token_id,
-            self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
-        ]
+        terminators = self._get_terminators()
 
         # Run the generation
         outputs = self.generator(
@@ -473,10 +512,7 @@ class Llama:
         prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
         # Define termination tokens
-        terminators = [
-            self.tokenizer.eos_token_id,
-            self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
-        ]
+        terminators = self._get_terminators()
 
         # Run the generation
         outputs = self.generator(
@@ -486,7 +522,7 @@ class Llama:
             eos_token_id=terminators,
             pad_token_id=self.tokenizer.eos_token_id,
             do_sample=True,
-            temperature=0.3,
+            temperature=0.6,
             top_p=0.9,
         )
 
@@ -516,10 +552,7 @@ class Llama:
         prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
         # Define termination tokens
-        terminators = [
-            self.tokenizer.eos_token_id,
-            self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
-        ]
+        terminators = self._get_terminators()
 
         # Run the generation
         outputs = self.generator(
@@ -558,10 +591,7 @@ class Llama:
         prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
         # Define termination tokens
-        terminators = [
-            self.tokenizer.eos_token_id,
-            self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
-        ]
+        terminators = self._get_terminators()
 
         # Run the generation
         outputs = self.generator(

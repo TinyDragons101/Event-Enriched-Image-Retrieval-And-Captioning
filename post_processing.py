@@ -31,7 +31,7 @@ def post_process_csv(input_csv_path, output_csv_path=None):
     df = pd.read_csv(input_csv_path)
 
     if 'generated_caption' not in df.columns:
-        raise ValueError("CSV must contain a 'generate_caption' column.")
+        raise ValueError("CSV must contain a 'generated_caption' column.")
 
     df['generated_caption'] = df['generated_caption'].apply(clean_caption)
 
@@ -44,8 +44,8 @@ def post_process_csv(input_csv_path, output_csv_path=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_csv", type=str, help="Path to the input CSV file.", default="./final_csv_result/submission_final.csv")
-    parser.add_argument("--output_csv", type=str, help="Path to save the cleaned CSV file.", default="./final_csv_result/submission_final.csv")
+    parser.add_argument("--input_csv", type=str, help="Path to the input CSV file.", default="./final_csv_result/temp.csv")
+    parser.add_argument("--output_csv", type=str, help="Path to save the cleaned CSV file.", default="./final_csv_result/temp.csv")
     args = parser.parse_args()
 
     post_process_csv(args.input_csv, args.output_csv)
