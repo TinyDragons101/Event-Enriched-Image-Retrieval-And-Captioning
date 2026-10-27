@@ -1,0 +1,43 @@
+{
+  "_comment": "Span penalty exactly as Eq. (2) of the paper: -0.1 * max(0, |e|-3). [repaired scorer, fixes on]",
+  "weights": {
+    "exact_match_crawl": 10.0,
+    "exact_match_generated": 8.0,
+    "partial_match_crawl": 6.0,
+    "partial_match_generated": 4.0,
+    "substring_in_qa": 3.0,
+    "substring_in_summary": 1.5,
+    "early_position_bonus": 2.0,
+    "mid_position_bonus": 1.0,
+    "type_person": 3.0,
+    "type_gpe": 2.5,
+    "type_org": 2.0,
+    "type_loc": 2.0,
+    "type_date": 1.0,
+    "type_event": 2.5,
+    "type_other": 0.5,
+    "length_penalty_factor": -0.1
+  },
+  "thresholds": {
+    "min_score": 3.0,
+    "top_k": 10,
+    "min_entity_length": 2
+  },
+  "fixes": {
+    "parse_keyword_markdown": true,
+    "word_boundary_match": true,
+    "span_penalty": "paper",
+    "substring_dedup": true,
+    "first_mention_position": true,
+    "drop_non_depictable": true,
+    "excluded_labels": [
+      "CARDINAL",
+      "ORDINAL",
+      "PERCENT",
+      "MONEY",
+      "QUANTITY",
+      "TIME",
+      "LANGUAGE"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "_comment": "Table 3(c) w/o contextual presence. Max attainable score drops to 5.0 (PERSON 3.0 + early position 2.0), so tau=3.0 becomes far more binding: report #Ent alongside the metrics. [published scorer, fixes off]",
+  "weights": {
+    "exact_match_crawl": 0.0,
+    "exact_match_generated": 0.0,
+    "partial_match_crawl": 0.0,
+    "partial_match_generated": 0.0,
+    "substring_in_qa": 0.0,
+    "substring_in_summary": 0.0,
+    "early_position_bonus": 2.0,
+    "mid_position_bonus": 1.0,
+    "type_person": 3.0,
+    "type_gpe": 2.5,
+    "type_org": 2.0,
+    "type_loc": 2.0,
+    "type_date": 1.0,
+    "type_event": 2.5,
+    "type_other": 0.5,
+    "length_penalty_factor": -0.1
+  },
+  "thresholds": {
+    "min_score": 3.0,
+    "top_k": 10,
+    "min_entity_length": 2
+  }
+}

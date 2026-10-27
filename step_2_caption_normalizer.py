@@ -66,10 +66,40 @@ class CaptionNormalizer:
     Tương tự như sematicNorm và entityEnricker
     """
 
-    def __init__(self, max_words=105, expected_length=104, use_entity_scoring=False, entity_config_path=None):
+    def __init__(self, max_words=105, expected_length=104, use_entity_scoring=False,
+                 entity_config_path=None, selection_map=None, use_noun_phrases=True,
+                 preserve_selected=False, pos_mask=False):
+        """
+        selection_map:   optional {query_id: [entity, ...]} computed ahead of time.
+                         When given it overrides the internal scorer, so the prompt
+                         gate and the enrichment gate are guaranteed to see the
+                         *same* E* (the unified gate of Section 3.6) and spaCy is
+                         not run twice over every article.
+        use_noun_phrases: enrich_caption appends article noun phrases after the
+                         entities. Those bypass the gate entirely, so set this to
+                         False to measure a gate that leaks only through the
+                         summary / QA text.
+        preserve_selected: entity-aware pruning additionally protects every
+                         mention of an entity in E*, which is what Section 3.6
+                         step (2) claims.  The shipped code protects only the
+                         entities spaCy finds inside the caption itself, and it
+                         runs BEFORE E* is computed, so it cannot see E* at all.
+                         Turning this on reorders the two steps.
+        pos_mask:        also protect PROPN and NUM tokens during pruning -- the
+                         'spaCy POS/NER mask' of Section 3.6, which the shipped
+                         code never implemented (it uses doc.ents only).
+
+        Both default to the shipped behaviour so the published run still
+        reproduces.
+        """
         self.max_words = max_words
         self.expected_length = expected_length
         self.nlp = spacy.load("en_core_web_sm")
+
+        self.selection_map = selection_map
+        self.use_noun_phrases = use_noun_phrases
+        self.preserve_selected = preserve_selected
+        self.pos_mask = pos_mask
 
         # NEW: Entity scorer
         self.use_entity_scoring = use_entity_scoring
@@ -79,7 +109,7 @@ class CaptionNormalizer:
         else:
             self.entity_scorer = None
 
-    def truncate_caption_semantic(self, text, max_word, expected_length):
+    def truncate_caption_semantic(self, text, max_word, expected_length, protect=None):
         """
         Cắt ngắn caption dựa trên ngữ nghĩa, giữ lại named entities
         Tương tự hàm sematicNorm
@@ -95,6 +125,13 @@ class CaptionNormalizer:
 
         # Trích xuất named entities
         entity_names = set(word for ent in doc.ents for word in ent.text.split())
+
+        # Gate 2 / pruning: protect every mention of a selected entity, and
+        # optionally every proper noun and number, as Section 3.6 describes.
+        if self.pos_mask:
+            entity_names.update(tok.text for tok in doc if tok.pos_ in ("PROPN", "NUM"))
+        if protect:
+            entity_names.update(protect)
 
         ls_word = text.split(" ")
         entity_mask = [False] * word_count
@@ -135,16 +172,16 @@ class CaptionNormalizer:
         MODIFIED: Use EntityHeuristicScorer instead of simple extraction
         Trích xuất named entities và noun phrases từ article
         """
+        if self.selection_map is not None:
+            # PRECOMPUTED: entities chosen by the selector used for the prompt too
+            selected_entities = self.selection_map.get(query_data.get("query_id"), [])
+            return selected_entities, self._noun_phrases(query_data)
+
         if self.use_entity_scoring and self.entity_scorer:
             # NEW APPROACH: Heuristic scoring
             selected_entities, _ = self.entity_scorer.score_query(query_data)
 
-            # Extract noun phrases separately (keep this for backward compatibility)
-            text = query_data.get("article", "")
-            doc = self.nlp(text)
-            noun_phrases = [chunk.text.strip() for chunk in doc.noun_chunks]
-
-            return selected_entities, noun_phrases
+            return selected_entities, self._noun_phrases(query_data)
 
         else:
             # OLD APPROACH: Extract all entities without filtering
@@ -159,10 +196,18 @@ class CaptionNormalizer:
                 entities.append(ent.text.strip())
 
             # Noun phrases
-            for chunk in doc.noun_chunks:
-                noun_phrases.append(chunk.text.strip())
+            if self.use_noun_phrases:
+                for chunk in doc.noun_chunks:
+                    noun_phrases.append(chunk.text.strip())
 
             return entities, noun_phrases
+
+    def _noun_phrases(self, query_data):
+        """Article noun phrases used as enrichment filler after the entities."""
+        if not self.use_noun_phrases:
+            return []
+        doc = self.nlp(query_data.get("article", ""))
+        return [chunk.text.strip() for chunk in doc.noun_chunks]
 
     def enrich_caption(self, caption, entities, noun_phrases, cutting_idx):
         """
@@ -225,15 +270,24 @@ class CaptionNormalizer:
         # Bước 1: Làm sạch output từ LLM
         caption = self.normalize_llm_output(llm_caption)
 
+        # Bước 3 phải chạy trước Bước 2 khi pruning cần biết E*
+        entities, noun_phrases = None, None
+        protect = None
+        if self.preserve_selected:
+            entities, noun_phrases = self.extract_entities_and_phrases(query_data)
+            protect = {w for e in entities for w in str(e).split()}
+
         # Bước 2: Cắt ngắn dựa trên ngữ nghĩa (giữ entities)
         caption = self.truncate_caption_semantic(
             caption,
             self.max_words,
-            self.expected_length
+            self.expected_length,
+            protect=protect,
         )
 
         # Bước 3: Trích xuất entities và phrases từ article
-        entities, noun_phrases = self.extract_entities_and_phrases(query_data)
+        if entities is None:
+            entities, noun_phrases = self.extract_entities_and_phrases(query_data)
 
         # Bước 4: Làm giàu caption nếu còn ngắn
         caption = self.enrich_caption(

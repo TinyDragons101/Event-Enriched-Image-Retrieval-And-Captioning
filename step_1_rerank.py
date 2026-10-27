@@ -71,7 +71,25 @@ def create_caption_json(rerank_inputs, output_path, device='cuda:7'):
         print(f"✅ Captions saved to: {output_path} (total: {len(results)})")
 
 
-def rerank_embeddings(rerank_input_path, output_path, device='cuda:7'):
+def rerank_embeddings(rerank_input_path, output_path, device='cuda:7',
+                      sort_reranked=False, fusion_lambda=None):
+    """Text re-ranking of the top-K image candidates.
+
+    sort_reranked
+        The shipped code built (image_id, combined_score) pairs and then wrote
+        `[img_id for img_id, _ in rerank_scores]` WITHOUT sorting, so the output
+        order equalled the input order and the re-ranking changed nothing.
+        Default stays False, because every published retrieval number was
+        produced that way; pass --sort_reranked to actually re-rank.
+
+    fusion_lambda
+        None  -> legacy fusion: logit_scale * cos(text) + cos(image), a plain
+                 sum of two differently scaled quantities.
+        float -> the convex combination Section 3.2 of the paper describes,
+                 lambda * s_img + (1 - lambda) * s_text, with s_text the RAW
+                 cosine (the logit scale is dropped, as it would otherwise
+                 dominate any lambda).
+    """
     with open(rerank_input_path, 'r', encoding='utf-8') as f:
         rerank_inputs = json.load(f)
 
@@ -81,6 +99,16 @@ def rerank_embeddings(rerank_input_path, output_path, device='cuda:7'):
         image_similarity_dict = json.load(f)
 
     model = CustonInternVLRetrievalModel(device=device)
+
+    # loaded once: the shipped code re-read this tensor from disk for every
+    # candidate of every query
+    coeff = torch.load("./logit_scale.pt", map_location=device)
+    if coeff.dim() > 0:
+        coeff = coeff.squeeze()
+
+    if fusion_lambda is not None and not 0.0 <= fusion_lambda <= 1.0:
+        raise ValueError("--fusion_lambda must lie in [0, 1]")
+    print(f"[rerank] sort_reranked={sort_reranked} fusion_lambda={fusion_lambda}")
 
     rerank_results = []
     for item in tqdm(rerank_inputs, desc="Reranking embeddings"):
@@ -100,21 +128,22 @@ def rerank_embeddings(rerank_input_path, output_path, device='cuda:7'):
             caption_text = candidate['caption']
             try:
                 candidate_embedding = model.encode_text(caption_text)  # shape (1, D)
-                coeff = torch.load("./logit_scale.pt", map_location= device)  # shape: []
-                if coeff.dim() > 0:
-                    coeff = coeff.squeeze()
-                
-                sim_score = (coeff * (query_embedding @ candidate_embedding.T)).item()
+                raw_sim = (query_embedding @ candidate_embedding.T).item()
             except Exception as e:
                 print(f"❌ Failed to encode caption for {image_id}: {e}")
-                sim_score = 0.0
+                raw_sim = 0.0
 
             image_sim = image_scores.get(image_id, 0.0)
-            combined_score = round(sim_score + image_sim, 6)
+            if fusion_lambda is None:
+                combined_score = round(coeff.item() * raw_sim + image_sim, 6)
+            else:
+                combined_score = round(
+                    fusion_lambda * image_sim + (1.0 - fusion_lambda) * raw_sim, 6)
 
             rerank_scores.append((image_id, combined_score))
 
-
+        if sort_reranked:
+            rerank_scores.sort(key=lambda pair: pair[1], reverse=True)
         reranked_ids = [img_id for img_id, _ in rerank_scores]
         rerank_results.append({
             "query_id": query_id,
@@ -248,12 +277,23 @@ def main():
     parser.add_argument('--output_dir', type=str, default='./public_test_final_elements_json',
                         help="Directory to save the final caption JSON")
 
+    parser.add_argument('--sort_reranked', action='store_true',
+                        help="actually sort candidates by the fused score. The shipped "
+                             "code never sorted, so re-ranking was a no-op; every "
+                             "published retrieval number assumes it OFF.")
+    parser.add_argument('--fusion_lambda', type=float, default=None,
+                        help="use the convex fusion of Section 3.2, "
+                             "lambda*s_img + (1-lambda)*s_text, instead of the "
+                             "logit-scaled sum the code actually used")
+
 
     args = parser.parse_args()
     # wrong_query_ids = load_wrong_queries(args.wrong_sample_json_path)
     # rerank_inputs = extract_rerank_inputs(args.csv_path, wrong_query_ids, args.pre_top_k)
     # create_caption_json(rerank_inputs, args.rerank_caption_output_path, device=args.device)
-    rerank_embeddings(args.rerank_caption_output_path, args.rerank_output_path, device=args.device)
+    rerank_embeddings(args.rerank_caption_output_path, args.rerank_output_path,
+                      device=args.device, sort_reranked=args.sort_reranked,
+                      fusion_lambda=args.fusion_lambda)
     update_csv_with_rerank_results(args.csv_path, args.rerank_output_path, args.rerank_final_path)
     create_context_json(args.rerank_final_path)
 

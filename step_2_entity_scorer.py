@@ -1,13 +1,69 @@
 """
 Entity Heuristic Scoring System
-Đánh giá mức độ liên quan của entities với visual content
+Dánh giá mức dộ liên quan của entities với visual content.
+
+LEGACY vs FIXED
+---------------
+The weights and thresholds below reproduce the published VG-Cap run (Overall
+0.6219).  That run contains four defects, documented one by one in `DEFAULTS`
+below.  Each is repaired by a switch in the optional `fixes` block of the
+config, and EVERY switch defaults to the legacy behaviour, so a config without
+a `fixes` block scores exactly as the submission did.
+
+    configs/entity_scoring_config.json        as-run   (all fixes off)
+    configs/entity_scoring_config_fixed.json  repaired (all fixes on)
+
+Switches
+    parse_keyword_markdown  the LLM keyword list is a markdown bullet list, but
+                            parse_entity_string split it on commas, so the whole
+                            list entered E as 1-3 unsplit blobs of ~300 chars.
+    word_boundary_match     presence matching used raw substring containment, so
+                            'One' matched "someone" and outscored the person in
+                            the photograph.  Switch to word-boundary matching.
+    span_penalty            'off'   P_span is never applied: compute_score looks
+                                    up the feature key 'length_penalty' while the
+                                    weights declare 'length_penalty_factor'.
+                            'code'  -0.1 * |e|          for |e| > 3   (what the
+                                    code structure intended)
+                            'paper' -0.1 * max(0,|e|-3) (Eq. (2) of the paper)
+    substring_dedup         deduplication merged longer surface forms only
+                            between the keyword list and spaCy, never between two
+                            spaCy entities, so 'Michelle Payne' and 'Payne' both
+                            survived.
+    first_mention_position  start == 0 was used as the sentinel for 'no position
+                            information', which silently denied the position
+                            bonus to every keyword-derived candidate and to any
+                            entity starting at character 0.
+    drop_non_depictable     candidates whose spaCy label is non-depictable
+                            (CARDINAL, ORDINAL, ...) or which carry no letter at
+                            all ('1', '10') are not entity candidates.
 """
 
-import spacy
 import json
-from typing import List, Dict, Tuple
-from collections import defaultdict
 import re
+import string
+from typing import Dict, List, Optional, Tuple
+
+
+#: Legacy behaviour of every switch.  Do not change these: a config without a
+#: `fixes` block must keep reproducing the published submission.
+DEFAULT_FIXES: Dict[str, object] = {
+    "parse_keyword_markdown": False,
+    "word_boundary_match": False,
+    "span_penalty": "off",            # off | code | paper
+    "substring_dedup": False,
+    "first_mention_position": False,
+    "drop_non_depictable": False,
+    "excluded_labels": ["CARDINAL", "ORDINAL", "PERCENT", "MONEY",
+                        "QUANTITY", "TIME", "LANGUAGE"],
+}
+
+SPAN_PENALTY_MODES = ("off", "code", "paper")
+
+#: markdown decorations the LLM wraps its keyword list in
+_BULLET = re.compile(r"^\s*(?:[-*•·]|\d+[.)])\s+")
+_BOLD = re.compile(r"\*\*(.+?)\*\*")
+_TRAILING_PAREN = re.compile(r"\s*\([^()]*\)\s*$")
 
 
 class Entity:
@@ -26,27 +82,45 @@ class Entity:
 
 class EntityHeuristicScorer:
     """
-    Rule-based scoring system cho entity relevance
-    Dựa trên multiple heuristics từ different sources
+    Rule-based scoring system cho entity relevance.
+    spaCy is imported lazily so that the parsing / matching / scoring logic can
+    be unit-tested without the model installed.
     """
 
-    def __init__(self, config_path: str = None):
+    def __init__(self, config_path: Optional[str] = None):
         """
         Args:
-            config_path: Path to JSON config file with weights
+            config_path: Path to JSON config file with weights/thresholds/fixes
         """
-        # Load spaCy model
-        self.nlp = spacy.load("en_core_web_sm")
+        self._nlp = None  # lazy: see .nlp
 
-        # Load or use default weights
         if config_path:
-            with open(config_path, 'r') as f:
+            with open(config_path, 'r', encoding='utf-8') as f:
                 config = json.load(f)
             self.weights = config['weights']
             self.thresholds = config['thresholds']
+            fixes = config.get('fixes', {})
         else:
             self.weights = self._get_default_weights()
             self.thresholds = self._get_default_thresholds()
+            fixes = {}
+
+        self.fixes = dict(DEFAULT_FIXES)
+        self.fixes.update(fixes)
+
+        mode = self.fixes.get("span_penalty", "off")
+        if mode not in SPAN_PENALTY_MODES:
+            raise ValueError(
+                f"fixes.span_penalty must be one of {SPAN_PENALTY_MODES}, got {mode!r}")
+        self.excluded_labels = set(self.fixes.get("excluded_labels") or [])
+
+    # -- spaCy ---------------------------------------------------------------
+    @property
+    def nlp(self):
+        if self._nlp is None:
+            import spacy
+            self._nlp = spacy.load("en_core_web_sm")
+        return self._nlp
 
     def _get_default_weights(self) -> dict:
         """
@@ -76,7 +150,8 @@ class EntityHeuristicScorer:
             'type_other': 0.5,               # Other types
 
             # Length penalty (avoid very long entities)
-            'length_penalty_factor': -0.1,   # Per word in entity
+            # NOTE: only read when fixes.span_penalty != "off"
+            'length_penalty_factor': -0.1,
         }
 
     def _get_default_thresholds(self) -> dict:
@@ -87,6 +162,7 @@ class EntityHeuristicScorer:
             'min_entity_length': 2,  # Minimum characters in entity
         }
 
+    # -- candidate construction ---------------------------------------------
     def extract_entities_from_article(self, article: str) -> List[Entity]:
         """
         Extract entities từ article text using spaCy
@@ -95,36 +171,116 @@ class EntityHeuristicScorer:
         entities = []
 
         for ent in doc.ents:
-            entity = Entity(
-                text=ent.text,
-                label=ent.label_,
-                start=ent.start_char
-            )
-            entities.append(entity)
+            if not self._is_admissible(ent.text, ent.label_):
+                continue
+            entities.append(Entity(text=ent.text, label=ent.label_, start=ent.start_char))
 
         return entities
 
+    def _is_admissible(self, text: str, label: str) -> bool:
+        """Reject candidates that cannot denote something depictable.
+
+        Legacy behaviour accepts everything, which is how '1', '10' and 'One'
+        reached the top of E*.
+        """
+        if not self.fixes.get("drop_non_depictable"):
+            return True
+        text = text.strip()
+        if len(text) < int(self.thresholds.get('min_entity_length', 2)):
+            return False
+        if label in self.excluded_labels:
+            return False
+        if not any(ch.isalpha() for ch in text):      # '1', '10', '2015'
+            return False
+        return True
+
     def parse_entity_string(self, entity_string: str) -> List[str]:
         """
-        Parse name_entity_keyword string
-        Format có thể là: "Biden, White House, flood"
+        Parse the LLM keyword field.
+
+        Legacy: split on commas.  The field is in fact a markdown bullet list
+        with a preamble, so the comma split returns 1-3 unsplit blobs of several
+        hundred characters, which then score as if they were entities.
+        Enable fixes.parse_keyword_markdown for the real parse.
         """
         if not entity_string:
             return []
 
-        # Split by comma
-        entities = [e.strip() for e in entity_string.split(',')]
+        if not self.fixes.get("parse_keyword_markdown"):
+            entities = [e.strip() for e in entity_string.split(',')]
+            return [e for e in entities
+                    if len(e) >= self.thresholds['min_entity_length']]
 
-        # Filter empty
-        entities = [e for e in entities if len(e) >= self.thresholds['min_entity_length']]
+        return self._parse_markdown_entities(entity_string)
 
-        return entities
+    def _parse_markdown_entities(self, entity_string: str) -> List[str]:
+        """Markdown bullet list -> list of entity surface forms.
 
-    def deduplicate_entities(self, entities: List[Entity], parsed_strings: List[str]) -> List[Entity]:
+        Handles the shape llama3 actually emits:
+
+            Here is the list of named entities ...:
+
+            **People**:
+
+            * Michelle Payne
+            * Stevie Payne (Michelle's brother)
+
+            **Organizations**:
+
+            * CNN
         """
-        Merge entities từ spaCy và parsed strings
-        Handle duplicates như "Biden" vs "Joe Biden"
+        min_len = int(self.thresholds.get('min_entity_length', 2))
+        out: List[str] = []
+
+        for raw in entity_string.splitlines():
+            line = raw.strip()
+            if not line:
+                continue
+
+            bulleted = bool(_BULLET.match(line))
+            line = _BULLET.sub("", line, count=1)
+
+            # a type header such as '**People**:' -- never an entity
+            stripped = _BOLD.sub(r"\1", line).strip()
+            if stripped.endswith(":"):
+                continue
+            # the conversational preamble ('Here is the list ...')
+            if not bulleted and len(stripped.split()) > 8:
+                continue
+
+            # A bulleted line holds exactly one entity, so commas inside it
+            # belong to the entity ('November 3, 2015').  Only an unbulleted
+            # line is treated as a comma-separated list.
+            pieces = [stripped] if bulleted else stripped.split(",")
+            for piece in pieces:
+                piece = _BOLD.sub(r"\1", piece).strip()
+                piece = _TRAILING_PAREN.sub("", piece).strip()
+                piece = piece.strip(string.whitespace + '"“”')
+                piece = piece.rstrip(".;")
+                if len(piece) < min_len:
+                    continue
+                if not any(ch.isalpha() for ch in piece):
+                    continue
+                out.append(piece)
+
+        # order-preserving dedup
+        seen, unique = set(), []
+        for item in out:
+            key = item.lower()
+            if key not in seen:
+                seen.add(key)
+                unique.append(item)
+        return unique
+
+    def deduplicate_entities(self, entities: List[Entity],
+                             parsed_strings: List[str]) -> List[Entity]:
         """
+        Merge entities từ spaCy và parsed strings.
+        Handle duplicates như "Biden" vs "Joe Biden".
+        """
+        if self.fixes.get("substring_dedup"):
+            return self._deduplicate_substring_aware(entities, parsed_strings)
+
         entity_map = {}
 
         # Add spaCy entities
@@ -153,6 +309,69 @@ class EntityHeuristicScorer:
 
         return list(entity_map.values())
 
+    def _deduplicate_substring_aware(self, entities: List[Entity],
+                                     parsed_strings: List[str]) -> List[Entity]:
+        """Substring-aware merge over ALL candidates, keeping the longest
+        surface form -- what Section 3.4 describes.
+
+        The surviving entity inherits the earliest character offset and the most
+        informative label seen among the forms it absorbed, so merging never
+        destroys position or type evidence.
+        """
+        candidates: List[Entity] = list(entities)
+        for text in parsed_strings:
+            if self._is_admissible(text, "PARSED"):
+                candidates.append(Entity(text=text, label="PARSED"))
+
+        # longest first, so a short form is always absorbed by its longer form
+        candidates.sort(key=lambda e: (-len(e.text), e.start))
+
+        kept: List[Entity] = []
+        for cand in candidates:
+            key = cand.text.lower()
+            if not key:
+                continue
+            host = None
+            for existing in kept:
+                ekey = existing.text.lower()
+                if key == ekey or self._is_word_subsequence(key, ekey):
+                    host = existing
+                    break
+            if host is None:
+                kept.append(cand)
+                continue
+            # merge evidence into the longer form we already keep
+            if cand.start and (not host.start or cand.start < host.start):
+                host.start = cand.start
+            if host.label in ("", "PARSED") and cand.label not in ("", "PARSED"):
+                host.label = cand.label
+
+        return kept
+
+    @staticmethod
+    def _is_word_subsequence(short: str, long: str) -> bool:
+        """True when `short` occurs inside `long` on word boundaries.
+
+        Prevents 'Ann' from being merged into 'Hannah' while still merging
+        'Payne' into 'Michelle Payne'.
+        """
+        if len(short) >= len(long):
+            return False
+        return re.search(rf"(?<!\w){re.escape(short)}(?!\w)", long) is not None
+
+    # -- features ------------------------------------------------------------
+    def _contains(self, haystack: str, needle: str) -> bool:
+        """Containment test used by every presence feature.
+
+        Legacy: raw substring, so 'one' matches 'someone'.
+        Fixed:  word-boundary match.
+        """
+        if not needle or not haystack:
+            return False
+        if not self.fixes.get("word_boundary_match"):
+            return needle in haystack
+        return re.search(rf"(?<!\w){re.escape(needle)}(?!\w)", haystack) is not None
+
     def calculate_presence_features(self, entity: Entity, signals: dict) -> dict:
         """
         Calculate presence-based features
@@ -167,58 +386,73 @@ class EntityHeuristicScorer:
 
         # Exact match in crawl_caption (highest signal)
         crawl = signals.get('crawl_caption', '').lower()
-        features['exact_match_crawl'] = 1.0 if entity_lower in crawl else 0.0
+        features['exact_match_crawl'] = 1.0 if self._contains(crawl, entity_lower) else 0.0
 
         # Partial match in crawl (any word matches)
         if features['exact_match_crawl'] == 0.0:
-            features['partial_match_crawl'] = 1.0 if any(word in crawl for word in entity_words if len(word) > 2) else 0.0
+            features['partial_match_crawl'] = 1.0 if any(
+                self._contains(crawl, word) for word in entity_words if len(word) > 2) else 0.0
         else:
             features['partial_match_crawl'] = 0.0
 
         # Exact match in generated_caption
         generated = signals.get('generated_caption', '').lower()
-        features['exact_match_generated'] = 1.0 if entity_lower in generated else 0.0
+        features['exact_match_generated'] = 1.0 if self._contains(generated, entity_lower) else 0.0
 
         # Partial match in generated
         if features['exact_match_generated'] == 0.0:
-            features['partial_match_generated'] = 1.0 if any(word in generated for word in entity_words if len(word) > 2) else 0.0
+            features['partial_match_generated'] = 1.0 if any(
+                self._contains(generated, word) for word in entity_words if len(word) > 2) else 0.0
         else:
             features['partial_match_generated'] = 0.0
 
         # Substring in Q&A
         qa = signals.get('question_answer', '').lower()
-        features['substring_in_qa'] = 1.0 if entity_lower in qa else 0.0
+        features['substring_in_qa'] = 1.0 if self._contains(qa, entity_lower) else 0.0
 
         # Substring in summary
         summary = signals.get('summary', '').lower()
-        features['substring_in_summary'] = 1.0 if entity_lower in summary else 0.0
+        features['substring_in_summary'] = 1.0 if self._contains(summary, entity_lower) else 0.0
 
         return features
+
+    def first_mention(self, entity: Entity, article: str) -> int:
+        """Character offset of the first mention, or -1 when absent.
+
+        Legacy used `start == 0` as the sentinel for 'unknown', which denied the
+        position bonus to every keyword-derived candidate.
+        """
+        if entity.start and entity.start > 0:
+            return entity.start
+        if not article:
+            return -1
+        idx = article.lower().find(entity.text.lower())
+        return idx if idx >= 0 else -1
 
     def calculate_position_features(self, entity: Entity, article: str) -> dict:
         """
         Calculate position-based features
         Entity position trong article text
         """
-        features = {}
+        features = {'early_position_bonus': 0.0, 'mid_position_bonus': 0.0}
 
-        if entity.start == 0:
-            # Không có position info (parsed entity)
-            features['early_position_bonus'] = 0.0
-            features['mid_position_bonus'] = 0.0
+        if self.fixes.get("first_mention_position"):
+            start = self.first_mention(entity, article)
+            if start < 0:
+                return features
         else:
-            article_length = len(article)
-            position_ratio = entity.start / article_length if article_length > 0 else 0.5
+            if entity.start == 0:
+                # Không có position info (parsed entity)
+                return features
+            start = entity.start
 
-            if position_ratio < 0.2:  # First 20%
-                features['early_position_bonus'] = 1.0
-                features['mid_position_bonus'] = 0.0
-            elif position_ratio < 0.5:  # 20-50%
-                features['early_position_bonus'] = 0.0
-                features['mid_position_bonus'] = 1.0
-            else:
-                features['early_position_bonus'] = 0.0
-                features['mid_position_bonus'] = 0.0
+        article_length = len(article)
+        position_ratio = start / article_length if article_length > 0 else 0.5
+
+        if position_ratio < 0.2:    # First 20%
+            features['early_position_bonus'] = 1.0
+        elif position_ratio < 0.5:  # 20-50%
+            features['mid_position_bonus'] = 1.0
 
         return features
 
@@ -247,14 +481,30 @@ class EntityHeuristicScorer:
 
         features[feature_name] = 1.0
 
-        # Length penalty (longer entities are less likely to be single objects)
+        # Length penalty.  Legacy keeps the raw word count here and the generic
+        # weighted sum silently drops it (no 'length_penalty' weight exists);
+        # when fixes.span_penalty is on, _span_penalty() owns the term instead
+        # and this feature is zeroed so it cannot be counted twice.
         word_count = len(entity.text.split())
-        if word_count > 3:
+        if self.fixes.get("span_penalty", "off") != "off":
+            features['length_penalty'] = 0.0
+        elif word_count > 3:
             features['length_penalty'] = word_count
         else:
             features['length_penalty'] = 0
 
         return features
+
+    def _span_penalty(self, entity: Entity) -> float:
+        """P_span(e); zero unless fixes.span_penalty is 'code' or 'paper'."""
+        mode = self.fixes.get("span_penalty", "off")
+        if mode == "off":
+            return 0.0
+        weight = self.weights.get(
+            'length_penalty_factor', self.weights.get('length_penalty', 0.0))
+        n_words = len(entity.text.split())
+        excess = max(0, n_words - 3) if mode == "paper" else (n_words if n_words > 3 else 0)
+        return weight * excess
 
     def compute_score(self, features: dict) -> float:
         """
@@ -264,43 +514,27 @@ class EntityHeuristicScorer:
 
         for feature_name, feature_value in features.items():
             weight = self.weights.get(feature_name, 0.0)
-
-            if feature_name == 'length_penalty':
-                # Penalty is negative
-                score += weight * feature_value
-            else:
-                score += weight * feature_value
+            score += weight * feature_value
 
         return max(0.0, score)  # Non-negative scores
 
-    def score_entities(
-        self,
-        entities: List[Entity],
-        signals: dict,
-        article: str
-    ) -> List[Entity]:
+    def score_entities(self, entities: List[Entity], signals: dict,
+                       article: str) -> List[Entity]:
         """
         Score all entities and update their scores
-
-        Args:
-            entities: List of Entity objects
-            signals: Dict with visual/context signals
-            article: Full article text
-
-        Returns:
-            List of Entity objects with scores populated
         """
         for entity in entities:
-            # Combine all features
             all_features = {}
 
             all_features.update(self.calculate_presence_features(entity, signals))
             all_features.update(self.calculate_position_features(entity, article))
             all_features.update(self.calculate_type_features(entity))
 
-            # Compute final score
-            entity.features = all_features
-            entity.score = self.compute_score(all_features)
+            penalty = self._span_penalty(entity)
+            entity.features = dict(all_features)
+            if penalty:
+                entity.features['span_penalty_applied'] = round(penalty, 4)
+            entity.score = max(0.0, self.compute_score(all_features) + penalty)
 
         return entities
 
@@ -308,16 +542,10 @@ class EntityHeuristicScorer:
         """
         Filter entities by threshold and rank by score
         """
-        # Filter by min score
         filtered = [e for e in entities if e.score >= self.thresholds['min_score']]
-
-        # Sort by score descending
         ranked = sorted(filtered, key=lambda e: e.score, reverse=True)
-
-        # Take top-K
         top_k = ranked[:self.thresholds['top_k']]
 
-        # Mark as selected
         for ent in top_k:
             ent.selected = True
 
@@ -326,14 +554,7 @@ class EntityHeuristicScorer:
     def score_query(self, query_data: dict) -> Tuple[List[str], dict]:
         """
         Main scoring function for a single query
-
-        Args:
-            query_data: Dict with query information
-
-        Returns:
-            Tuple of (selected_entities: List[str], debug_info: dict)
         """
-        # Extract article and signals
         article = query_data.get('article', '')
 
         signals = {
@@ -343,23 +564,14 @@ class EntityHeuristicScorer:
             'summary': query_data.get('article_summary', {}).get('fact_summary', '')
         }
 
-        # Step 1: Extract entities
         spacy_entities = self.extract_entities_from_article(article)
         parsed_entities = self.parse_entity_string(query_data.get('name_entity_keyword', ''))
-
-        # Step 2: Deduplicate
         all_entities = self.deduplicate_entities(spacy_entities, parsed_entities)
-
-        # Step 3: Score entities
         scored_entities = self.score_entities(all_entities, signals, article)
-
-        # Step 4: Filter and rank
         ranked_entities = self.filter_and_rank(scored_entities)
 
-        # Step 5: Extract selected entity texts
         selected_texts = [e.text for e in ranked_entities if e.selected]
 
-        # Step 6: Create debug info
         debug_info = {
             'scored_entities': [
                 {
@@ -372,27 +584,23 @@ class EntityHeuristicScorer:
                 for e in ranked_entities
             ],
             'top_entities': selected_texts,
+            'rejected_entities': [e.text for e in scored_entities if not e.selected],
             'threshold_used': self.thresholds['min_score'],
             'total_entities_extracted': len(all_entities),
             'entities_selected': len(selected_texts),
-            'signals_used': list(signals.keys())
+            'signals_used': list(signals.keys()),
+            'fixes': self.fixes,
         }
 
         return selected_texts, debug_info
 
 
 def save_scoring_results(results: dict, output_path: str):
-    """
-    Save entity scoring results to JSON for debugging
-
-    Args:
-        results: Dict mapping query_id -> debug_info
-        output_path: Path to save JSON
-    """
+    """Save entity scoring results to JSON for debugging"""
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 
-    print(f"✅ Entity scoring results saved to: {output_path}")
+    print(f"Entity scoring results saved to: {output_path}")
 
 
 def load_scoring_results(input_path: str) -> dict:

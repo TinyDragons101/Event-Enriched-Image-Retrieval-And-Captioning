@@ -19,3 +19,9 @@ matching-01-no-threshold
 public_test_final_elements_json
 
 database_new.json
+# ablation study outputs (captions, selections, submissions)
+runs/
+
+# pre-fix backups of the files touched by the correctness pass
+backup_pre_fix/
+*.bak

@@ -1,80 +1,84 @@
+"""Stage-2 driver: merge context -> generate drafts -> normalize -> submission.
+
+FIXES over the shipped version
+------------------------------
+* merge_function() and the template/JSON loading ran at IMPORT time, so merely
+  importing this module (or asking for --help) rebuilt final_merge_result.json.
+  They now run inside main().
+* The script returned early whenever assemble_result/*.json existed, silently
+  reusing another configuration's captions.  --force regenerates, and
+  --run_suffix gives each configuration its own output files.
+* create_submission() was called with a keyword the function did not accept, so
+  the normalized captions never reached the CSV.  Fixed in
+  step_2_merge_all_elements.py.
+* The entity gate was enrichment-only: the prompt always received the raw
+  keyword string.  --gate {none,prompt,enrichment,unified} now covers all four
+  variants of Table 3(d).
+
+For the ablation study use run_ablation.py instead: it keeps every run in its
+own runs/<tag>/ directory.
+"""
 import argparse
-from pathlib import Path
-from jinja2 import Template
 import json
-from tqdm import tqdm
-from llamassemblers import LLMAssembler
-import time
-from step_2_merge_all_elements import merge_function, create_submission
-from step_2_caption_normalizer import CaptionNormalizer
 import os
+from pathlib import Path
+
+from jinja2 import Template
+from tqdm import tqdm
+
+from step_2_merge_all_elements import (merge_function, create_submission,
+                                       CAPTION_SOURCES)
+from step_2_caption_normalizer import CaptionNormalizer
 
 PROMPT_TEMPLATE_DIR = Path('./assemble_caption_prompt_template')
 RESULT_DIR = Path('./assemble_result')
-FEWSHOT_EXAMPLE_PATH = Path('./assemble_caption_prompt_template/test.json')
+FEWSHOT_EXAMPLE_PATH = PROMPT_TEMPLATE_DIR / 'test.json'
 CAPTION_INPUT_PATH = Path('./public_test_final_elements_json/final_merge_result.json')
-TEST_FEWSHOT_EXAMPLE_PATH = PROMPT_TEMPLATE_DIR / 'test.json'
 TEST_CAPTION_INPUT_PATH = PROMPT_TEMPLATE_DIR / 'test.json'
-COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH = RESULT_DIR / 'cot_5_things_fact_more_event_llama.json'
-NORMALIZED_OUTPUT_PATH = RESULT_DIR / 'normalized_captions.json'
 
-merge_function(
-    generative_caption_path='./public_test_final_elements_json/final_rerank_public_test_detail_top1_caption.json',
-    query_first_article_path='./public_test_final_elements_json/reranking_query_first_article_question_answer.json',
-    entity_name_path="./assemble_result/name_entity_llama.json",
-    question_answer_path="./assemble_result/questions_answers_llama.json",
-    new_database_path="./result-tanphuc.json",
-    output_path=CAPTION_INPUT_PATH
-)
+PROMPT_GATES = {"prompt", "unified"}
+ENRICHMENT_GATES = {"enrichment", "unified"}
 
-# Global assembler (will be initialized in main with model_type from args)
 assembler = None
-template_strats: dict[str, Template] = {}
-
-RESULT_DIR.mkdir(exist_ok=True)
-
-with open(CAPTION_INPUT_PATH, 'r') as f:
-    inputs = json.load(f)
-
-with open(FEWSHOT_EXAMPLE_PATH, 'r') as f:
-    examples = json.load(f)
-
-for path in PROMPT_TEMPLATE_DIR.rglob("*.j2"):
-    with open(path, 'r', encoding='utf-8') as f:
-        template_str = f.read()
-        template = Template(template_str)
-        template_strats[str(path.stem)] = template
 
 
-def assemble(input: dict, strat: str) -> str:
-    template = template_strats[strat]
-    prompt = template.render(**input)
-    enhanced_caption = assembler.assemble(prompt)
-    return enhanced_caption
+def run_merge(output_path: Path, caption_source: str = "alt") -> None:
+    """Rebuild final_merge_result.json from the five stage-1 outputs."""
+    merge_function(
+        generative_caption_path='./public_test_final_elements_json/final_rerank_public_test_detail_top1_caption.json',
+        query_first_article_path='./public_test_final_elements_json/reranking_query_first_article_question_answer.json',
+        entity_name_path="./assemble_result/name_entity_llama.json",
+        question_answer_path="./assemble_result/questions_answers_llama.json",
+        new_database_path="./result-tanphuc.json",
+        output_path=output_path,
+        caption_source=caption_source,
+    )
 
 
-def model_qa(input: dict, strat: str) -> str:
-    template = template_strats[strat]
-    prompt = template.render(**input)
-    enhanced_caption = assembler.question_answer(prompt)
-    return enhanced_caption
+def load_templates() -> dict:
+    templates = {}
+    for path in PROMPT_TEMPLATE_DIR.rglob("*.j2"):
+        templates[path.stem] = Template(path.read_text(encoding='utf-8'))
+    return templates
 
 
-def model_name_entity(input: dict, strat: str) -> str:
-    template = template_strats[strat]
-    prompt = template.render(**input)
-    enhanced_caption = assembler.name_entity_extraction(prompt)
-    return enhanced_caption
+def compose_input(batch: dict, examples: list, keyword_override: str | None = None) -> dict:
+    """Render context for one query.
 
-
-def compose_input(batch: dict, examples: list[dict]) -> dict:
+    keyword_override replaces the raw LLM keyword string by the gated set E*
+    (Gate 1).  The shipped version had no such parameter, which is why the
+    published run is enrichment-only gating.
+    """
     example_contexts = [None] * len(examples)
     return {
         "article": batch.get("article", ""),
         "generated_caption": batch.get("generated_caption", ""),
         "crawl_caption": batch.get("crawl_caption", ""),
         "question_answer": batch.get("question_answer", ""),
-        "name_entity_keyword": batch.get("name_entity_keyword", ""),
+        "name_entity_keyword": (
+            keyword_override if keyword_override is not None
+            else batch.get("name_entity_keyword", "")
+        ),
         "related_phrases": batch.get("related_phrases", ""),
         "context": batch.get("context", ""),
         "summary": {
@@ -88,175 +92,221 @@ def compose_input(batch: dict, examples: list[dict]) -> dict:
                 "crawl_caption": example.get('crawl_caption', ""),
                 "context": example_context,
                 "summary": example.get('article_summary', {}),
-                "expected_output": example.get('expected_output', "")
+                "expected_output": example.get('expected_output', ""),
             }
             for example, example_context in zip(examples, example_contexts)
         ],
     }
 
 
-def normalize_captions(
-    llm_output_path: Path,
-    merge_data_path: Path,
-    output_path: Path,
-    max_words: int = 105,
-    expected_length: int = 104,
-    use_entity_scoring: bool = False,
-    entity_config_path: str = None
-):
-    """
-    Bước normalize caption sau khi assemble
-    Tương tự như sematicNorm + entityEnricker
-    """
-    print("STARTING CAPTION NORMALIZATION")
+def select_entities(merge_data: list, args) -> dict:
+    """E* per query, shared by both gates."""
+    from step_2_entity_selectors import build_selector
 
-    # Print entity scoring mode
-    if use_entity_scoring:
-        print("🔥 Entity Heuristic Scoring: ENABLED")
-    else:
-        print("ℹ️  Entity Heuristic Scoring: DISABLED (using default extraction)")
+    selector = build_selector("heuristic", config_path=args.entity_config_path,
+                              budget=args.top_k)
+    selections = {}
+    for batch in tqdm(merge_data, desc="selecting entities"):
+        chosen, _ = selector.select(batch)
+        selections[batch["query_id"]] = chosen
+    return selections
+
+
+def normalize_captions(llm_output_path, merge_data_path, output_path, args,
+                       selections=None):
+    print("STARTING CAPTION NORMALIZATION")
+    gate_on = args.gate in ENRICHMENT_GATES or args.use_entity_scoring
+    print(f"Entity gate at enrichment: {'ENABLED' if gate_on else 'DISABLED'}")
 
     normalizer = CaptionNormalizer(
-        max_words=max_words,
-        expected_length=expected_length,
-        use_entity_scoring=use_entity_scoring,
-        entity_config_path=entity_config_path
+        max_words=args.max_words,
+        expected_length=args.expected_length,
+        use_entity_scoring=args.use_entity_scoring and selections is None,
+        entity_config_path=args.entity_config_path,
+        selection_map=selections if args.gate in ENRICHMENT_GATES else None,
+        use_noun_phrases=not args.no_noun_phrases,
+        preserve_selected=args.preserve_selected,
+        pos_mask=args.pos_mask,
     )
-
     results = normalizer.normalize_batch(
         llm_output_path=str(llm_output_path),
         merge_data_path=str(merge_data_path),
         output_path=str(output_path),
-        verbose=True
+        verbose=True,
     )
-
     print(f"\nNormalized captions saved to: {output_path}")
-
     return results
 
 
 def main(args):
     global assembler
 
-    # Initialize assembler with model_type from args
-    print(f"🚀 Initializing LLMAssembler with model_type={args.model_type}")
-    assembler = LLMAssembler(device='cuda:5', model_type=args.model_type)
+    RESULT_DIR.mkdir(exist_ok=True)
+    caption_input_path = Path(args.caption_input_path)
 
-    # Nếu đã tồn tại file normalized captions thì chỉ cần tạo submission
-    if args.normalize_output and os.path.exists(NORMALIZED_OUTPUT_PATH):
-        print(f"Normalized file already exists: {NORMALIZED_OUTPUT_PATH}")
-        print("Creating submission with normalization...")
-        create_submission(final_caption_json_path=NORMALIZED_OUTPUT_PATH)
+    if args.merge or not caption_input_path.exists():
+        run_merge(caption_input_path, args.caption_source)
+
+    templates = load_templates()
+    if args.strategy not in templates:
+        raise SystemExit(f"unknown --strategy {args.strategy!r}; "
+                         f"available: {sorted(templates)}")
+
+    examples = json.loads(FEWSHOT_EXAMPLE_PATH.read_text(encoding='utf-8'))
+    template = templates[args.strategy]
+
+    # -- template preview, no model needed ---------------------------------
+    if args.template_test:
+        test_inputs = json.loads(TEST_CAPTION_INPUT_PATH.read_text(encoding='utf-8'))
+        prompt = template.render(**compose_input(test_inputs[0], examples))
+        out = PROMPT_TEMPLATE_DIR / f"{args.strategy}.md"
+        out.write_text(prompt, encoding='utf-8')
+        print(f"rendered prompt -> {out}")
         return
 
-    CAPTION_INPUT_PATH = args.caption_input_path
+    inputs = json.loads(caption_input_path.read_text(encoding='utf-8'))
+    if args.limit:
+        inputs = inputs[: args.limit]
 
-    # Nếu đã tồn tại file cot_5_things_fact_more_event_output.json thì chỉ cần normalize captions rồi tạo submission
-    if os.path.exists(COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH):
-        print(f"Found existing LLM output: {COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH}")
-        print("Skipping LLM generation, proceeding to normalization...")
+    if args.gate in PROMPT_GATES and args.reuse_drafts:
+        raise SystemExit(
+            "--reuse_drafts is invalid with --gate prompt/unified: these gates change "
+            "the prompt, so the drafts must be regenerated.")
 
-        if args.normalize_output:
-            normalize_captions(
-                llm_output_path=COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH,
-                merge_data_path=CAPTION_INPUT_PATH,
-                output_path=NORMALIZED_OUTPUT_PATH,
-                max_words=args.max_words,
-                expected_length=args.expected_length,
-                use_entity_scoring=args.use_entity_scoring,
-                entity_config_path=args.entity_config_path
-            )
+    suffix = f"_{args.run_suffix}" if args.run_suffix else ""
+    draft_path = RESULT_DIR / f"{args.strategy}_{args.model_type}{suffix}.json"
+    normalized_path = RESULT_DIR / f"normalized_captions{suffix}.json"
 
-            print("Creating submission with normalization...")
-            create_submission(final_caption_json_path=NORMALIZED_OUTPUT_PATH)
+    # -- entity selection ---------------------------------------------------
+    selections = None
+    if args.gate != "none":
+        selections = select_entities(inputs, args)
+        (RESULT_DIR / f"selected_entities{suffix}.json").write_text(
+            json.dumps(selections, indent=2, ensure_ascii=False), encoding='utf-8')
 
-        else:
-            print("Creating submission without normalization...")
-            create_submission(final_caption_json_path=COT_5_THINGS_FACT_MORE_EVENT_OUTPUT_PATH)
+    # -- drafts -------------------------------------------------------------
+    reuse_path = Path(args.reuse_drafts) if args.reuse_drafts else draft_path
+    if reuse_path.exists() and not args.force:
+        if args.gate in PROMPT_GATES:
+            raise SystemExit(
+                f"{reuse_path} already exists, but --gate {args.gate} changes the prompt, "
+                f"so those drafts are stale. Pass --force, or --run_suffix to write new ones.")
+        print(f"Reusing existing drafts: {reuse_path} (pass --force to regenerate)")
+        result = json.loads(reuse_path.read_text(encoding='utf-8'))
+        if args.limit:
+            keep = {b['query_id'] for b in inputs}
+            result = {k: v for k, v in result.items() if k in keep}
+    else:
+        # imported here so --help and --template_test work without transformers
+        from llamassemblers import LLMAssembler
+        print(f"Initializing LLMAssembler with model_type={args.model_type}")
+        assembler = LLMAssembler(device=args.device, model_type=args.model_type)
+        if args.seed is not None:
+            from transformers import set_seed
+            set_seed(args.seed)
 
+        result = {}
+        for i, batch in enumerate(tqdm(inputs, desc="Processing batches")):
+            keyword_override = None
+            if args.gate in PROMPT_GATES:
+                keyword_override = ", ".join(selections.get(batch['query_id'], []))
+            prompt = template.render(**compose_input(batch, examples, keyword_override))
+
+            if args.qa:
+                result[batch['query_id']] = assembler.question_answer(prompt)
+            elif args.name_entity:
+                result[batch['query_id']] = assembler.name_entity_extraction(prompt)
+            else:
+                result[batch['query_id']] = assembler.assemble(prompt)
+
+            # checkpoint instead of rewriting the whole dict every query
+            if (i + 1) % args.checkpoint_every == 0:
+                draft_path.write_text(json.dumps(result, indent=2, ensure_ascii=False),
+                                      encoding='utf-8')
+        draft_path.write_text(json.dumps(result, indent=2, ensure_ascii=False),
+                              encoding='utf-8')
+
+    if args.qa or args.name_entity:
+        print(f"Saved to {draft_path}")
         return
 
-    strat = args.strategy
-    template_test = args.template_test
-    qa = args.qa
-    model_name = args.model_type
-    name_entity = args.name_entity
-    if template_test:
-        with open(TEST_CAPTION_INPUT_PATH, 'r') as f:
-            test_inputs = json.load(f)
-        with open(TEST_FEWSHOT_EXAMPLE_PATH, 'r') as f:
-            test_examples = json.load(f)
-        template = template_strats[strat]
-        prompt = template.render(**compose_input(test_inputs[0], test_examples))
-        with open(PROMPT_TEMPLATE_DIR / f"{strat}.md", 'w') as f:
-            f.write(prompt)
-        return
+    # normalize_batch reads drafts from disk: make sure this run's file holds
+    # exactly the captions we are about to normalize
+    draft_path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding='utf-8')
 
-    result = {}
+    # -- normalization + submission ----------------------------------------
+    if args.normalize_output:
+        normalize_captions(draft_path, caption_input_path, normalized_path, args,
+                           selections=selections)
+        create_submission(final_caption_json_path=str(normalized_path),
+                          output_csv_path=args.output_csv)
+    else:
+        create_submission(final_caption_json_path=str(draft_path),
+                          output_csv_path=args.output_csv)
 
-    for batch in tqdm(inputs, desc="Processing batches"):
-        input_data = compose_input(batch, examples)
-        if qa:
-            enhanced_caption = model_qa(input_data, strat)
-        elif name_entity:
-            enhanced_caption = model_name_entity(input_data, strat)
-        else:
-            enhanced_caption = assemble(input_data, strat)
 
-        result[batch['query_id']] = enhanced_caption
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(description=__doc__,
+                                formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument('--strategy', type=str, default='cot_5_things_fact_more_event',
+                   help="prompt template stem in assemble_caption_prompt_template/")
+    p.add_argument('--template_test', action='store_true',
+                   help="render the prompt for one example and exit")
+    p.add_argument('--qa', action='store_true', help="run the QA-generation prompt")
+    p.add_argument('--name_entity', action='store_true',
+                   help="run the keyword-extraction prompt")
+    p.add_argument('--merge', action='store_true',
+                   help="rebuild final_merge_result.json before running")
+    p.add_argument('--caption_source', default='alt', choices=list(CAPTION_SOURCES),
+                   help="which crawled string becomes the editorial caption: 'alt' "
+                        "(shipped default, the <img alt> text), 'caption' (the figure "
+                        "caption, which also carries a kicker and a photo credit) or "
+                        "'merged' (alt, falling back to a cleaned figure caption). "
+                        "Only takes effect when the merge actually runs (--merge).")
+    p.add_argument('--caption_input_path', type=Path, default=CAPTION_INPUT_PATH)
+    p.add_argument('--model_type', type=str, default='llama3',
+                   help="llama3 (Llama-3-8B) or qwen3 (Qwen2.5-14B)")
+    p.add_argument('--device', type=str, default='cuda:5')
+    p.add_argument('--seed', type=int, default=None,
+                   help="decoding seed; the published run set none, so it was not reproducible")
+    p.add_argument('--limit', type=int, default=None, help="use only the first N queries")
+    p.add_argument('--checkpoint_every', type=int, default=50)
+    p.add_argument('--reuse_drafts', type=str, default=None,
+                   help="reuse this drafts JSON instead of generating; invalid with "
+                        "--gate prompt/unified, which change the prompt")
+    p.add_argument('--force', action='store_true',
+                   help="regenerate drafts even if the output file already exists")
+    p.add_argument('--run_suffix', type=str, default='',
+                   help="suffix for every output file, so configurations cannot overwrite each other")
+    p.add_argument('--output_csv', type=str,
+                   default='final_csv_result/submission_final.csv')
 
-        with open(RESULT_DIR / f"{strat}_{model_name}.json", "w", encoding="utf-8") as f:
-            json.dump(result, f, indent=2, ensure_ascii=False)
+    p.add_argument('--normalize_output', action='store_true', default=True)
+    p.add_argument('--no_normalize_output', dest='normalize_output', action='store_false')
+    p.add_argument('--max_words', type=int, default=105)
+    p.add_argument('--expected_length', type=int, default=104)
 
-    if not args.qa and not args.name_entity:
-        if args.normalize_output:
-            print("Normalizing captions...")
-            normalize_captions(
-                llm_output_path=RESULT_DIR / f"{strat}_{model_name}.json",
-                merge_data_path=CAPTION_INPUT_PATH,
-                output_path=NORMALIZED_OUTPUT_PATH,
-                max_words=args.max_words,
-                expected_length=args.expected_length,
-                use_entity_scoring=args.use_entity_scoring,
-                entity_config_path=args.entity_config_path
-            )
-            print("Creating submission with normalization...")
-            create_submission(final_caption_json_path=NORMALIZED_OUTPUT_PATH)
+    p.add_argument('--gate', default='enrichment',
+                   choices=['none', 'prompt', 'enrichment', 'unified'],
+                   help="where E* is applied: none=unfiltered baseline, "
+                        "enrichment=the published VG-Cap run, unified=Section 3.6")
+    p.add_argument('--top_k', type=int, default=10, help="K_e")
+    p.add_argument('--use_entity_scoring', action='store_true', default=False,
+                   help="legacy flag, equivalent to --gate enrichment")
+    p.add_argument('--entity_config_path', type=str,
+                   default='configs/entity_scoring_config.json',
+                   help="use configs/entity_scoring_config_fixed.json for the repaired scorer")
+    p.add_argument('--no_noun_phrases', action='store_true',
+                   help="stop enrichment from appending ungated article noun phrases")
+    p.add_argument('--preserve_selected', action='store_true',
+                   help="pruning protects every mention of E* (Section 3.6 step 2)")
+    p.add_argument('--pos_mask', action='store_true',
+                   help="pruning also protects PROPN/NUM tokens")
+    return p
 
-        else:
-            print("Creating submission without normalization...")
-            create_submission(final_caption_json_path=RESULT_DIR / f"{strat}_{model_name}.json")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--strategy', type=str, choices=template_strats.keys(), required=True,
-                        help="Strategy to use for caption assembly")
-    parser.add_argument('--template_test', action='store_true',
-                        help="Test and print loaded template")
-    parser.add_argument('--qa', action='store_true',
-                        help="Test and print loaded template strategies")
-    parser.add_argument('--generate_caption_path', type=Path, default=RESULT_DIR / 'final_rerank_public_test_detail_top1_caption.json',
-                        help="Path to the generated caption JSON file")
-    parser.add_argument('--question_answer_path', type=Path, default=RESULT_DIR / 'question_answer.json',
-                        help="Path to the question answer JSON file")
-    parser.add_argument('--new_database_path', type=Path, default=RESULT_DIR / 'new_database.json',
-                        help="Path to the new database JSON file")
-    parser.add_argument('--caption_input_path', type=Path, default=CAPTION_INPUT_PATH,
-                        help="Path to the caption input JSON file")
-    parser.add_argument('--name_entity', action='store_true',
-                        help="Test and print loaded template strategies")
-    parser.add_argument('--model_type',type=str, default='llama3',
-                        help="Model type: llama3 (Llama-3-8B), qwen3 (Qwen2.5-14B), or full names llama3-8b/qwen3-14b")
-    parser.add_argument('--normalize_output',action='store_true', default=True,
-                        help="Whether to normalize captions after generation")
-    parser.add_argument('--max_words', type=int, default=105,
-                        help="Maximum words for normalization")
-    parser.add_argument('--expected_length', type=int, default=104,
-                        help="Expected caption length after normalization")
-    parser.add_argument('--use_entity_scoring', action='store_true', default=False,
-                        help="Enable entity heuristic scoring to filter entities before enrichment")
-    parser.add_argument('--entity_config_path', type=str, default=None,
-                        help="Path to entity scoring config JSON (optional, uses default if not specified)")
-
-    args = parser.parse_args()
+    args = build_parser().parse_args()
+    if args.use_entity_scoring and args.gate == 'none':
+        args.gate = 'enrichment'
     main(args)

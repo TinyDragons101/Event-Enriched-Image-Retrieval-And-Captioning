@@ -1,0 +1,26 @@
+{
+  "_comment": "Table 3(c) w/o entity-type prior. PERSON loses its free pass over tau, so the selected-entity count drops sharply; #Ent must be reported. [published scorer, fixes off]",
+  "weights": {
+    "exact_match_crawl": 10.0,
+    "exact_match_generated": 8.0,
+    "partial_match_crawl": 6.0,
+    "partial_match_generated": 4.0,
+    "substring_in_qa": 3.0,
+    "substring_in_summary": 1.5,
+    "early_position_bonus": 2.0,
+    "mid_position_bonus": 1.0,
+    "type_person": 0.0,
+    "type_gpe": 0.0,
+    "type_org": 0.0,
+    "type_loc": 0.0,
+    "type_date": 0.0,
+    "type_event": 0.0,
+    "type_other": 0.0,
+    "length_penalty_factor": -0.1
+  },
+  "thresholds": {
+    "min_score": 3.0,
+    "top_k": 10,
+    "min_entity_length": 2
+  }
+}

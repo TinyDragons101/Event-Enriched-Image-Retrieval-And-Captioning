@@ -1,0 +1,38 @@
+{
+  "_comment": "VG-Cap with every known scorer defect repaired. Differs from entity_scoring_config.json ONLY in the 'fixes' block; all weights and thresholds are identical, so any metric change is attributable to the repairs and not to re-tuning. Run with: python run_ablation.py --entity_config configs/entity_scoring_config_fixed.json",
+  "weights": {
+    "exact_match_crawl": 10.0,
+    "exact_match_generated": 8.0,
+    "partial_match_crawl": 6.0,
+    "partial_match_generated": 4.0,
+    "substring_in_qa": 3.0,
+    "substring_in_summary": 1.5,
+
+    "early_position_bonus": 2.0,
+    "mid_position_bonus": 1.0,
+
+    "type_person": 3.0,
+    "type_gpe": 2.5,
+    "type_org": 2.0,
+    "type_loc": 2.0,
+    "type_date": 1.0,
+    "type_event": 2.5,
+    "type_other": 0.5,
+
+    "length_penalty_factor": -0.1
+  },
+  "thresholds": {
+    "min_score": 3.0,
+    "top_k": 10,
+    "min_entity_length": 2
+  },
+  "fixes": {
+    "parse_keyword_markdown": true,
+    "word_boundary_match": true,
+    "span_penalty": "paper",
+    "substring_dedup": true,
+    "first_mention_position": true,
+    "drop_non_depictable": true,
+    "excluded_labels": ["CARDINAL", "ORDINAL", "PERCENT", "MONEY", "QUANTITY", "TIME", "LANGUAGE"]
+  }
+}

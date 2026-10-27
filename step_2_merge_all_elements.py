@@ -1,5 +1,62 @@
 import json
 import csv
+import re
+
+# ---------------------------------------------------------------------------
+# Which crawled string becomes C_image's editorial caption
+# ---------------------------------------------------------------------------
+# step_2_0_create_result.py stores two strings per database image:
+#
+#   crawl_alt      the <img alt="..."> text
+#   crawl_caption  the text of div.image__metadata (the figure caption)
+#
+# The shipped pipeline uses crawl_alt, and measurement on result-tanphuc.json
+# (3000 records) says that is the right choice:
+#
+#   alt == caption                     38  ( 1.3%)
+#   caption == alt + photo credit    2254  (75.1%)   e.g. "...the race." +
+#                                                    "Matt King/Getty Images"
+#   genuinely different               708  (23.6%)   caption = "<kicker> —<alt>"
+#                                                    + credit; alt is the body
+#   alt empty but caption present      11
+#
+# So the figure caption is the alt text wrapped in a kicker and a photo credit.
+# Feeding it to the scorer would push agency names (Getty Images, AFP, Reuters)
+# into exact_match_crawl, the highest-weighted feature (10.0).  'alt' therefore
+# stays the default; 'merged' only fills the 11 records where alt is empty.
+CAPTION_SOURCES = ("alt", "caption", "merged")
+
+#: "<kicker> —" prefix the CNN template puts in front of the caption body
+_KICKER = re.compile(r"^.{0,90}?\s*\u2014\s*")
+#: trailing photo credit: one or more "Name/Agency" runs glued to the end
+_CREDIT = re.compile(
+    r"(?:[A-Z][\w.'&-]*(?:\s+[A-Z][\w.'&-]*)*/)+"
+    r"[A-Z][\w.'&-]*(?:\s+[A-Z][\w.'&-]*)*\s*$"
+)
+
+
+def strip_caption_furniture(text: str) -> str:
+    """Remove the kicker prefix and the trailing photo credit."""
+    text = (text or "").strip()
+    if not text:
+        return ""
+    text = _KICKER.sub("", text, count=1)
+    text = _CREDIT.sub("", text).strip()
+    return text
+
+
+def pick_crawl_caption(record: dict, source: str = "alt") -> str:
+    """The editorial-caption string handed to the prompt and to the scorer."""
+    alt = (record.get("crawl_alt") or "").strip()
+    cap = (record.get("crawl_caption") or "").strip()
+
+    if source == "alt":
+        return alt
+    if source == "caption":
+        return strip_caption_furniture(cap)
+    if source == "merged":
+        return alt or strip_caption_furniture(cap)
+    raise ValueError(f"caption_source must be one of {CAPTION_SOURCES}, got {source!r}")
 
 
 def safe_load_json(path):
@@ -11,7 +68,9 @@ def safe_load_json(path):
         return {}
 
 
-def merge_function(generative_caption_path, query_first_article_path, entity_name_path, question_answer_path, new_database_path, output_path):
+def merge_function(generative_caption_path, query_first_article_path, entity_name_path,
+                   question_answer_path, new_database_path, output_path,
+                   caption_source: str = "alt"):
     generated_caption_data = safe_load_json(generative_caption_path)
     data_3 = safe_load_json(query_first_article_path)
     entity_name_data = safe_load_json(entity_name_path)
@@ -26,9 +85,10 @@ def merge_function(generative_caption_path, query_first_article_path, entity_nam
         newdatabase_data[value.get('query_id', '')] = {
             'position': value.get('article_position', ''),
             'content': value.get('article', ''),
-            'crawl_caption': value.get('crawl_alt', '')
+            'crawl_caption': pick_crawl_caption(value, caption_source)
         }
 
+    print(f"[merge] caption_source={caption_source}")
     final_merge_result = []
 
     for query_id, caption_value in query_ids.items():
@@ -51,16 +111,45 @@ def merge_function(generative_caption_path, query_first_article_path, entity_nam
     print(f"Final merged result saved to: {output_path}")
 
 
-def create_submission():
-    final_caption_json = "assemble_result/cot_5_things_fact_more_event_llama.json"
-    # For public test submission, use the public test file which already has correct format
-    csv_path = "final_csv_result/public_final_retrieval_merging_final_results.csv"
-    output_csv_path = "final_csv_result/submission_final.csv"
+def load_caption_map(path) -> dict:
+    """{query_id: caption} from either shape this repo writes.
 
+    The LLM step saves a dict {query_id: caption}; CaptionNormalizer saves a
+    LIST of records with 'query_id' / 'normalized_caption'.  create_submission()
+    used to assume the dict shape, so feeding it normalized_captions.json
+    raised AttributeError on .get().
+    """
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if isinstance(data, dict):
+        return data
+    if isinstance(data, list):
+        out = {}
+        for rec in data:
+            caption = rec.get("normalized_caption")
+            if caption is None:
+                caption = rec.get("caption", rec.get("generated_caption", ""))
+            out[rec["query_id"]] = caption
+        return out
+    raise TypeError(f"unsupported caption file shape in {path}: {type(data).__name__}")
+
+
+def create_submission(
+    final_caption_json_path: str = "assemble_result/cot_5_things_fact_more_event_llama.json",
+    csv_path: str = "final_csv_result/public_final_retrieval_merging_final_results.csv",
+    output_csv_path: str = "final_csv_result/submission_final.csv",
+):
+    """Write the submission CSV.
+
+    FIXED: the parameter was hard-coded, so step_2_caption_process.py's calls
+    (create_submission(final_caption_json_path=...)) raised TypeError and the
+    normalized captions never reached the CSV -- which is why
+    final_csv_result/submission_final.csv equals the raw drafts, not VG-Cap.
+    """
     # Load caption data with debug
-    print(f"[DEBUG] Loading caption data from: {final_caption_json}")
-    with open(final_caption_json, "r", encoding="utf-8") as f:
-        caption_data = json.load(f)
+    print(f"[DEBUG] Loading caption data from: {final_caption_json_path}")
+    caption_data = load_caption_map(final_caption_json_path)
     
     print(f"[DEBUG] Loaded {len(caption_data)} captions")
     print(f"[DEBUG] Caption data type: {type(caption_data)}")
