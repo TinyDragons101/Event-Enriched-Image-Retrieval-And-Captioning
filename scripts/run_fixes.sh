@@ -35,7 +35,7 @@ LIMIT_ARG=(); [[ -n "${LIMIT}" ]] && LIMIT_ARG=(--limit "${LIMIT}")
 COMMON=(--seed "${SEED}" --device "${DEVICE}" --model_type "${MODEL}" --out_dir "${OUT_DIR}" "${LIMIT_ARG[@]}")
 REUSE=(); [[ "${GATE}" == "enrichment" && -f "${DRAFTS}" ]] && REUSE=(--reuse_drafts "${DRAFTS}")
 
-run() { echo; echo "=== $* ==="; python run_ablation.py "$@"; }
+run() { echo; echo "=== $* ==="; python run_ablation.py --skip_if_done "$@"; }
 
 echo "gate=${GATE} seed=${SEED}  reuse_drafts=${#REUSE[@]}"
 

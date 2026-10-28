@@ -25,8 +25,8 @@ class LLMAssembler:
             self.model = Llama(device=device, model_type='llama3-8b')
 
     
-    def assemble(self, prompt: str) -> str:
-        return self.model.assemble(prompt)
+    def assemble(self, prompt: str, temperature: float = 0.3) -> str:
+        return self.model.assemble(prompt, temperature=temperature)
     
     def question_answer(self, prompt: str) -> str:
         return self.model.question_answer(prompt)

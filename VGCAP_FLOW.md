@@ -3,6 +3,11 @@
 Cập nhật 2026-10-27. Mọi số dòng dưới đây trace từ code thật, không từ manuscript.
 Đây là flow đã sinh ra con số **0.6219** đã công bố.
 
+> ⚠️ Số dòng ở đây là của **bản trước khi vá** (commit `9a23067`), xem bằng
+> `git show 9a23067:<file>`. Ở HEAD (`1ce3c7f`) các file đã được viết lại nên số dòng lệch,
+> ví dụ `compose_input` nay ở `step_2_caption_process.py:65` và `merge_function` đã chuyển sang
+> `step_2_merge_all_elements.py:71`.
+
 > Dòng 153–156 và 183–188 của `step_2_caption_normalizer.py` là phần mới thêm
 > (`selection_map`); flow gốc không có, không ảnh hưởng mô tả bên dưới.
 
@@ -44,7 +49,8 @@ Cập nhật 2026-10-27. Mọi số dòng dưới đây trace từ code thật, 
       │
       ├─ C2  truncate_caption_semantic(max_words=105, exp=104)  :97
       │      CHỈ chạy khi draft > 105 từ
-      │      mask POS/NER bảo vệ proper noun + số, cắt token thường từ cuối
+      │      chỉ bảo vệ từ thuộc entity spaCy TRONG caption (doc.ents), KHÔNG có
+      │      POS mask cho proper noun / số; cắt token thường từ cuối
       │
       ├─ C3  extract_entities_and_phrases()                     :148
       │      ▸ use_entity_scoring=True  -> EntityHeuristicScorer.score_query()
@@ -130,7 +136,7 @@ Ví dụ §4.7 (ảnh Mark Webber xem tennis): caption unfiltered kết thúc b�
 | Việc | viết lại §3.6 thành enrichment-only, vẽ overview đúng | `run_ablation.py --gate unified` |
 | Số cũ | giữ nguyên toàn bộ | **phải chạy lại hết**, kể cả Table 1 |
 | Đóng góp "unified gating" | mất, phải hạ xuống thành enrichment gating | giữ được |
-| GPU | 0 | >= 13 x 6h |
+| GPU | 0 | ~19 x 6h nếu chạy `run_panels.sh unified` (mọi `sel_*`/`abl_*` phải sinh lại) |
 
 **Đề xuất:** chạy `--gate unified` cho đúng một dòng VG-Cap trước (~6h) rồi so với 0.6219.
 Hơn -> chuyển hẳn sang unified và chạy lại. Không hơn -> sửa bài theo code, giữ số cũ, và nói thẳng
@@ -163,9 +169,14 @@ Trace thêm sau khi đối chiếu file (cập nhật 2026-10-27).
 | File | Độ dài TB sau làm sạch | Prompt | Ứng với dòng nào trong Table 3(a) |
 |---|---|---|---|
 | `assemble_result/cot_5_things_fact_more_event_llama.json` | **97.4 từ** | CÓ length band | `+ unfiltered entities, prompt band` (0.6166) và `+ heuristic selector` (0.6219) |
-| `assemble_result/cot_5_things_fact_more_event_llama_version1.json` | **135.2 từ** | KHÔNG length band | `ENRIC baseline` (bài ghi Len 136) và `+ SGN` (0.6124) |
+| `assemble_result/cot_5_things_fact_more_event_llama_version1.json` | **135.2 từ** | KHÔNG length band, CÓ Keywords | `ENRIC baseline` (bài ghi Len 136) và `+ SGN` (0.6124) |
 
 Cả hai đều 3000 query, **không có query nào trùng caption** giữa hai file.
+
+✅ Đã kiểm bằng git (2026-10-27): `version1.json` giống hệt từng byte với `llama.json` ở commit
+`c004e52`, sinh bằng template **có** khối Keywords và **không** có band 100–120 ("at least 5
+sentences"). Vậy dòng ENRIC (0.6097) và "+SGN (0.6124)" **đã chứa entity trong prompt**; bước
+0.6124 → 0.6166 chỉ đổi length band. Ladder (a) viết lại ở `VGCAP_TODO.md` §2.
 
 Hệ quả: **bốn dòng đã công bố của panel (a) đều tái dựng được mà không cần GPU**, vì phần ngẫu
 nhiên duy nhất (LLM) đã đóng băng trong draft, còn normalizer và entity scorer đều deterministic.

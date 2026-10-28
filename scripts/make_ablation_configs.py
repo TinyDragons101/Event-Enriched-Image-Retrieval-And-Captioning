@@ -52,6 +52,10 @@ VARIANTS = {
     "ablation_span_penalty_paper": (
         "Span penalty exactly as Eq. (2) of the paper: -0.1 * max(0, |e|-3).",
         [], {}, {}, {"span_penalty": "paper"}),
+    "ablation_no_span": (
+        "Table 3(c) w/o span penalty. On the published scorer this equals VG-Cap "
+        "(the penalty never fired); on the repaired scorer it turns the penalty off.",
+        [], {}, {}, {"span_penalty": "off"}),
 }
 
 
@@ -67,7 +71,7 @@ def emit(base_path: Path, suffix: str, note: str) -> None:
         if extra_f:
             cfg.setdefault("fixes", {}).update(extra_f)
         path = OUT / f"{name}{suffix}.json"
-        path.write_text(json.dumps(cfg, indent=2) + "\n")
+        path.write_text(json.dumps(cfg, indent=2) + "\n", encoding="utf-8", newline="\n")
         print(f"wrote {path}")
 
 

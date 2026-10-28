@@ -1,0 +1,10 @@
+# STEP 1 (GPU, 4 slots) -- the normal VG-Cap run (Gates 1+2) and the seed-0 runs it is compared with.
+# All 4 start together; vgcap_s0 is the run compared with the submitted 0.6219 at the checkpoint (runbook section 7).
+# VG-Cap = Gates 1+2: E* in the prompt (Gate 1) and as the only enrichment source (Gate 2)
+run vgcap_s0            --seed 0 --gate unified --selector heuristic --entity_config $CFG
+# (d) No gate: band + unfiltered entity list. Its drafts also give "Gate 2 only" on CPU (C1_after_G1.txt)
+run gate_none_s0        --seed 0 --gate none
+# (d) Gate 1 only: E* in the prompt, enrichment from all article entities
+run gate_prompt_s0      --seed 0 --gate prompt --selector heuristic --entity_config $CFG
+# (a) entity list, no band (= the + SGN row); its drafts also give the ENRIC baseline row on CPU
+run ladder_kw_noband_s0 --seed 0 --gate none --no_prompt_band

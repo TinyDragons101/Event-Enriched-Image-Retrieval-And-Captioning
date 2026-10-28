@@ -10,7 +10,14 @@ Cập nhật 2026-10-27 sau khi kiểm tra thực tế.
 
 ### B1. Không có ground truth public test → CIDEr chỉ lấy được từ leaderboard
 
-Repo không có reference caption của public test, và chưa rõ ban tổ chức có phát hành không.
+**Nhóm đã xác nhận (2026-10-27):**
+- Không có GT public test, không có công cụ chấm (chỉ trang nộp bài + công thức Overall).
+- Quota leaderboard khoảng 100 lần, đã dùng 5–6.
+- Không biết model CLIP chính thức.
+- **Có** GT tập train (`gt_train.csv`, trên drive).
+- Script đếm #Ent gốc **đã mất**.
+- Bản paper chính là `VGCap_ACIIDS2027/main.tex`.
+
 Hệ quả chia làm hai:
 
 | Chỉ số | Tính cục bộ được? | Cách lấy |
@@ -20,18 +27,20 @@ Hệ quả chia làm hai:
 | **Len, #Ent, Leakage** | ✅ có | `stats.json` của mỗi run, không cần gì thêm |
 | **Entity P/R/F1 (Table 4)** | ❌ không | cần reference caption |
 
-Leaderboard **không giới hạn số lần submit**, nên hướng đi là: sinh hết CSV → submit từng cái →
-`scripts/record_score.py` ghi điểm ngược lại → `scripts/collect_results.py --latex`.
+Leaderboard **có quota (~94 lượt còn lại)**, nên hướng đi là: sinh CSV → khử trùng lặp bằng
+`scripts/make_submissions.py` → nộp theo thứ tự ưu tiên → `scripts/record_score.py` ghi điểm ngược
+lại → `scripts/collect_results.py --latex`. Phụ lục A chạy trên tập con train và chấm CIDEr cục
+bộ bằng `gt_train.csv`, không nộp leaderboard (bảng ngân sách ở `VGCAP_ACTION.md` B1).
 
-Ba lựa chọn cho cột Entity P/R/F1: (1) chạy trên tập con **train split** có GT và báo cáo riêng —
-cũng là điều phụ lục A của bài đã hứa; (2) bỏ cột, chỉ giữ unsupported-rate và human eval;
-(3) hỏi ban tổ chức EVENTA.
+Cột Entity P/R/F1: chạy trên tập con **train split** có GT và báo cáo riêng, đúng như phụ lục A của
+bài đã hứa. Không có lựa chọn "hỏi ban tổ chức" nữa.
 
 ### B2. Không set seed → đã xử lý
 
 `llama3.py:128` dùng `do_sample=True, temperature=0.6, top_p=0.9` và không có `set_seed` ở đâu.
 `run_ablation.py --seed` đã gọi `transformers.set_seed`. Lưu ý: seed chỉ ảnh hưởng 4 run sinh mới;
-18 run tái dùng draft sẽ cho caption y hệt nhau giữa các seed.
+18 run tái dùng draft sẽ cho caption y hệt nhau giữa các seed. `set_seed` chỉ gọi một lần trước
+vòng lặp, nên một run đã `--resume` không còn tái lập được theo seed.
 
 ### B3 (mới). Caption của run 0.6219 không có trong repo
 
@@ -80,19 +89,43 @@ Chạy tất cả: `bash scripts/run_panels.sh enrichment` (hoặc `unified`).
 ### Panel (a) — Component ladder (6 dòng)
 **Câu hỏi:** mỗi thành phần đóng góp bao nhiêu khi cộng dồn?
 
-| Dòng | Trạng thái | Chạy bằng |
-|---|---|---|
-| ENRIC baseline (reproduced) | ✅ 0.6097 — thiếu ô `#Ent` | — |
-| + semantic normalizer (SGN) | ✅ 0.6124 — thiếu ô `#Ent` | — |
-| + prompt band only | ❌ **TODO R3.6/R4.2** | prompt band, không entity |
-| + unfiltered entities only | ❌ **TODO R3.6/R4.2** | entity, không prompt band |
-| + unfiltered entities, prompt band | ✅ 0.6166 | `--gate none` |
-| + heuristic selector (VG-Cap) | ✅ 0.6219 | `--gate enrichment --selector heuristic` |
+> **Phát hiện từ git (2026-10-27):** `version1.json`, bộ draft của dòng ENRIC và +SGN, sinh bằng
+> template ở commit `c004e52`. Template đó **có khối Keywords**, không có band 100–120 (thay bằng
+> "at least 5 sentences"). Bằng chứng: `version1.json` giống hệt từng byte với `llama.json` ở
+> `c004e52`. Ở `2d47722` file được đổi tên, và template chỉ đổi các dòng độ dài/số câu.
+>
+> ⇒ Ladder đã công bố **không** "thêm entity" ở bước 0.6124 → 0.6166: entity đã có trong prompt từ
+> dòng ENRIC. Bước đó chỉ đổi **length band**.
 
-Hai dòng mới tách tác dụng của *prompt band* khỏi *entity conditioning* — ladder gốc cộng cả hai
-cùng lúc nên không biết cái nào có công.
+Ladder viết lại theo đúng prompt đã dùng:
 
-⚠️ Ô `#Ent` của hai dòng đầu điền được ngay từ caption đã có (`stats.json` tự tính).
+| Dòng | Keywords trong prompt | Band | SGN | Draft | Trạng thái |
+|---|---|---|---|---|---|
+| ENRIC baseline (reproduced) | có | không | không | `version1.json` | ✅ 0.6097, thiếu `#Ent` |
+| + SGN | có | không | có | `version1.json` | ✅ 0.6124, thiếu `#Ent`. **Đây chính là dòng "+ unfiltered entities only"** |
+| + prompt band | có | có | có | `llama.json` | ✅ 0.6166 |
+| + heuristic selector (VG-Cap) | có | có | có | `llama.json` + gate enrichment | ✅ 0.6219 |
+| **mới:** không keyword, không band | không | không | có | sinh mới | ❌ GPU (~6h) |
+| **mới:** không keyword, có band | không | có | có | sinh mới (`ladder_band_only`) | ❌ GPU (~6h) |
+
+Hai dòng mới tạo thành bảng 2×2 (keyword × band, cùng có SGN) với hai dòng 0.6124 và 0.6166. So
+"có keyword" với "không keyword" ở cùng mức band thì tách được tác dụng của entity conditioning,
+đúng câu reviewer R3.6/R4.2 hỏi.
+
+⚠️ Việc cần làm ở code trước khi chạy (chưa sửa):
+- `ladder_entities_only` trong `run_panels.sh` (keyword, không band) **trùng ý nghĩa** với dòng
+  0.6124 có sẵn. Thay bằng run "không keyword, không band".
+- Nhánh "không band" của `cot_5_things_fact_more_event_ablation.j2` bỏ luôn câu về số câu, trong
+  khi prompt của `version1.json` có "at least 5 sentences". Muốn so được với 0.6124 thì nhánh này
+  phải giữ đúng câu đó (template ở `c004e52`).
+- `ladder_enric` / `ladder_sgn` đang có cờ `--no_prompt_entities`. Khi tái dùng draft, cờ này chỉ
+  ghi vào `config.json` và **gán nhãn sai**. Bỏ cờ đó.
+
+⚠️ Phải sửa lời kể ở dòng 371 của bài ("Adding entities with the prompt band reaches 0.6166") và
+nhãn các dòng 340–345.
+
+⚠️ Ô `#Ent` của hai dòng đầu điền được ngay từ caption đã có, nhưng chỉ sau khi chốt định nghĩa
+#Ent mới (script gốc đã mất, xem §12).
 
 ### Panel (b) — Alternative selectors, matched budget (4 dòng)
 **Câu hỏi:** cái làm nên kết quả là *công thức chấm điểm*, hay chỉ là việc *giới hạn số entity*?
@@ -135,10 +168,14 @@ scorer đang đọc gần-ground-truth. **Chạy dòng này trước mọi dòng
 features sinh key `length_penalty`, weights khai báo key `length_penalty_factor`
 → `self.weights.get('length_penalty', 0.0)` trả về **0.0**. Eq. (2) chưa bao giờ chạy.
 ⇒ Dòng "w/o span penalty" sẽ ra **y hệt** VG-Cap. Hai config thay thế để bật nó lên:
-- `ablation_span_penalty_on.json` — theo ngữ nghĩa code: `−0.1 × số_từ`
+- `ablation_span_penalty_code.json` — theo ngữ nghĩa code: `−0.1 × số_từ`
 - `ablation_span_penalty_paper.json` — theo đúng Eq. (2): `−0.1 × max(0, số_từ − 3)`
 
 Kiểm chứng trên span 5 từ "the Australian Grand Prix circuit": **10.5** (hiện tại) / **10.0** / **10.3**.
+
+⚠️ Trên scorer **đã vá** (`CFG_SUFFIX=_fixed`), hai config `ablation_span_penalty_*_fixed.json`
+đều **bật** penalty, tức là trùng `fix_all`; **chưa có** config "w/o span" thật. Cần thêm biến thể
+`ablation_no_span` (`fixes.span_penalty = "off"`) vào `scripts/make_ablation_configs.py`.
 
 ⚠️ Tắt một họ làm đổi số entity được chọn (τ giữ nguyên) → lại rơi vào đúng confound panel (b) muốn
 loại. Rõ nhất ở "w/o entity-type prior". **Phải báo cáo cột `#Ent` cho từng dòng** và giải thích,
@@ -167,9 +204,9 @@ sinh (~6h).
 
 | Cột | Cần gì | Chi phí |
 |---|---|---|
-| Entity P/R/F1 | So entity của caption với entity của reference caption, 3000 query | Cần B1 (ground truth) |
+| Entity P/R/F1 | So entity của caption với entity của reference caption | Không có GT test → tính trên **tập con train** bằng `gt_train.csv`; sửa câu "over all 3,000 queries" |
 | Unsupported-entity rate | 200 query × 2 annotator, nhãn: visually supported / contextually supported / unsupported | **Người**, 1–2 tuần |
-| Leakage rate | % entity bị loại nhưng vẫn xuất hiện trong caption cuối | ✅ `stats.json` tự tính |
+| Leakage rate | % entity bị loại nhưng vẫn xuất hiện trong caption cuối | ⚠️ `stats.json` tự tính, nhưng khớp bằng chuỗi con thô và mẫu số có blob keyword → sửa cách đo trước |
 | Human 1–5 (Fact./Flu./Inf.) | 3 rater, cùng 200 query, blind + random order | **Người** |
 
 ⚠️ Bài đang viết "Cohen's κ" nhưng dùng 3 rater → phải là **Fleiss' κ**. Chỗ 2 annotator
@@ -186,9 +223,10 @@ sinh (~6h).
 | A — Sensitivity τ × K_e (15 ô) | Đổi prompt → phải sinh lại | Đắt; cân nhắc subsample 500–1000 query |
 | A — Weight perturbation (7 ô) | ×0.5 / ×1.5 từng họ + random ±20% | Đắt |
 | A — Length sweep L* (12 ô) | Chỉ đổi `--expected_length` | ✅ **Rẻ**, tái dùng draft |
-| B — Learned selector | Logistic regression trên cùng feature, label = entity có trong reference caption | Cần B1 + 1 lần sinh |
-| C — Efficiency | Latency + peak memory từng stage | 1 pass đo |
-| D — Qualitative 6–8 ví dụ | Dùng `runs/<tag>/entity_debug.json` (có score breakdown từng entity) | ✅ Rẻ |
+| A — Length sweep: lưu ý | Bài ghi "prompt band shifted accordingly", nhưng template cố định `100-120` → sweep rẻ chỉ đổi normalizer. Muốn đúng câu chữ thì phải tham số hoá band và sinh lại (4 run GPU) | |
+| B — Learned selector | Logistic regression trên cùng feature, label = entity có trong reference caption | Cần GT **train** + context Stage 2 cho ~500 query train (**chưa có**, phải dựng trên server, cần GPU) + 1 lần chạy selector |
+| C — Efficiency | Latency + peak memory từng stage | 1 pass đo; **cần script mới** (`timings` hiện chỉ là tổng thời gian cả run, không có peak memory) |
+| D — Qualitative 6–8 ví dụ | Dùng `runs/<tag>/entity_debug.json` | ⚠️ Rẻ, nhưng **sửa `_pack()` trước**: file debug của selector hiện không có `features` nên không có score breakdown |
 | E — Reproducibility | Release code, prompt, seed, annotation | ✅ Rẻ |
 
 ---
@@ -290,17 +328,21 @@ sinh (~6h).
 **Chưa test end-to-end** — máy local không có `spacy`/`torch`. Mới chỉ smoke-test logic selector với
 spaCy giả lập (pass) + compile + CLI. Lần chạy thật đầu tiên trên server nên dùng `--limit 20`.
 
-### Lỗi phụ phát hiện khi đọc code (chưa sửa)
-- `create_submission()` trong `step_2_merge_all_elements.py` **không nhận tham số**, nhưng
-  `step_2_caption_process.py:171` gọi `create_submission(final_caption_json_path=...)` → TypeError.
-  Bản `_copy` mới có tham số.
-- Cả hai bản `create_submission` đọc dict `{query_id: caption}`, trong khi `normalize_batch` lưu
-  **list** các record → `.get()` trên list sẽ lỗi. `run_ablation.py` tự ghi submission nên không dính.
-- `calculate_position_features` coi `entity.start == 0` là "không có thông tin vị trí", nên entity
-  đứng đầu bài báo bị mất bonus; entity parse từ keyword LLM luôn `start=0` nên **không bao giờ**
-  được position bonus.
+### Lỗi phụ phát hiện khi đọc code
+- ✅ **Đã sửa ở commit `1ce3c7f`:** `create_submission()` trong `step_2_merge_all_elements.py`
+  không nhận tham số, nhưng `step_2_caption_process.py` gọi nó với `final_caption_json_path=...`
+  → TypeError. Giờ hàm nhận tham số và `load_caption_map()` đọc được cả dict lẫn list.
+- ✅ **Đã có switch (mặc định tắt):** `calculate_position_features` coi `entity.start == 0` là
+  "không có thông tin vị trí", nên entity đứng đầu bài báo bị mất bonus; entity parse từ keyword LLM
+  luôn `start=0` nên **không bao giờ** được position bonus. Bật bằng `first_mention_position`.
 - Vòng lặp sinh caption cũ ghi lại toàn bộ dict JSON sau **mỗi** query (3000 lần ghi một dict đang
   lớn dần). `run_ablation.py` checkpoint mỗi 50 query.
+- ❌ **Chưa sửa:** `run_ablation.py` không chặn ghi đè (chạy lại một `--tag` đã xong là mất
+  `llm_raw.json` 6h), và checkpoint ghi thẳng vào file nên bị kill giữa lúc ghi thì JSON hỏng.
+- ❌ **Chưa sửa:** `run_appendix.sh unified` dừng ở lệnh đầu tiên (phần L\* luôn truyền
+  `--reuse_drafts`); tag `len_*` không có tên gate nên hai gate ghi đè nhau.
+- ❌ **Chưa sửa:** `train_learned_selector.py` gán nhãn bằng chuỗi con thô (cùng lỗi `'one'` khớp
+  "someone").
 
 ---
 
@@ -310,6 +352,9 @@ Mọi TODO cần số đều đã có đường chạy. Thứ tự bắt buộc:
 evaluator -> (3) chạy run -> (4) chấm điểm -> (5) gom bảng.**
 
 ### Bước 0 — validate evaluator trước khi tin bất kỳ số mới nào
+
+> ⚠️ `data/public_test_gt.json` **hiện chưa có** (xem B1). Không có GT thì chỉ kiểm được CLIP:
+> `--expect '{"clip":0.858}'`, còn CIDEr/Overall phải kiểm bằng cách submit 4 CSV neo.
 
 ```bash
 # tái tạo con số đã công bố từ caption cũ; sai thì dừng lại, đừng chạy tiếp
@@ -381,7 +426,7 @@ Ba chỗ dưới đây tôi để nguyên hành vi cũ, vì sửa sẽ làm con 
 Chọn sửa hay không là quyết định của nhóm, và mỗi lựa chọn kéo theo việc chạy lại:
 
 1. **Span penalty chết** (`length_penalty` vs `length_penalty_factor`) — giữ nguyên để tái lập.
-   Bật bằng `configs/ablation_span_penalty_on.json` hoặc `..._paper.json`.
+   Bật bằng `configs/ablation_span_penalty_code.json` hoặc `..._paper.json`.
 2. **Prompt không qua gate** — giữ nguyên. Bật bằng `--gate unified`.
 3. **Noun phrase bỏ qua gate** trong `enrich_caption` — giữ nguyên. Tắt bằng `--no_noun_phrases`.
 
@@ -408,6 +453,10 @@ Sau khi phát hiện hai bộ draft có sẵn, bức tranh chi phí đổi hẳn
 | `abl_*` (6 config) | tái dùng `llama.json` | 0 |
 
 **18 run không cần GPU, 4 run cần — tổng ~24h GPU** (không phải ~130h như ước lượng ban đầu).
+
+⚠️ Con số này chỉ đúng với `run_panels.sh enrichment`. Với `run_panels.sh unified`, mọi dòng
+`sel_*` và `abl_*` đều đổi prompt nên phải sinh lại: khoảng **19 run GPU (~115h)**. Ba seed thật
+(sinh lại cả draft có band và không band cho seed 1, 2) tốn thêm khoảng 24–72h tuỳ phạm vi.
 
 ### Phụ lục A — 37 run, 0 GPU
 
@@ -478,7 +527,7 @@ Hai điểm bất thường:
 
 | Việc | Vì sao |
 |---|---|
-| **Hỏi lại script đếm `#Ent` gốc** | Bài chỉ viết "recognized and deduplicated as in Section 3.4", không đủ để tái lập. §3.4 ngụ ý substring-dedup, nhưng cách đó cho 9.41, lệch xa |
+| ~~Hỏi lại script đếm `#Ent` gốc~~ | **Nhóm xác nhận script đã mất.** Không tái lập được 7.59 / 6.76; phải chốt định nghĩa mới (việc dưới) và đếm lại mọi số ở §4.5 + Fig. 2 |
 | **Tính lại `#Ent` cho MỌI dòng bằng một script duy nhất** | Dù tìm được script cũ hay không, cả bảng phải dùng chung một cách đếm và **nói rõ cách đếm trong bài** — hiện bài không định nghĩa |
 | **Kiểm xem run đã công bố có dùng đúng bộ draft này không** | Không set seed nên draft có thể đã được sinh lại; đó là giả thuyết đơn giản nhất giải thích chênh lệch |
 

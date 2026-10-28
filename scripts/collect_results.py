@@ -37,6 +37,12 @@ def load_runs(out_dir: Path) -> list[dict]:
         scores_path = run_dir / "scores.json"
         if scores_path.exists():
             row.update(json.loads(scores_path.read_text(encoding="utf-8")))
+        # #Ent recounted by scripts/count_entities.py overrides stats.json, so
+        # every row of the table uses the same frozen definition
+        count_path = run_dir / "entity_count.json"
+        if count_path.exists():
+            row["mean_entities_per_caption"] = json.loads(
+                count_path.read_text(encoding="utf-8"))["mean_entities_per_caption"]
         rows.append(row)
     return rows
 

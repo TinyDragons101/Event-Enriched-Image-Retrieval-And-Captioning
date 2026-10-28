@@ -1,0 +1,30 @@
+# STEP 2 (GPU, 4 slots) -- everything else for the P1 + P2 rows of new_main.tex Table 3. Start only after the checkpoint (runbook section 7).
+# Every (b)/(c) row goes through both gates, like VG-Cap ("applied through both gates", Table 3 caption).
+# P1 seeds 1-2 of the core rows: VG-Cap, No gate (its drafts also give Gate 2 only on CPU), Gate 1 only
+run vgcap_s1            --seed 1 --gate unified --selector heuristic --entity_config $CFG
+run vgcap_s2            --seed 2 --gate unified --selector heuristic --entity_config $CFG
+run gate_none_s1        --seed 1 --gate none
+run gate_none_s2        --seed 2 --gate none
+run gate_prompt_s1      --seed 1 --gate prompt --selector heuristic --entity_config $CFG
+run gate_prompt_s2      --seed 2 --gate prompt --selector heuristic --entity_config $CFG
+# P1 (b) article order (3 seeds), random (mean of 5 draws; --seed is the draw)
+run sel_article_order_s0 --seed 0 --gate unified --selector article_order --entity_config $CFG --budget_match fixed --budget 10
+run sel_article_order_s1 --seed 1 --gate unified --selector article_order --entity_config $CFG --budget_match fixed --budget 10
+run sel_article_order_s2 --seed 2 --gate unified --selector article_order --entity_config $CFG --budget_match fixed --budget 10
+run sel_random_d1_s0     --seed 1 --gate unified --selector random        --entity_config $CFG --budget_match fixed --budget 10
+run sel_random_d2_s0     --seed 2 --gate unified --selector random        --entity_config $CFG --budget_match fixed --budget 10
+run sel_random_d3_s0     --seed 3 --gate unified --selector random        --entity_config $CFG --budget_match fixed --budget 10
+run sel_random_d4_s0     --seed 4 --gate unified --selector random        --entity_config $CFG --budget_match fixed --budget 10
+run sel_random_d5_s0     --seed 5 --gate unified --selector random        --entity_config $CFG --budget_match fixed --budget 10
+# P1 (c) w/o editorial-caption match (3 seeds)
+run abl_no_editorial_s0  --seed 0 --gate unified --selector heuristic --entity_config configs/ablation_no_editorial${CFG_SUFFIX}.json
+run abl_no_editorial_s1  --seed 1 --gate unified --selector heuristic --entity_config configs/ablation_no_editorial${CFG_SUFFIX}.json
+run abl_no_editorial_s2  --seed 2 --gate unified --selector heuristic --entity_config configs/ablation_no_editorial${CFG_SUFFIX}.json
+# P2 (a) single-component rows without the entity list (+ prompt band; and the literal no-list base)
+run ladder_nokw_band_s0   --seed 0 --gate none --no_prompt_entities
+run ladder_nokw_noband_s0 --seed 0 --gate none --no_prompt_entities --no_prompt_band
+# P2 (b) contextual presence only; (c) w/o contextual presence, w/o entity-type prior, presence required
+run sel_presence_score_s0    --seed 0 --gate unified --selector presence_score --entity_config $CFG --budget_match fixed --budget 10
+run abl_no_presence_s0       --seed 0 --gate unified --selector heuristic --entity_config configs/ablation_no_presence${CFG_SUFFIX}.json
+run abl_no_type_s0           --seed 0 --gate unified --selector heuristic --entity_config configs/ablation_no_type${CFG_SUFFIX}.json
+run sel_presence_required_s0 --seed 0 --gate unified --selector presence_only --entity_config $CFG --budget_match fixed --budget 10

@@ -1,0 +1,5 @@
+# STEP 1b (CPU) -- needs gate_none_s0 and ladder_kw_noband_s0 from G1_core_s0.txt (each needs its stats.json).
+# (d) Gate 2 only: same drafts as gate_none_s0 (Gate 2 does not change the prompt), enrichment from E* only
+run gate_enrichment_s0 --seed 0 --gate enrichment --selector heuristic --entity_config $CFG --reuse_drafts runs/gate_none_s0/llm_raw.json
+# (a) ENRIC baseline: entity list, no band, no SGN
+run ladder_enric_s0    --seed 0 --gate none --no_prompt_band --no_normalizer --reuse_drafts runs/ladder_kw_noband_s0/llm_raw.json

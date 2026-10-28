@@ -30,6 +30,10 @@ CAPTION_PRESENCE_FEATURES: Tuple[str, ...] = (
     "partial_match_crawl",
     "partial_match_generated",
 )
+CONTEXT_PRESENCE_FEATURES: Tuple[str, ...] = CAPTION_PRESENCE_FEATURES + (
+    "substring_in_qa",
+    "substring_in_summary",
+)
 TYPE_FEATURES: Tuple[str, ...] = (
     "type_person",
     "type_gpe",
@@ -156,6 +160,8 @@ class BaseSelector:
                     "entity": e.text,
                     "label": e.label,
                     "score": round(e.score, 2),
+                    # per-feature breakdown: Appendix D and make_qualitative.py need it
+                    "features": {k: round(v, 2) for k, v in e.features.items()},
                     "selected": id(e) in selected_ids,
                 }
                 for e in candidates
@@ -263,6 +269,34 @@ class TypeOnlySelector(BaseSelector):
         return self._pack(ranked[:budget], scored, budget)
 
 
+class PresenceScoreSelector(BaseSelector):
+    """Contextual presence only (Table 3(b) of new_main.tex): rank by the
+    presence-family score alone -- editorial/generated caption, QA pairs,
+    summary -- ignoring position, type and span.
+
+    Entities with no presence evidence at all are not admitted; otherwise the
+    remaining slots would be filled in candidate order and the row would partly
+    measure article order instead.  tau is not applied, mirroring
+    TypeOnlySelector.  Ties are broken by first mention.
+    """
+
+    name = "presence_score"
+
+    def select(self, query_data):
+        scored, article = self._scored(query_data)
+        budget = self._budget(query_data)
+
+        def presence_score(entity: Entity) -> float:
+            return sum(
+                self.scorer.weights.get(f, 0.0) * entity.features.get(f, 0.0)
+                for f in CONTEXT_PRESENCE_FEATURES
+            )
+
+        keep = [e for e in scored if presence_score(e) > 0.0]
+        ranked = sorted(keep, key=lambda e: (-presence_score(e), first_mention(e, article)))
+        return self._pack(ranked[:budget], scored, budget)
+
+
 SELECTORS = {
     cls.name: cls
     for cls in (
@@ -270,6 +304,7 @@ SELECTORS = {
         ArticleOrderSelector,
         RandomSelector,
         PresenceOnlySelector,
+        PresenceScoreSelector,
         TypeOnlySelector,
     )
 }

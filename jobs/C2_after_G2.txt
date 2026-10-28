@@ -1,0 +1,6 @@
+# STEP 2b (CPU) -- needs gate_none_s1, gate_none_s2 and ladder_nokw_noband_s0 from G2_rest.txt.
+# (d) Gate 2 only, seeds 1-2: same drafts as No gate of the same seed
+run gate_enrichment_s1 --seed 1 --gate enrichment --selector heuristic --entity_config $CFG --reuse_drafts runs/gate_none_s1/llm_raw.json
+run gate_enrichment_s2 --seed 2 --gate enrichment --selector heuristic --entity_config $CFG --reuse_drafts runs/gate_none_s2/llm_raw.json
+# (a) literal ENRIC row without entity list: no keywords, no band, no SGN
+run ladder_nokw_noband_nosgn_s0 --seed 0 --gate none --no_prompt_entities --no_prompt_band --no_normalizer --reuse_drafts runs/ladder_nokw_noband_s0/llm_raw.json

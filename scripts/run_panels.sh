@@ -38,7 +38,9 @@ REF_SEL="${REF_DIR}/selected_entities.json"
 LIMIT_ARG=(); [[ -n "${LIMIT}" ]] && LIMIT_ARG=(--limit "${LIMIT}")
 COMMON=(--seed "${SEED}" --device "${DEVICE}" --model_type "${MODEL}" "${LIMIT_ARG[@]}")
 
-run() { echo; echo "=== $* ==="; python run_ablation.py "$@"; }
+# --skip_if_done: re-running the script resumes where it stopped instead of
+# failing on (or overwriting) runs that already finished
+run() { echo; echo "=== $* ==="; python run_ablation.py --skip_if_done "$@"; }
 
 # draft co san thi tai dung, khong thi sinh moi
 band_drafts()   { [[ -f "${DRAFTS_BAND}"   ]] && echo "--reuse_drafts ${DRAFTS_BAND}"; }
@@ -57,17 +59,21 @@ run --tag "${REF_TAG}" --gate "${GATE}" --selector heuristic \
     --entity_config "${BASE_CFG}" "${COMMON[@]}" $(gate_drafts)
 
 # ---------------------------------------------------------------------------
-# (a) Component ladder
+# (a) Component ladder, 2x2 keywords x band (all with SGN except ladder_enric).
+#     version1.json (ENRIC, +SGN) was generated WITH the Keywords block and
+#     without the band (template of commit c004e52), so the published
+#     "+SGN" row already is "keywords, no band". The two generated rows below
+#     drop the keywords: one without band, one with band.
 # ---------------------------------------------------------------------------
-run --tag "ladder_enric_s${SEED}" --gate none --no_prompt_entities --no_prompt_band \
+run --tag "ladder_enric_s${SEED}" --gate none --no_prompt_band \
     --no_normalizer "${COMMON[@]}" $(noband_drafts)
 
-run --tag "ladder_sgn_s${SEED}" --gate none --no_prompt_entities --no_prompt_band \
+run --tag "ladder_sgn_s${SEED}" --gate none --no_prompt_band \
     "${COMMON[@]}" $(noband_drafts)
 
 run --tag "ladder_band_only_s${SEED}" --gate none --no_prompt_entities "${COMMON[@]}"
 
-run --tag "ladder_entities_only_s${SEED}" --gate none --no_prompt_band "${COMMON[@]}"
+run --tag "ladder_nokw_noband_s${SEED}" --gate none --no_prompt_entities --no_prompt_band "${COMMON[@]}"
 
 # ---------------------------------------------------------------------------
 # (d) Gate location. prompt/unified doi prompt -> bat buoc sinh moi.
@@ -97,12 +103,12 @@ done
 
 # ---------------------------------------------------------------------------
 # (c) Leave one feature family out
-#     'w/o span penalty' chinh la mac dinh hien tai: trong ban da cong bo
-#     penalty khong bao gio chay (compute_score doc key 'length_penalty',
-#     weights chi khai 'length_penalty_factor'). Hai dong span duoi day BAT no
-#     len qua fixes.span_penalty = code | paper, khong phai tat.
+#     'w/o span penalty' = no_span (fixes.span_penalty = off). Tren scorer da
+#     cong bo no trung voi run tham chieu (penalty khong bao gio chay); tren
+#     scorer da va (CFG_SUFFIX=_fixed) no moi thuc su tat penalty. Hai dong
+#     span_penalty_* BAT penalty len (code | paper).
 # ---------------------------------------------------------------------------
-for CFG in no_presence no_editorial no_position no_type span_penalty_code span_penalty_paper; do
+for CFG in no_presence no_editorial no_position no_type no_span span_penalty_code span_penalty_paper; do
   run --tag "abl_${CFG}${CFG_SUFFIX}_${GATE}_s${SEED}" --gate "${GATE}" --selector heuristic \
       --entity_config "configs/ablation_${CFG}${CFG_SUFFIX}.json" "${COMMON[@]}" $(gate_drafts)
 done

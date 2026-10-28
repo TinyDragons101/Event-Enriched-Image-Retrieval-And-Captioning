@@ -3,7 +3,12 @@
 Cách sinh toàn bộ file kết quả để submit lên leaderboard.
 `VGCAP_FLOW.md` = code chạy thế nào. `VGCAP_TODO.md` = chạy cái gì và vì sao. File này = **chạy sao**.
 
-Giả định: **không có ground truth public test**, điểm lấy từ leaderboard, không giới hạn số lần submit.
+Giả định: **không có ground truth public test**, điểm lấy từ leaderboard.
+
+> **Nhóm đã xác nhận (2026-10-27):** leaderboard có **quota khoảng 100 lần, đã dùng 5–6**; không có
+> công cụ chấm, không biết model CLIP chính thức; có `gt_train.csv` (trên drive). Luôn khử trùng
+> lặp bằng `make_submissions.py` và theo bảng ngân sách ở `VGCAP_ACTION.md` B1. Phụ lục A chạy trên
+> tập con train và chấm cục bộ, không nộp.
 
 ### Trạng thái kiểm chứng (2026-10-27)
 
@@ -13,6 +18,10 @@ Giả định: **không có ground truth public test**, điểm lấy từ leade
 | ✅ Đã kiểm | chạy được **không cần torch**; Python 3.15 + spaCy 3.8.17 OK |
 | ✅ Đã kiểm | template ablation render **byte-identical** với bản gốc khi bật cả hai khối |
 | ✅ Đã kiểm | hai bộ draft khớp hai nhánh prompt (97.4 từ / 135.2 từ) |
+| ✅ Đã kiểm | draft, `final_merge_result.json` và CSV retrieval: cùng 3000 query_id, cùng thứ tự; mọi preamble đều bị bóc |
+| ❌ Chưa chứng minh | scorer mới == scorer đã công bố: `test_fixes.py` mới chạy trên NER giả lập, và file gốc `backup_pre_fix/` không có trong repo (xem `VGCAP_ACTION.md` B0) |
+| ✅ Đã kiểm (git) | `version1.json` sinh từ template commit `c004e52`: **có** khối Keywords, **không** có band ("at least 5 sentences"). Dòng ENRIC/+SGN đã có entity trong prompt, xem `VGCAP_TODO.md` §2 panel (a) |
+| ✅ Đã kiểm (code + log) | `generated_caption` do InternVL2.5-8B sinh (mặc định của `step_2_create_caption_query.py`, log nạp InternLM2) |
 | 🔄 Đang chạy | `repro_vgcap` + `repro_unfiltered` full 3000 query |
 | ❌ Chưa có | bất kỳ con số Overall/CIDEr nào — phải submit mới biết |
 
@@ -30,8 +39,8 @@ nvidia-smi                      # chọn GPU trống; theo NOTE.md không dùng 
 Thư viện còn thiếu trong `requirements.txt`:
 
 ```bash
-pip install spacy jinja2
-python -m spacy download en_core_web_sm
+pip install spacy jinja2 python-dotenv     # llama3.py import dotenv
+python -m spacy download en_core_web_sm    # ghi lai version (spacy.load(...).meta["version"]): NER doi -> E* doi
 # chỉ cần nếu chạy phụ lục B:
 pip install scikit-learn
 ```
@@ -55,7 +64,7 @@ Chỉ bước sinh caption là ngẫu nhiên, và 3000 draft đã lưu sẵn —
 
 ```
 llama.json      97.4 từ  → prompt CÓ length band     → dòng 0.6166, 0.6219 và toàn bộ panel (b),(c)
-version1.json  135.2 từ  → prompt KHÔNG length band  → dòng ENRIC baseline (bài ghi 136) và +SGN
+version1.json  135.2 từ  → prompt KHÔNG length band, CÓ Keywords → dòng ENRIC baseline (bài ghi 136) và +SGN
 ```
 
 Normalizer và entity scorer đều deterministic, nên mọi cấu hình chỉ đổi `E*` hoặc đổi `L*` đều tái
@@ -105,15 +114,21 @@ Mỗi lệnh ~10–30 phút CPU.
 python scripts/collect_results.py
 ```
 
-| Run | Len bài ghi | #Ent bài ghi |
+| Run | Len bài ghi | Len tái dựng (đã chạy 2026-10-27) |
 |---|---|---|
 | `repro_enric` | 136 | — |
 | `repro_sgn` | 104 | — |
-| `repro_unfiltered` | 104 | 7.59 |
-| `repro_vgcap` | 104 | 6.76 |
+| `repro_unfiltered` | 104 | 104.02 |
+| `repro_vgcap` | 104 | 104.01 |
+
+Thêm một mốc: số caption khác nhau giữa `repro_unfiltered` và `repro_vgcap` phải là **2119/3000**.
 
 Khớp ⇒ pipeline tái dựng đúng, submit tiếp yên tâm.
-**Lệch ⇒ dừng lại báo**, vì 22 CSV phía sau sẽ sai theo.
+**Lệch Len hoặc số caption khác nhau ⇒ dừng lại báo**, vì 22 CSV phía sau sẽ sai theo.
+
+> ⚠️ **Không** dùng `#Ent` (7.59 / 6.76) làm mốc dừng. Đã biết không cách đếm nào tái lập được
+> cặp số này (`VGCAP_TODO.md` §12); dùng nó làm mốc thì pipeline sẽ dừng dù tái dựng đúng.
+> `#Ent` là việc phải chốt định nghĩa và đếm lại, không phải phép kiểm.
 
 Rồi submit 4 CSV này lên leaderboard. Điểm trả về phải ra 0.6097 / 0.6124 / 0.6166 / 0.6219.
 Đây là phép kiểm mạnh nhất có thể làm mà không có ground truth.
@@ -177,7 +192,7 @@ python scripts/bootstrap.py --a runs/gate_none_s0 --b runs/repro_vgcap --metric 
 
 | Cột | Không có GT public test thì sao |
 |---|---|
-| Leakage rate | ✅ làm được ngay, `stats.json` đã có |
+| Leakage rate | ⚠️ `stats.json` đã có số, nhưng đo bằng chuỗi con thô và mẫu số có blob keyword → phải sửa cách đo trước khi đưa vào bài |
 | Entity P/R/F1 | ❌ **không làm được** — cần reference caption |
 | Unsupported-entity rate | ✅ người chấm, không cần GT |
 | Human 1–5 | ✅ người chấm |
@@ -186,11 +201,9 @@ python scripts/bootstrap.py --a runs/gate_none_s0 --b runs/repro_vgcap --metric 
 python scripts/eval_entities.py --run runs/repro_vgcap --sample 200 --seed 0   # cần --gt cho P/R/F1
 ```
 
-Ba lựa chọn cho cột P/R/F1:
-1. Chạy trên một tập con của **train split** (có GT) rồi báo cáo riêng — đây cũng là điều phụ lục A
-   của bài đã hứa ("use a held-out split of the OpenEvents training queries").
-2. Bỏ cột, chỉ giữ unsupported-rate và human eval.
-3. Hỏi ban tổ chức EVENTA xem có phát hành GT public test không.
+Cột P/R/F1: **đã chốt** chạy trên một tập con của **train split** bằng `gt_train.csv` (nhóm xác
+nhận không có GT public test). Đây cũng là điều phụ lục A của bài đã hứa ("use a held-out split of
+the OpenEvents training queries"). Sửa câu "over all 3,000 queries" ở dòng 380 của bài.
 
 ⚠️ κ cho 3 rater phải là **Fleiss**, không phải Cohen như bài đang viết.
 
@@ -211,7 +224,16 @@ python scripts/train_learned_selector.py --merge <train_merge.json> --gt <train_
     --n_queries 500 --out configs/learned_selector.json
 ```
 
-Phụ lục C (efficiency) không cần lệnh riêng — khối `timings` đã nằm trong `stats.json` mỗi run.
+> ⚠️ `<train_merge.json>` **chưa tồn tại**. Không được thay bằng
+> `public_test_final_elements_json/final_merge_result.json` (đó là tập test, không có query chung
+> với GT train). Phải dựng lại context Stage 2 cho ~500 query train trên server (cần GPU).
+>
+> ⚠️ Phụ lục D: sửa `_pack()` trong `step_2_entity_selectors.py` để ghi `features` vào
+> `entity_debug.json` trước, nếu không `make_qualitative.py` phân nhóm sai và không có bảng điểm.
+
+Phụ lục C (efficiency) **cần lệnh riêng**: khối `timings` trong `stats.json` chỉ là tổng thời gian
+cả run, không có thời gian mỗi query, peak GPU memory, hay giai đoạn retrieval/re-ranking mà bảng
+của bài yêu cầu.
 
 ---
 
@@ -247,7 +269,8 @@ ls runs/*/stats.json | wc -l
 | `--reuse_drafts is invalid with --gate prompt/unified` | hai gate đó đổi prompt, phải sinh lại |
 | `--budget_match per_query requires --reference_selection` | chạy run VG-Cap trước, trỏ vào `selected_entities.json` của nó |
 | `--gate prompt/unified needs the Keywords block` | bỏ `--no_prompt_entities` |
-| Generation đứt giữa chừng | chạy lại cùng `--tag` kèm `--resume` |
+| Generation đứt giữa chừng | chạy lại cùng `--tag` kèm `--resume`. Lưu ý: (1) file checkpoint ghi đè trực tiếp, bị kill đúng lúc ghi thì JSON hỏng và `--resume` lỗi; (2) sau resume, luồng ngẫu nhiên khác run liền mạch, nên run đó không tái lập được theo seed |
+| Lỡ chạy lại một `--tag` đã xong | `run_ablation.py` **không chặn**: mọi file trong `runs/<tag>/` bị ghi đè, kể cả `llm_raw.json` (6h GPU). Sao lưu `runs/` sau mỗi run GPU; `runs/` bị gitignore |
 | OOM | đổi `--device`, xem `nvidia-smi` |
 | spaCy chậm | bình thường, ~10–30 phút cho 3000 article |
 
@@ -258,9 +281,11 @@ Mỗi run lưu `config.json` và `effective_entity_config.json` nên luôn truy 
 ## 11. Checklist
 
 ```
-[ ] 1  pip install spacy jinja2 + en_core_web_sm
+[ ] 1  pip install spacy jinja2 python-dotenv + en_core_web_sm (ghi lại version)
+[ ] 1  khôi phục backup_pre_fix từ git; test_fixes.py dòng [1] PASS với spaCy thật
 [ ] 3  smoke test --limit 20 chạy trót lọt
-[ ] 4  4 run neo: Len = 136/104/104/104, #Ent = 7.59/6.76
+[ ] 4  4 run neo: Len = 136/104/104/104; 2119 caption khác nhau giữa unfiltered và vgcap
+[ ] 4  CLIP cục bộ của repro_vgcap ≈ 0.858 (kiểm evaluator trước khi chấm hàng loạt)
 [ ] 4  submit 4 CSV neo -> ra 0.6097 / 0.6124 / 0.6166 / 0.6219
 [ ] 5  run_panels.sh xong -> 22 CSV
 [ ] 5  run_appendix.sh xong -> 37 CSV

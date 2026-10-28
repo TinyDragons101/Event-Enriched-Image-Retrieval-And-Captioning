@@ -24,12 +24,18 @@ bản vá, không phải do tinh chỉnh lại trọng số.
 Kiểm chứng bất cứ lúc nào:
 
 ```bash
-python scripts/test_fixes.py --n 3000 \
-    --reference runs/repro_vgcap/selected_entities.json
+# backup_pre_fix/ bị gitignore, KHÔNG có trong repo -> khôi phục scorer gốc từ commit trước bản vá
+mkdir -p backup_pre_fix
+git show 9a23067:step_2_entity_scorer.py > backup_pre_fix/step_2_entity_scorer.py.bak
+python scripts/test_fixes.py --n 3000      # dòng [1] phải PASS, không được SKIP
 ```
 
-Đã chạy tại chỗ (300 query, spaCy giả lập): **300/300 query khớp E\* chính xác** với
-module gốc trong `backup_pre_fix/step_2_entity_scorer.py.bak`.
+Đã chạy tại chỗ (300 query, spaCy **giả lập**): 300/300 query khớp E\* với module gốc.
+⚠️ Kết quả này **chưa đủ**: NER giả lập không chứng minh được hành vi với spaCy thật. Phải chạy
+lại trên server.
+
+⚠️ Cờ `--reference runs/repro_vgcap/selected_entities.json` (kiểm tra `[2]`) **không** so với bản
+đã công bố: file đó do chính code mới sinh ra, nên phép so là vòng tròn. Chỉ kiểm tra `[1]` có giá trị.
 
 ---
 
@@ -106,6 +112,13 @@ BASE_CFG=configs/entity_scoring_config_fixed.json CFG_SUFFIX=_fixed \
   bash scripts/run_panels.sh enrichment
 ```
 
+⚠️ Dòng "w/o span penalty":
+- Scorer **cũ**: penalty không bao giờ chạy, nên dòng này **chính là** run VG-Cap tham chiếu; không
+  cần chạy riêng, chỉ cần ghi rõ trong bài.
+- Scorer **đã vá**: cả hai config `ablation_span_penalty_*_fixed.json` đều **bật** penalty (trùng
+  `fix_all`). Chưa có config tắt penalty trên nền đã vá; cần thêm `ablation_no_span`
+  (`fixes.span_penalty = "off"`) vào `make_ablation_configs.py`.
+
 ### 4.4 Panel (e) mới — lỗi nào mới là nguyên nhân?
 
 ```bash
@@ -119,6 +132,10 @@ và `all + không noun-phrase`. Toàn bộ tái dùng draft → **0 GPU**.
 việc giới hạn budget?"* mà reviewer đang hỏi ở panel (b).
 
 ### 4.5 Appendix A — Sensitivity
+
+⚠️ Chỉ dùng `enrichment`: `run_appendix.sh unified` dừng ngay ở lệnh đầu (phần L\* luôn truyền
+`--reuse_drafts`). Sweep L\* hiện **không** dịch length band trong prompt, trái với caption
+Table A2 của bài ("prompt band shifted accordingly").
 
 ```bash
 bash scripts/run_appendix.sh enrichment
@@ -140,10 +157,16 @@ done
 python scripts/bootstrap.py --a runs/gate_none_s0 --b runs/vgcap_s0 --metric cider
 ```
 
-### 4.7 Table 4 — Leakage đã có sẵn
+⚠️ Vòng lặp trên không tái dùng draft, nên mỗi lệnh sinh mới (~6h GPU, tổng ~18h).
+`--metric cider` cần CIDEr từng query, tức là cần GT public test (hiện chưa có); không có GT
+thì chỉ dùng được `--metric clip`.
 
-`runs/<tag>/stats.json` có `leakage_rate` (repro_vgcap: **0.0808**).
-P/R/F1 và annotation sheet: `python scripts/eval_entities.py --run ... --gt ...`.
+### 4.7 Table 4 — Leakage: có số nhưng chưa dùng được
+
+`runs/<tag>/stats.json` có `leakage_rate` (repro_vgcap: 0.0808). ⚠️ Số này khớp entity bằng chuỗi
+con thô (`'One'` khớp "someone") và mẫu số có các blob keyword ~300 ký tự (không bao giờ xuất hiện
+trong caption) → bị kéo thấp. Sửa cách đo trước khi đưa vào Table 4.
+P/R/F1 và annotation sheet: `python scripts/eval_entities.py --run ... --gt ...` (cần GT).
 
 ---
 
@@ -271,5 +294,6 @@ scripts/run_panels.sh          BASE_CFG/CFG_SUFFIX; sửa tên config span penal
 scripts/run_fixes.sh           MỚI — panel (e)
 scripts/test_fixes.py          MỚI — test hồi quy
 configs/entity_scoring_config_fixed.json   MỚI
-backup_pre_fix/                bản gốc của mọi file bị sửa
+backup_pre_fix/                bản gốc của mọi file bị sửa -- bị gitignore, KHÔNG có trong repo;
+                               khôi phục bằng: git show 9a23067:<file> > backup_pre_fix/<file>.bak
 ```

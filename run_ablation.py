@@ -12,8 +12,10 @@ Why a separate driver instead of more flags on step_2_caption_process.py:
     0.6219 row is "enrichment-only gating", not the unified gate of
     Section 3.6.  --gate below makes all four variants runnable, which is
     exactly what Table 3(d) compares;
-  * decoding is stochastic (do_sample=True, temperature 0.6) and no seed was
-    ever set, so single runs were not reproducible.  --seed fixes that.
+  * decoding is stochastic (do_sample=True) and no seed was ever set, so
+    single runs were not reproducible.  --seed fixes that, per query.
+    --temperature defaults to 0.3, the value the published drafts were made
+    with (the code later switched to 0.6, which would not be comparable).
 
 Gate semantics
 --------------
@@ -43,7 +45,9 @@ from __future__ import annotations
 import argparse
 import json
 import csv
+import os
 import time
+import zlib
 from pathlib import Path
 from statistics import mean
 
@@ -94,6 +98,20 @@ WEIGHT_FAMILIES = {
              "type_date", "type_event", "type_other"],
     "span": ["length_penalty", "length_penalty_factor"],
 }
+
+
+def atomic_write_json(path: Path, obj) -> None:
+    """Write via a temp file + rename, so a kill mid-write never leaves a
+    truncated llm_raw.json that --resume cannot parse."""
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(obj, indent=2, ensure_ascii=False), encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def query_seed(seed: int, query_id: str) -> int:
+    """Per-query seed: a draft depends only on (seed, query_id), not on how
+    many queries ran before it, so --resume and job order cannot change it."""
+    return (seed * 1_000_003 + zlib.crc32(query_id.encode("utf-8"))) % (2 ** 32)
 
 
 def build_effective_config(args, run_dir: Path) -> str:
@@ -199,10 +217,10 @@ def generate_drafts(args, merge_data, selections, out_path: Path) -> dict:
     template_path = PROMPT_TEMPLATE_DIR / f"{stem}.j2"
     template = Template(template_path.read_text(encoding="utf-8"))
     print(f"[{args.tag}] prompt template: {template_path.name} "
-          f"(entities={args.prompt_entities}, length_band={args.prompt_band})")
+          f"(entities={args.prompt_entities}, length_band={args.prompt_band}, "
+          f"temperature={args.temperature})")
     examples = json.loads(FEWSHOT_EXAMPLE_PATH.read_text(encoding="utf-8"))
 
-    set_seed(args.seed)
     assembler = LLMAssembler(device=args.device, model_type=args.model_type)
 
     drafts: dict = {}
@@ -220,14 +238,15 @@ def generate_drafts(args, merge_data, selections, out_path: Path) -> dict:
         prompt = template.render(**compose_input(
             batch, examples, keyword_override,
             use_entities=args.prompt_entities, use_length_band=args.prompt_band))
-        drafts[qid] = assembler.assemble(prompt)
+        set_seed(query_seed(args.seed, qid))
+        drafts[qid] = assembler.assemble(prompt, temperature=args.temperature)
 
         # checkpoint periodically rather than re-serialising the whole dict
         # on every query, as the original loop did
         if (i + 1) % args.checkpoint_every == 0:
-            out_path.write_text(json.dumps(drafts, indent=2, ensure_ascii=False), encoding="utf-8")
+            atomic_write_json(out_path, drafts)
 
-    out_path.write_text(json.dumps(drafts, indent=2, ensure_ascii=False), encoding="utf-8")
+    atomic_write_json(out_path, drafts)
     return drafts
 
 
@@ -303,7 +322,7 @@ def main() -> None:
     ap.add_argument("--gate", default="enrichment", choices=["none", "prompt", "enrichment", "unified"])
     ap.add_argument("--selector", default="heuristic",
                     choices=["heuristic", "article_order", "random", "presence_only",
-                             "type_only", "learned"])
+                             "presence_score", "type_only", "learned"])
     ap.add_argument("--learned_coefficients", default=None,
                     help="JSON from scripts/train_learned_selector.py (--selector learned)")
     ap.add_argument("--entity_config", default=DEFAULT_ENTITY_CONFIG,
@@ -349,6 +368,8 @@ def main() -> None:
     ap.add_argument("--no_normalizer", action="store_true",
                     help="skip SGN entirely; submit the cleaned drafts (ENRIC baseline row)")
     ap.add_argument("--model_type", default="llama3")
+    ap.add_argument("--temperature", type=float, default=0.3,
+                    help="decoding temperature; 0.3 produced both published draft sets")
     ap.add_argument("--device", default="cuda:5")
     ap.add_argument("--expected_length", type=int, default=104)
     ap.add_argument("--max_words", type=int, default=None,
@@ -358,6 +379,10 @@ def main() -> None:
     ap.add_argument("--reuse_drafts", default=None,
                     help="reuse this llm_raw.json instead of generating (valid when the gate does not change the prompt)")
     ap.add_argument("--resume", action="store_true", help="continue a partially finished generation")
+    ap.add_argument("--overwrite", action="store_true",
+                    help="allow replacing the outputs of an existing run (including its drafts)")
+    ap.add_argument("--skip_if_done", action="store_true",
+                    help="exit quietly when runs/<tag>/stats.json already exists")
     ap.add_argument("--skip_stats", action="store_true")
     ap.add_argument("--out_dir", default="runs")
     args = ap.parse_args()
@@ -376,6 +401,16 @@ def main() -> None:
         raise SystemExit("--preserve_selected needs --gate enrichment or unified")
 
     run_dir = Path(args.out_dir) / args.tag
+    # Guard: a second call with the same tag used to overwrite everything,
+    # including hours of generated drafts.
+    finished = (run_dir / "stats.json").exists()
+    if finished and args.skip_if_done:
+        print(f"[{args.tag}] already finished ({run_dir / 'stats.json'}), skipping")
+        return
+    has_outputs = finished or (run_dir / "llm_raw.json").exists()
+    if has_outputs and not (args.overwrite or args.resume):
+        raise SystemExit(f"[{args.tag}] {run_dir} already has outputs; pass --resume to continue "
+                         f"it, --skip_if_done to skip it, or --overwrite to replace it")
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "config.json").write_text(json.dumps(vars(args), indent=2), encoding="utf-8")
 
@@ -420,7 +455,7 @@ def main() -> None:
     if args.reuse_drafts:
         source = json.loads(Path(args.reuse_drafts).read_text(encoding="utf-8"))
         drafts = {b["query_id"]: source[b["query_id"]] for b in merge_data if b["query_id"] in source}
-        drafts_path.write_text(json.dumps(drafts, indent=2, ensure_ascii=False), encoding="utf-8")
+        atomic_write_json(drafts_path, drafts)
         print(f"[{args.tag}] reused {len(drafts)} drafts from {args.reuse_drafts}")
     else:
         drafts = generate_drafts(args, merge_data, selections, drafts_path)

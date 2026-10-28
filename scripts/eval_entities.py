@@ -91,7 +91,7 @@ def main() -> None:
     with sheet.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(["query_id", "entity", "entity_label", "caption",
-                         "support (visual / contextual / unsupported)",
+                         "support (visual / contextual / peripheral / hallucinated)",
                          "factuality 1-5", "fluency 1-5", "informativeness 1-5", "notes"])
         for qid in sampled:
             caption = captions[qid]
@@ -103,7 +103,8 @@ def main() -> None:
                 writer.writerow([qid, ent.text, ent.label_, caption if i == 0 else "",
                                  "", "", "", "", ""])
     print(f"\nannotation sheet -> {sheet} ({len(sampled)} queries)")
-    print("Columns 'support' are per entity (2 annotators -> Cohen's kappa).")
+    print("Columns 'support' are per entity (2 annotators -> Cohen's kappa); labels as in Table 4 "
+          "of new_main.tex: visual / contextual / peripheral / hallucinated.")
     print("Columns 1-5 are per caption, first row of each query (3 raters -> FLEISS' kappa,")
     print("not Cohen's -- the manuscript currently says Cohen's for three raters).")
 

@@ -491,7 +491,9 @@ class Llama:
 
         return summary
     
-    def assemble(self, prompt, max_new_tokens: int = 1500):
+    def assemble(self, prompt, max_new_tokens: int = 1500, temperature: float = 0.3):
+        # temperature 0.3 is what produced both published draft sets (commits
+        # c004e52 and 2d47722); it was changed to 0.6 only afterwards (9a23067)
         messages = [
             {
                 "role": "system",
@@ -522,7 +524,7 @@ class Llama:
             eos_token_id=terminators,
             pad_token_id=self.tokenizer.eos_token_id,
             do_sample=True,
-            temperature=0.6,
+            temperature=temperature,
             top_p=0.9,
         )
 
