@@ -1,0 +1,39 @@
+[smoke_gpu4] gate=unified selector=heuristic queries=20
+[smoke_gpu4] selecting entities:   0%|          | 0/20 [00:00<?, ?it/s][smoke_gpu4] selecting entities:   5%|▌         | 1/20 [00:00<00:09,  2.05it/s][smoke_gpu4] selecting entities:  10%|█         | 2/20 [00:00<00:05,  3.26it/s][smoke_gpu4] selecting entities:  15%|█▌        | 3/20 [00:00<00:04,  4.16it/s][smoke_gpu4] selecting entities:  20%|██        | 4/20 [00:01<00:05,  2.76it/s][smoke_gpu4] selecting entities:  30%|███       | 6/20 [00:02<00:04,  2.90it/s][smoke_gpu4] selecting entities:  35%|███▌      | 7/20 [00:02<00:05,  2.23it/s][smoke_gpu4] selecting entities:  40%|████      | 8/20 [00:03<00:05,  2.14it/s][smoke_gpu4] selecting entities:  45%|████▌     | 9/20 [00:03<00:04,  2.51it/s][smoke_gpu4] selecting entities:  55%|█████▌    | 11/20 [00:03<00:02,  3.40it/s][smoke_gpu4] selecting entities:  60%|██████    | 12/20 [00:03<00:02,  3.92it/s][smoke_gpu4] selecting entities:  65%|██████▌   | 13/20 [00:04<00:02,  3.45it/s][smoke_gpu4] selecting entities:  70%|███████   | 14/20 [00:04<00:02,  2.95it/s][smoke_gpu4] selecting entities:  75%|███████▌  | 15/20 [00:05<00:01,  3.11it/s][smoke_gpu4] selecting entities:  80%|████████  | 16/20 [00:05<00:01,  3.47it/s][smoke_gpu4] selecting entities:  85%|████████▌ | 17/20 [00:05<00:00,  3.75it/s][smoke_gpu4] selecting entities:  90%|█████████ | 18/20 [00:05<00:00,  3.18it/s][smoke_gpu4] selecting entities:  95%|█████████▌| 19/20 [00:06<00:00,  3.39it/s][smoke_gpu4] selecting entities: 100%|██████████| 20/20 [00:06<00:00,  3.62it/s][smoke_gpu4] selecting entities: 100%|██████████| 20/20 [00:06<00:00,  3.11it/s]
+[smoke_gpu4] mean entities selected: 10.000
+[smoke_gpu4] prompt template: cot_5_things_fact_more_event.j2 (entities=True, length_band=True, temperature=0.3)
+🔥 Using llama3-8b: meta-llama/Meta-Llama-3-8B-Instruct
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.32s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.21s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:03<00:01,  1.14s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.22it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.04it/s]
+[smoke_gpu4] generating:   0%|          | 0/20 [00:00<?, ?it/s]Starting from v4.46, the `logits` model output will have the same type as the model (except at train time, where it will always be FP32)
+[smoke_gpu4] generating:   5%|▌         | 1/20 [00:06<01:58,  6.22s/it][smoke_gpu4] generating:  10%|█         | 2/20 [00:11<01:43,  5.72s/it][smoke_gpu4] generating:  15%|█▌        | 3/20 [00:14<01:18,  4.62s/it][smoke_gpu4] generating:  20%|██        | 4/20 [00:18<01:05,  4.06s/it][smoke_gpu4] generating:  25%|██▌       | 5/20 [00:21<00:55,  3.71s/it][smoke_gpu4] generating:  30%|███       | 6/20 [00:24<00:47,  3.41s/it][smoke_gpu4] generating:  35%|███▌      | 7/20 [00:26<00:41,  3.16s/it][smoke_gpu4] generating:  40%|████      | 8/20 [00:29<00:36,  3.06s/it][smoke_gpu4] generating:  45%|████▌     | 9/20 [00:32<00:34,  3.18s/it][smoke_gpu4] generating:  50%|█████     | 10/20 [00:35<00:31,  3.13s/it]You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+[smoke_gpu4] generating:  55%|█████▌    | 11/20 [00:39<00:28,  3.21s/it][smoke_gpu4] generating:  60%|██████    | 12/20 [00:42<00:25,  3.21s/it][smoke_gpu4] generating:  65%|██████▌   | 13/20 [00:45<00:22,  3.24s/it][smoke_gpu4] generating:  70%|███████   | 14/20 [00:48<00:18,  3.12s/it][smoke_gpu4] generating:  75%|███████▌  | 15/20 [00:51<00:15,  3.06s/it][smoke_gpu4] generating:  80%|████████  | 16/20 [00:54<00:12,  3.03s/it][smoke_gpu4] generating:  85%|████████▌ | 17/20 [00:58<00:09,  3.15s/it][smoke_gpu4] generating:  90%|█████████ | 18/20 [01:01<00:06,  3.19s/it][smoke_gpu4] generating:  95%|█████████▌| 19/20 [01:04<00:03,  3.13s/it][smoke_gpu4] generating: 100%|██████████| 20/20 [01:07<00:00,  3.23s/it][smoke_gpu4] generating: 100%|██████████| 20/20 [01:07<00:00,  3.39s/it]
+Normalizing captions:   0%|          | 0/20 [00:00<?, ?it/s]Normalizing captions:   5%|▌         | 1/20 [00:00<00:02,  8.04it/s]Normalizing captions:  10%|█         | 2/20 [00:00<00:02,  6.97it/s]Normalizing captions:  15%|█▌        | 3/20 [00:00<00:02,  6.92it/s]Normalizing captions:  20%|██        | 4/20 [00:00<00:04,  3.42it/s]Normalizing captions:  30%|███       | 6/20 [00:01<00:04,  3.34it/s]Normalizing captions:  35%|███▌      | 7/20 [00:02<00:05,  2.53it/s]Normalizing captions:  40%|████      | 8/20 [00:02<00:05,  2.39it/s]Normalizing captions:  45%|████▌     | 9/20 [00:02<00:03,  2.81it/s]Normalizing captions:  55%|█████▌    | 11/20 [00:03<00:02,  3.69it/s]Normalizing captions:  60%|██████    | 12/20 [00:03<00:01,  4.27it/s]Normalizing captions:  65%|██████▌   | 13/20 [00:03<00:01,  3.83it/s]Normalizing captions:  70%|███████   | 14/20 [00:04<00:01,  3.26it/s]Normalizing captions:  75%|███████▌  | 15/20 [00:04<00:01,  3.48it/s]Normalizing captions:  80%|████████  | 16/20 [00:04<00:01,  3.83it/s]Normalizing captions:  85%|████████▌ | 17/20 [00:04<00:00,  4.10it/s]Normalizing captions:  90%|█████████ | 18/20 [00:05<00:00,  3.54it/s]Normalizing captions:  95%|█████████▌| 19/20 [00:05<00:00,  3.70it/s]Normalizing captions: 100%|██████████| 20/20 [00:05<00:00,  3.80it/s]Normalizing captions: 100%|██████████| 20/20 [00:05<00:00,  3.57it/s]
+
+==================================================
+Caption Normalization Statistics:
+==================================================
+Total captions processed: 20
+Mean length: 104.00 words
+Min length: 104 words
+Max length: 104 words
+==================================================
+submission -> runs/smoke_gpu4/submission.csv (3000 rows, 2980 without a caption)
+stats:   0%|          | 0/20 [00:00<?, ?it/s]stats:  20%|██        | 4/20 [00:00<00:00, 38.27it/s]stats:  45%|████▌     | 9/20 [00:00<00:00, 39.99it/s]stats:  70%|███████   | 14/20 [00:00<00:00, 40.28it/s]stats:  95%|█████████▌| 19/20 [00:00<00:00, 40.66it/s]stats: 100%|██████████| 20/20 [00:00<00:00, 40.17it/s]
+{
+  "n_captions": 20,
+  "mean_length_words": 104,
+  "mean_entities_per_caption": 11.95,
+  "total_entity_mentions": 239,
+  "mean_entities_selected": 10,
+  "leakage_rate": 0.0322,
+  "rejected_entities_total": 1336,
+  "tag": "smoke_gpu4",
+  "gate": "unified",
+  "selector": "heuristic",
+  "seed": 4,
+  "timings": {
+    "entity_scoring_s": 6.48,
+    "generation_s": 73.82,
+    "normalization_s": 6.26
+  }
+}

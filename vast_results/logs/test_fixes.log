@@ -1,0 +1,6 @@
+[1] legacy == pre-fix module          PASS  (3000 query)
+[3] markdown blob trong E*            legacy  1658  ->  fixed     0
+[4] span khong co chu cai trong E*    legacy  1694  ->  fixed     0
+    tong so entity duoc chon          legacy 29982      fixed 29978
+
+KET QUA: TAT CA PASS

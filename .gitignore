@@ -25,3 +25,6 @@ runs/
 # pre-fix backups of the files touched by the correctness pass
 backup_pre_fix/
 *.bak
+
+# vast.ai backup archives (too large for GitHub; kept locally)
+vast_results/*.tgz

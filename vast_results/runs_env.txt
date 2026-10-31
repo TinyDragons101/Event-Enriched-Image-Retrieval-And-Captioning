@@ -1,0 +1,11 @@
+Wed Oct 28 00:34:03 UTC 2026
+name, driver_version
+NVIDIA A100-SXM4-80GB, 570.172.08
+accelerate==1.7.0
+spacy==3.8.18
+tokenizers==0.20.3
+torch==2.7.0
+transformers==4.45.2
+en_core_web_sm 3.8.0
+8afb486c1db24fe5011ec46dfbe5b5dccdb575c2
+CFG=

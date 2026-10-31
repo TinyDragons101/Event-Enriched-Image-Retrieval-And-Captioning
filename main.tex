@@ -1,10 +1,6 @@
 \documentclass[runningheads]{llncs}
 % =====================================================================
-%  VG-Cap -- revised manuscript (response to MMM 2027 reviews R1--R4
-%  and the Stanford Agentic Reviewer report, denoted SAR below).
-%  Comments of the form  % [R1.2]  link a change to the revision log
-%  (VGCap_Revision_Log.docx).
-% =====================================================================
+
 
 % ---------------- Packages (de-duplicated) ---------------------------
 \usepackage[T1]{fontenc}
@@ -73,7 +69,11 @@
 
 \begin{document}
 
-\title{Grounding What Matters: Selective Entity Conditioning for Event-Enriched News Image Captioning}
+% \title{Grounding What Matters: Selective Entity Conditioning for Event-Enriched News Image Captioning}
+
+\title{VG-Cap: Entity-Gated Generation for Event-Enriched News Image Captioning}
+
+\titlerunning{Entity-Gated Generation for Event-Enriched News Image Captioning}
 
 % ---------------------------------------------------------------------
 %  DOUBLE-BLIND SWITCH
@@ -107,9 +107,10 @@
 
 % [R1.6][R4.5][SAR] claims corrected; [R1.1][R4.1] novelty scoped.
 \begin{abstract}
-News image captioning requires models to connect visual evidence with external article context to identify the depicted people, places, events, and their significance. \aciids{Existing retrieval-augmented methods pass the named entities of the retrieved article to the generator as a flat list, although articles routinely mention secondary actors and background events that the photograph does not show; such \emph{peripheral} entities produce statements unrelated to the depicted scene and consume the caption budget. We introduce VG-Cap, which keeps a fixed retrieval backbone and controls which article entities may enter the caption. A training-free, interpretable Entity Heuristic Scorer estimates the visual groundedness of each candidate entity from four factors: its presence in image-level and article-level context, its position in the article, its entity type, and its span length. The selected set then gates both entity pathways of an Entity-Gated Length-Controlled Generation module: the prompt of bounded generation and the enrichment step of semantic normalization, so that rejected entities cannot be re-injected.} On the OpenEvents-V1 benchmark, VG-Cap \revise{obtains the best Overall Score (0.6219) and CIDEr (0.265) among the compared methods and raises CLIPScore over its ENRIC backbone from 0.833 to 0.858 at an unchanged caption length}. \aciids{Since the length is unchanged, the gain is not due to shorter captions; we analyze its source with budget-matched selection baselines, gate ablations, and entity-level grounding annotation.}~\todo{Once Tables~\ref{tab:ablation}(b) and~\ref{tab:grounding} are filled, replace the last sentence by their outcome.}
+News image captioning requires models to connect visual evidence with external article context to identify the depicted people, places, events, and their significance. \aciids{Existing retrieval-augmented methods pass the named entities of the retrieved article to the generator as a flat list, although articles routinely mention secondary actors and background events that the photograph does not show; such \emph{peripheral} entities produce statements unrelated to the depicted scene and consume the caption budget. We introduce VG-Cap, which keeps a fixed retrieval backbone and controls which article entities may enter the caption. A training-free, interpretable Entity Heuristic Scorer estimates the visual groundedness of each candidate entity from four factors: its presence in image-level and article-level context, its position in the article, its entity type, and its span length. The selected set then gates both entity pathways of an Entity-Gated Length-Controlled Generation module: the prompt of bounded generation and the enrichment step of semantic normalization, so that rejected entities cannot be re-injected.} On the OpenEvents-V1 benchmark, VG-Cap \revise{obtains the best Overall Score (0.6219) and CIDEr (0.265) among the compared methods and raises CLIPScore over its ENRIC backbone from 0.833 to 0.858 at an unchanged caption length}. 
+% \aciids{Since the length is unchanged, the gain is not due to shorter captions; we analyze its source with budget-matched selection baselines and gate ablations.}
 
-\keywords{Visual grounding \and Selective entity conditioning \and Retrieval-augmented generation \and Event-enriched captioning \and Trustworthy multimedia}
+\keywords{Visual grounding \and Selective entity conditioning \and Retrieval-augmented generation \and Event-enriched captioning}
 \end{abstract}
 
 % =====================================================================
@@ -123,15 +124,13 @@ The task is commonly formulated in two stages: retrieving relevant external cont
 Existing retrieval-augmented approaches supply article context and named entities to the generator~\cite{enric,recap}, but treat the extracted entities as a flat collection. \aciids{Captions can therefore contain \emph{peripheral} entities, which are correct with respect to the article but concern a person, time, or event other than the photographed scene, simply because they were available.} A second difficulty is the sensitivity of caption evaluation to length: CIDEr-D applies a Gaussian penalty when a caption deviates from the reference length~\cite{vedantam2015cider}, and external context naturally encourages longer outputs. Both problems call for controlling \emph{what} information enters the caption and \emph{how much} of it is generated.
 
 % [R1.1][R2.m2][R4.1] explicit statement of what is inherited vs. new
-\aciids{We propose \textbf{VG-Cap} (Visual-Grounded Caption generation), which concentrates on the generation side of event-enriched captioning. Retrieval on this task is near-saturated (R@1 of 0.985 for ENRIC~\cite{enric}), so we adopt ENRIC's retrieval and re-ranking stage unchanged and focus on the question that retrieval alone cannot answer: once the right article is found, which of its many entities deserve a place in the caption? An \emph{Entity Heuristic Scorer} estimates the visual groundedness of each candidate entity from its contextual presence, article position, and entity type, penalized by span length, and keeps a small selected set. This set gates the two explicit pathways through which entities reach a caption, both of which lie in an \emph{Entity-Gated Length-Controlled Generation} module: the prompt of bounded generation and the enrichment step of semantic normalization, for which we reuse ReCap's Semantic Gaussian Normalizer (SGN)~\cite{recap}. The second gate is essential, because SGN enriches short captions with entities from the whole article and would otherwise re-introduce exactly the peripheral entities that the prompt-side filter removes. Conceptually, the scorer brings the passage-level filtering of knowledge-based VQA~\cite{gui2022kat,yan2024echosight,cocchi2025reflectiva} down to entity granularity, where it requires no training and each decision can be inspected directly.}
-
-\aciids{We evaluate VG-Cap on OpenEvents-V1~\cite{nguyen2025openevents}, a large-scale benchmark for event-enriched news image captioning, keeping the retrieval stage and the caption generator fixed across all configurations. VG-Cap achieves the best Overall Score ($0.6219$) and CIDEr ($0.265$) among the compared methods, and raises CLIPScore over its ENRIC backbone from $0.833$ to $0.858$ while the mean caption length stays at 104 words. Because the length is unchanged, the gain cannot come from shorter captions; it reflects which entities enter the caption. Filtering lowers the mean entity count per caption from $7.59$ to $6.76$ but also admits entities that the unfiltered captions lacked, so it reallocates entities rather than merely removing them. Budget-matched selection baselines and entity-level annotation then test whether this reallocation, and not the smaller entity budget, explains the gain and removes peripheral entities.}~\todo{Once Tables~\ref{tab:ablation}(b) and~\ref{tab:grounding} are filled, state their outcome here in one sentence.}
+\aciids{We propose \textbf{VG-Cap} (Visual-Grounded Caption generation), which concentrates on the generation side of event-enriched captioning. Retrieval on this task is near-saturated (R@1 of 0.985 for ENRIC~\cite{enric}), so we adopt ENRIC's retrieval and re-ranking stage unchanged and focus on the question that retrieval alone cannot answer: once the right article is found, which of its many entities deserve a place in the caption? An \emph{Entity Heuristic Scorer} estimates the visual groundedness of each candidate entity from its contextual presence, article position, and entity type, penalized by span length, and keeps a small selected set. This set gates the two explicit pathways through which entities reach a caption, both of which lie in an \emph{Entity-Gated Length-Controlled Generation} module: the prompt of bounded generation and the enrichment step of semantic normalization, for which we reuse ReCap's Semantic Gaussian Normalizer (SGN)~\cite{recap}. The second gate is essential, because SGN enriches short captions with entities from the whole article and would otherwise re-introduce exactly the peripheral entities that the prompt-side filter removes. Conceptually, the scorer brings the passage-level filtering of knowledge-based VQA~\cite{gui2022kat,yan2024echosight,cocchi2025reflectiva} down to entity granularity, where it requires no training and each decision can be inspected directly.} \aciids{We evaluate VG-Cap on OpenEvents-V1~\cite{nguyen2025openevents}, a large-scale benchmark for event-enriched news image captioning. VG-Cap achieves the best Overall Score ($0.6219$) and CIDEr ($0.265$) among the compared methods, and raises CLIPScore over its ENRIC backbone from $0.833$ to $0.858$ while the mean caption length stays at 104 words. The source code will be publicly released upon acceptance.}
 
 Our contributions are summarized as follows:
 \begin{itemize}
-  \item \aciids{An \emph{Entity Heuristic Scorer}, a training-free and interpretable estimate of entity groundedness that combines four factors: a trust hierarchy over context sources, an article-position prior, an entity-type prior, and a span-length penalty.}
-  \item \aciids{\emph{Entity-Gated Length-Controlled Generation}, in which unified entity gating is built into length control: the same selected set conditions the prompt of bounded generation and is the only source of entities that semantic normalization may add, and the set it must preserve, so that length control cannot re-introduce rejected entities.}
-  \item \aciids{A controlled empirical study on OpenEvents-V1 with fixed retrieval and generator, comprising a component ladder, budget-matched selection baselines, scorer and gate ablations, and an entity-level evaluation (reference overlap, manual labeling of visual, contextual, peripheral, and hallucinated entities, leakage, and human ratings) that separates the effect of entity selection from those of caption length and entity budget.}
+  \item \aciids{We propose Entity Heuristic Scorer, a training-free and interpretable estimate of entity groundedness that combines four factors: a trust hierarchy over context sources, an article-position prior, an entity-type prior, and a span-length penalty.}
+  \item \aciids{We introduce Entity-Gated Length-Controlled Generation, in which unified entity gating is built into length control: the same selected set conditions the prompt of bounded generation and is the only entity list from which semantic normalization enriches the caption, so that length control cannot re-introduce rejected entities through enrichment.}
+  \item \aciids{Extensive experiments were conducted on the OpenEvents-V1 dataset, demonstrating the effectiveness of VG-Cap in improving event-enriched news image captioning, achieving an Overall Score of 0.6219 and a CIDEr score of 0.265 while maintaining the same average caption length as the baseline.}
 \end{itemize}
 
 % =====================================================================
@@ -148,7 +147,7 @@ News image captioning uses article context to supply facts unavailable from the 
 Retrieval augmentation~\cite{lewis2020rag,ramos2023smallcap} supplements visual evidence with retrieved documents. For event-enriched captioning, recent methods explore uncertainty-guided image re-ranking~\cite{enric}, article retrieval with contextual extraction and semantic normalization~\cite{recap}, zero-shot retrieval~\cite{dinh2025zsecap}, hierarchical multimodal retrieval~\cite{nguyen2026hierarchical}, and multi-stage generation~\cite{hien2026cian}. These methods mainly improve \emph{which article} is retrieved and expose broad article content to the generator. \revise{In knowledge-based VQA, by contrast, retrieved passages are explicitly re-ranked or filtered before answering, using learned readers~\cite{gui2022kat}, multimodal re-rankers~\cite{yan2024echosight}, or self-reflective tokens~\cite{cocchi2025reflectiva}. VG-Cap brings this selection step to news captioning at entity granularity, without additional training.}
 
 \paragraph{\textbf{Evaluation of captions and hallucination.}}
-CIDEr~\cite{vedantam2015cider} measures consensus with human references, and its CIDEr-D variant adds a Gaussian length penalty that makes output length consequential; CLIPScore~\cite{hessel2021clipscore} measures reference-free image--text alignment. \revise{Neither directly measures whether individual statements are supported, which motivated object-hallucination metrics such as CHAIR~\cite{rohrbach2018object}. We therefore complement both metrics with entity-level and human evaluation (Section~\ref{sec:grounding}).}
+CIDEr~\cite{vedantam2015cider} measures consensus with human references, and its CIDEr-D variant adds a Gaussian length penalty that makes output length consequential; CLIPScore~\cite{hessel2021clipscore} measures reference-free image--text alignment. \revise{Neither directly measures whether individual statements are supported, which motivated object-hallucination metrics such as CHAIR~\cite{rohrbach2018object}.}
 
 % =====================================================================
 \section{Proposed Method}
@@ -157,14 +156,16 @@ CIDEr~\cite{vedantam2015cider} measures consensus with human references, and its
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/overview.png}
-\caption{\aciids{Overview of VG-Cap. \textbf{Stage~1} (article retrieval and re-ranking, inherited from ENRIC and kept fixed): the query and corpus images are embedded with InternVL, the top-$K$ candidates are retrieved by cosine similarity, and an uncertainty detector either selects the top-1 article directly or first applies text re-ranking. \textbf{Stage~2} (visual-grounded caption generation): the article context, image context, and candidate entities are constructed; the Entity Heuristic Scorer ranks the candidates by contextual presence, article position, entity-type prior, and span penalty and keeps at most $K_e{=}10$ entities with score $\ge\tau{=}3.0$; the selected set $\mathcal{E}^{*}$ is passed to both steps of the Entity-Gated Length-Controlled Generation, bounded generation and semantic normalization, which produce the final caption $\bar{y}$.}~\todo{Update Fig.~\ref{fig:pipeline}: rename the block ``Two-Stage Length Control'' to ``Entity-Gated Length-Controlled Generation'' and its inner labels ``Stage 1''/``Stage 2'' to ``Step 1''/``Step 2''.}}
+\caption{\aciids{Overview of VG-Cap. \textbf{Stage~1} (article retrieval and re-ranking, inherited from ENRIC and kept fixed): the query and corpus images are embedded with InternVL, the top-$K$ candidates are retrieved by cosine similarity, and an uncertainty detector either selects the top-1 article directly or first applies text re-ranking. \textbf{Stage~2} (visual-grounded caption generation): the article context, image context, and candidate entities are constructed; the Entity Heuristic Scorer ranks the candidates by contextual presence, article position, entity-type prior, and span penalty and keeps at most $K_e{=}10$ entities with score $\ge\tau{=}3.0$; the selected set $\mathcal{E}^{*}$ is passed to both steps of the Entity-Gated Length-Controlled Generation, bounded generation and semantic normalization, which produce the final caption $\bar{y}$.}
+% ~\todo{Update Fig.~\ref{fig:pipeline}: rename the block ``Two-Stage Length Control'' to ``Entity-Gated Length-Controlled Generation'' and its inner labels ``Stage 1''/``Stage 2'' to ``Step 1''/``Step 2''.}
+}
 \label{fig:pipeline}
 \end{figure}
 
 \subsection{Overview}
 \label{sec:method_overview}
 
-\aciids{Given a query image $q$, VG-Cap produces an event-enriched caption $\bar{y}$ in two stages (Fig.~\ref{fig:pipeline}). The first stage, inherited from ENRIC and kept fixed, retrieves the most relevant news article $\mathcal{A}$ together with the editorial caption of the matched database image (Section~\ref{sec:retrieval}). The second stage, which is our contribution, turns this article into a caption in three steps: it builds the article context, the image context, and a candidate entity set $\mathcal{E}$ (Section~\ref{sec:context}); it scores each candidate by its estimated visual groundedness and keeps a selected set $\mathcal{E}^{*}$ (Section~\ref{sec:entity_scorer}); and it generates the caption and normalizes its length with Entity-Gated Length-Controlled Generation (Section~\ref{sec:length_control}). The contexts tell the generator \emph{what happened}, while $\mathcal{E}^{*}$ decides \emph{which named entities} may appear: it is the only entity list in the prompt and the only source from which normalization may add entities. Algorithm~\ref{alg:vgcap} summarizes the second stage.}
+\aciids{Given a query image $q$, VG-Cap produces an event-enriched caption $\bar{y}$ in two stages (Fig.~\ref{fig:pipeline}). The first stage, inherited from ENRIC and kept fixed, retrieves the most relevant news article $\mathcal{A}$ together with the editorial caption of the matched database image (Section~\ref{sec:retrieval}). The second stage, which is our contribution, turns this article into a caption in three steps: it builds the article context, the image context, and a candidate entity set $\mathcal{E}$ (Section~\ref{sec:context}); it scores each candidate by its estimated visual groundedness and keeps a selected set $\mathcal{E}^{*}$ (Section~\ref{sec:entity_scorer}); and it generates the caption and normalizes its length with Entity-Gated Length-Controlled Generation (Section~\ref{sec:length_control}). The contexts tell the generator \emph{what happened}, while $\mathcal{E}^{*}$ decides \emph{which named entities} may appear: it is the only entity list in the prompt and the only entity list from which normalization enriches the caption. Algorithm~\ref{alg:vgcap} summarizes the second stage.}
 
 \begin{algorithm}[t]
 \caption{\revise{Groundedness-gated caption generation in VG-Cap}}
@@ -181,9 +182,9 @@ CIDEr~\cite{vedantam2015cider} measures consensus with human references, and its
 \State $\hat{y}\gets G_{\theta}(q,\mathcal{C}_{\mathrm{article}},\mathcal{C}_{\mathrm{image}},\mathcal{E}^{*};L_{\min},L_{\max})$ \Comment{gate 1: prompt}
 \State $\hat{y}\gets\textsc{StripPreamble}(\hat{y})$
 \If{$|\hat{y}|>L^{*}+1$}
-  \State \aciids{prune tokens from the end, preserving $\mathcal{E}^{*}$} \Comment{\aciids{gate 2: pruning}}
+  \State \revise{prune non-entity tokens from the end} \Comment{\revise{pruning}}
 \ElsIf{$|\hat{y}|<L^{*}$}
-  \State append $e\in\mathcal{E}^{*}\setminus\hat{y}$ in score order until $|\hat{y}|\ge L^{*}$ \Comment{gate 2: enrichment}
+  \State append $e\in\mathcal{E}^{*}\setminus\hat{y}$ in score order\revise{, then article noun phrases,} until $|\hat{y}|\ge L^{*}$ \Comment{gate 2: enrichment}
 \EndIf
 \State \aciids{$\bar{y}$}$\gets\textsc{FixPunctuation}(\textsc{Cut}(\hat{y},L^{*}))$
 \State \Return \aciids{$\bar{y}$}
@@ -194,18 +195,18 @@ CIDEr~\cite{vedantam2015cider} measures consensus with human references, and its
 \subsection{Article Retrieval and Re-ranking}
 \label{sec:retrieval}
 
-VG-Cap uses the retrieval component of ENRIC~\cite{enric} as a fixed backbone. \aciids{The query image and the images of the corpus (over 400K images) are encoded by the same InternVL-14B-224px vision encoder~\cite{chen2024internvl} into embeddings $f_q$ and $f_i$, and the candidates are ranked by the cosine similarity of $f_q$ and $f_i$}; the top-$K{=}15$ candidates are kept. An uncertainty detector, based on the entropy of the top-$K$ similarity distribution, the top-1/top-2 gap, and the top-1 similarity, \aciids{decides whether the initial ranking is reliable. If the query is not uncertain, the article of the top-1 candidate is selected directly. Otherwise, a text re-ranking based on image-caption similarity is applied: InternVL2.5 captions of the query and candidate images are embedded, and visual and textual similarities are fused as $s_{\mathrm{rerank}}(q,x_i)=\lambda\,s_{\mathrm{img}}(q,x_i)+(1-\lambda)\,s_{\mathrm{text}}(q,x_i)$, after which the top-1 re-ranked candidate determines the retrieved article $\mathcal{A}$.}~\todo{Report $\lambda$, the softmax temperature, and the three detector thresholds.}
+VG-Cap uses the retrieval component of ENRIC~\cite{enric} as a fixed backbone. \aciids{The query image and the images of the corpus (over 400K images) are encoded by the same InternVL-14B-224px vision encoder~\cite{chen2024internvl} into embeddings $f_q$ and $f_i$, and the candidates are ranked by the cosine similarity of $f_q$ and $f_i$}; the top-$K{=}15$ candidates are kept. An uncertainty detector, based on the entropy of the top-$K$ similarity distribution, the top-1/top-2 gap, and the top-1 similarity, \aciids{decides whether the initial ranking is reliable. If the query is not uncertain, the article of the top-1 candidate is selected directly. Otherwise, a text re-ranking based on image-caption similarity is applied: InternVL2.5 captions of the query and candidate images are embedded, and visual and textual similarities are fused, after which the top-1 re-ranked candidate determines the retrieved article $\mathcal{A}$.}
 
 \subsection{Context Construction}
 \label{sec:context}
 
-The retrieved article is much broader than the depicted scene, so VG-Cap organizes the available information into three groups, $\mathcal{C}=\{\mathcal{C}_{\mathrm{article}},\mathcal{C}_{\mathrm{image}},\mathcal{C}_{\mathrm{entity}}\}$. The \emph{article context} contains an article summary and LLM-generated question--answer pairs \aciids{covering who, where, when, why, and how}, which expose specific attributions such as a participant's identity and role. The \emph{image context} contains a \aciids{generated} description of the query image and the editorial caption of the retrieved database image. \revise{The editorial caption is crawled from the source web page of the \emph{retrieved} article and is available at inference time for every database image; it is not the reference caption of the query.}~\todo{R-SAR.Q5: confirm with the OpenEvents-V1 release that reference captions were not derived from editorial captions; report the ``w/o editorial evidence'' row of Table~\ref{tab:ablation} in either case.} The \emph{entity context} $\mathcal{C}_{\mathrm{entity}}$ consists of \aciids{the candidate entities of the article, i.e., its spaCy named entities united with the article keywords and deduplicated (Section~\ref{sec:entity_scorer}),} and is the only group filtered before reaching the generator.
+The retrieved article is much broader than the depicted scene, so VG-Cap organizes the available information into three groups, $\mathcal{C}=\{\mathcal{C}_{\mathrm{article}},\mathcal{C}_{\mathrm{image}},\mathcal{C}_{\mathrm{entity}}\}$. The \emph{article context} contains an article summary and LLM-generated question--answer pairs \aciids{covering who, where, when, why, and how}, which expose specific attributions such as a participant's identity and role. The \emph{image context} contains a \aciids{generated} description of the query image and the editorial caption of the retrieved database image. \revise{The editorial caption is crawled from the source web page of the \emph{retrieved} article and is available at inference time for every database image; it is not the reference caption of the query.} The \emph{entity context} $\mathcal{C}_{\mathrm{entity}}$ consists of \aciids{the candidate entities of the article, i.e., its spaCy named entities united with the article keywords and deduplicated (Section~\ref{sec:entity_scorer}),} and is the only group filtered before reaching the generator.
 
 \subsection{Entity Heuristic Scorer}
 \label{sec:entity_scorer}
 
 \paragraph{Candidate construction.}
-The candidate set $\mathcal{E}$ is the union of spaCy~\cite{honnibal2020spacy} named entities over the article body and \aciids{the article keywords} produced by the language model. Overlapping mentions are merged by substring-aware deduplication that keeps the longer surface form (e.g., ``Joe Biden'' over ``Biden'').
+The candidate set $\mathcal{E}$ is the union of spaCy~\cite{honnibal2020spacy} named entities over the article body and \aciids{the article keywords} produced by the language model. Overlapping mentions are merged by substring-aware deduplication that keeps the longer surface form (e.g., ``Joe Biden'' over ``Biden''). \revise{Spans with a non-depictable label (CARDINAL, ORDINAL, PERCENT, MONEY, QUANTITY, TIME, LANGUAGE) or without any letter are discarded, and a keyword that spaCy does not recognize as an entity receives the ``other'' type prior.}
 
 \paragraph{Groundedness scoring.}
 Each candidate $e\in\mathcal{E}$ receives
@@ -218,13 +219,13 @@ P_{\mathrm{span}}(e)=-0.1\,\max(0,|e|-3),
 where $\phi_f(e)\in\{0,1\}$ is the activation of feature $f$, $w_f$ its weight, and $|e|$ the number of words in $e$. \aciids{The score thus combines four scoring factors (Fig.~\ref{fig:pipeline}): three families of binary features, whose weights are listed in Table~\ref{tab:weights}, and the span penalty:}
 \begin{itemize}
   \item \textit{Contextual presence} defines a trust hierarchy: the closer a source is to the specific photograph, the stronger its evidence. \revise{An editorial caption is written by a journalist for this photograph and is the closest textual evidence of what it shows; a generated description reflects what the vision model perceives from the pixels; QA pairs and the summary describe the article as a whole and often mention off-camera actors and background events.} Weights decrease in that order \aciids{(editorial caption $>$ generated image description $>$ QA pairs $>$ summary)}, and exact matches outweigh partial ones, which only absorb morphological variation.
-  \item \textit{Article position} reflects the journalistic convention of front-loading key actors. \revise{The image's own position in the article is located by exact substring matching of its URL or HTML marker, with fuzzy matching as a fallback; since images are placed next to the passage they illustrate, early placement and early first mention both signal the article's central subject.} \aciids{An early first mention therefore earns more than one in the middle of the article, and later mentions earn no bonus.}
-  \item \textit{Entity type} encodes depictability priors \aciids{ordered as PERSON $>$ GPE $>$ EVENT $>$ ORG/LOC $>$ DATE/other}: people are the focal point of event photographs, \aciids{geopolitical places identify the scene, named events give it context but are less directly visible}, organizations are depicted less directly, and dates and numbers are rarely observable.
+  \item \textit{Article position} reflects the journalistic convention of front-loading key actors. \revise{The feature uses the character offset of the entity's first mention relative to the article length:} \aciids{an early first mention \revise{(first 20\%)} therefore earns more than one in the middle of the article \revise{(20--50\%)}, and later mentions earn no bonus.}
+  \item \textit{Entity type} encodes depictability priors \aciids{ordered as PERSON $>$ GPE \revise{$=$} EVENT $>$ ORG/LOC $>$ DATE/other}: people are the focal point of event photographs, \revise{geopolitical places and named events identify the scene and its context}, organizations are depicted less directly, and dates and numbers are rarely observable.
   \item \aciids{\textit{Span penalty} lowers the score of long spans, which tend to be formal titles or abstract descriptions rather than depictable entities.}
 \end{itemize}
 
 \begin{table}[t]
-\caption{\revise{Feature weights of the Entity Heuristic Scorer. All activations are binary except the span penalty. Weights were hand-assigned before evaluation and not tuned on the test split.}~\todo{Fig.~\ref{fig:pipeline} orders the type prior as PERSON $>$ GPE $>$ EVENT $>$ ORG/LOC; the earlier table listed GPE and EVENT jointly at 2.5. Report the EVENT weight actually used in the code (it must lie strictly between 2.0 and 2.5), or correct the figure if both are 2.5.}}
+\caption{\revise{Feature weights of the Entity Heuristic Scorer. All activations are binary except the span penalty. Weights were hand-assigned before evaluation and not tuned on the test split.}~\todo{The code uses EVENT $=$ GPE $=2.5$; if Fig.~\ref{fig:pipeline} draws GPE $>$ EVENT, redraw it as GPE $=$ EVENT.}}
 \label{tab:weights}
 \centering
 \scriptsize
@@ -238,7 +239,7 @@ where $\phi_f(e)\in\{0,1\}$ is the activation of feature $f$, $w_f$ its weight, 
 \cmidrule(l{0pt}r{14pt}){4-6}
  & Partial, editorial caption & 6.0 & \multirow{5}{*}{Type} & PERSON & 3.0 \\
  & Partial, generated caption & 4.0 & & \aciids{GPE} & 2.5 \\
- & QA pairs & 3.0 & & \aciids{EVENT} & \todo{} \\
+ & QA pairs & 3.0 & & \aciids{EVENT} & \revise{2.5} \\
  & Article summary & 1.5 & & ORG, LOC & 2.0 \\
  & & & & DATE / other & 1.0 / 0.5 \\
 \midrule
@@ -255,9 +256,9 @@ Entities with $S(e)\ge\tau$ are ranked by score and at most $K_e$ are kept:
 \end{equation}
 
 % [R2.1][R3.1][R3.3][R4.1][SAR] rationale, scope and honesty about the proxy
-\revise{\paragraph{Design rationale and scope.} The weights encode an \emph{ordinal} hierarchy, in which image-specific evidence outranks article-level evidence and \aciids{the type prior follows PERSON $>$ GPE $>$ EVENT $>$ ORG/LOC $>$ DATE/other}; they were fixed before any evaluation on the test split, and were not tuned on it. Two consequences follow from Eq.~\eqref{eq:entity_score}. First, $\tau$ is non-binding for short PERSON spans, whose type prior alone equals $\tau$, so for people the cap $K_e$ is the effective constraint; for DATE, at least $2.0$ of additional evidence is required. Second, priors alone can admit an entity without any caption match (e.g., an early-mentioned PERSON scores $5.0$), so $S(e)$ is a \emph{proxy} for groundedness rather than a verified visual detection. We therefore evaluate a presence-required variant and leave-one-family-out variants (Table~\ref{tab:ablation}), report sensitivity to $\tau$, $K_e$, and the weights (Appendix~\ref{app:sensitivity}), and compare against a learned logistic-regression selector over the same features (Appendix~\ref{app:learned}).}
+\revise{\paragraph{Design rationale and scope.} The weights encode an \emph{ordinal} hierarchy, in which image-specific evidence outranks article-level evidence and \aciids{the type prior follows PERSON $>$ GPE \revise{$=$} EVENT $>$ ORG/LOC $>$ DATE/other}; they were fixed before any evaluation on the test split, and were not tuned on it. Two consequences follow from Eq.~\eqref{eq:entity_score}. First, $\tau$ is non-binding for short PERSON spans, whose type prior alone equals $\tau$, so for people the cap $K_e$ is the effective constraint; for DATE, at least $2.0$ of additional evidence is required. Second, priors alone can admit an entity without any caption match (e.g., an early-mentioned PERSON scores $5.0$), so $S(e)$ is a \emph{proxy} for groundedness rather than a verified visual detection. We therefore evaluate a presence-required variant and variants without the presence or type-prior features (Table~\ref{tab:ablation}).}
 
-\revise{\paragraph{Worked example.} A three-word PERSON that exactly matches the editorial caption and is first mentioned in the lead scores $10.0+2.0+3.0=15.0$ and is always ranked near the top. A DATE found only in the summary and first mentioned in the 20--50\% band scores $1.5+1.0+1.0=3.5$ and passes $\tau$ only narrowly, whereas a DATE mentioned only late in the article scores $1.0$ and is rejected.}
+% \revise{\paragraph{Worked example.} A three-word PERSON that exactly matches the editorial caption and is first mentioned in the lead scores $10.0+2.0+3.0=15.0$ and is always ranked near the top. A DATE found only in the summary and first mentioned in the 20--50\% band scores $1.5+1.0+1.0=3.5$ and passes $\tau$ only narrowly, whereas a DATE mentioned only late in the article scores $1.0$ and is rejected.}
 
 \subsection{\aciids{Entity-Gated Length-Controlled Generation}}
 \label{sec:length_control}
@@ -273,13 +274,13 @@ Entities with $S(e)\ge\tau$ are ranked by score and at most $K_e$ are kept:
 
 \paragraph{\aciids{Unified entity gating.}}
 \label{sec:entity_conditioning}
-\aciids{Eq.~\eqref{eq:length_pipeline} contains the two explicit pathways through which article entities can enter a caption, and $\mathcal{E}^{*}$ gates both of them. \emph{Gate~1} acts at the prompt: $G_{\theta}$ is conditioned on $\mathcal{E}^{*}$ instead of on all article entities. \emph{Gate~2} acts in the normalizer: $\mathcal{E}^{*}$ is the only source of entities for enrichment and the set that pruning must preserve. Gate~2 is necessary because SGN~\cite{recap} originally enriches short captions with entities drawn from the whole article and would thus re-introduce exactly the peripheral entities that Gate~1 removes. Sharing one set creates a single information boundary: an entity rejected by the scorer cannot be added back during normalization, and an entity selected as grounded cannot be removed by truncation. Algorithm~\ref{alg:vgcap} marks both gates.}
+\aciids{Eq.~\eqref{eq:length_pipeline} contains the two explicit pathways through which article entities can enter a caption, and $\mathcal{E}^{*}$ gates both of them. \emph{Gate~1} acts at the prompt: $G_{\theta}$ is conditioned on $\mathcal{E}^{*}$ instead of on all article entities. \emph{Gate~2} acts in the normalizer: $\mathcal{E}^{*}$ is the only \revise{entity list} for enrichment. Gate~2 is necessary because SGN~\cite{recap} originally enriches short captions with entities drawn from the whole article and would thus re-introduce exactly the peripheral entities that Gate~1 removes. Sharing one set creates a single information boundary: \revise{an entity rejected by the scorer is neither listed in the prompt nor appended as an entity during normalization.} Algorithm~\ref{alg:vgcap} marks both gates.}
 % [R3.2] filtering does not fully restrict generator access
-\aciids{This boundary covers only the two \emph{explicit} pathways. A rejected entity can still reach the generator \emph{implicitly} through the summary, the QA pairs, or the editorial caption, which are passed unfiltered. We quantify this residual path as the \emph{leakage rate}, the fraction of rejected entities that nevertheless appear in the final caption (Table~\ref{tab:grounding}), and isolate the contribution of each gate by comparing prompt-only, enrichment-only, and unified gating (Table~\ref{tab:ablation}(d)).}~\todo{R3.2: optionally add a variant that masks rejected entities in the summary/QA text and report it next to the gating rows.}
+\aciids{This boundary covers only the two \emph{explicit} pathways. A rejected entity can still reach the generator \emph{implicitly} through the summary, the QA pairs, or the editorial caption, which are passed unfiltered\revise{, and the caption through the article noun phrases that enrichment appends once $\mathcal{E}^{*}$ is exhausted}. We isolate the contribution of each gate by comparing prompt-only, enrichment-only, and unified gating (Table~\ref{tab:ablation}(d)).} %~\todo{R3.2: optionally add a variant that masks rejected entities in the summary/QA text and report it next to the gating rows.}
 
-\paragraph{\aciids{Step~1: bounded generation.}} \aciids{The LLM receives four inputs, namely the query image, the article context, the image context, and the selected entities $\mathcal{E}^{*}$, and returns the initial caption $\hat{y}$.}~\todo{Llama-3-8B-Instruct (Section~\ref{sec:setup}) is text-only; state how the query image $q$ reaches $G_{\theta}$ (e.g., through its generated description) or name the multimodal generator actually used.} The prompt requests $L_{\min}$--$L_{\max}=100$--$120$ words in 3--5 sentences. \revise{Its instruction reads: \emph{``The generated caption must strictly contain between 100 and 120 words, organized into 3 to 5 concise and factual sentences. Each sentence must add new factual information about the news event.''} The last sentence suppresses restatement padding, i.e., sentences produced only to satisfy the sentence count.} \aciids{The band acts mainly through its lower bound: since $L_{\min}{=}100$ lies only slightly below the target $L^{*}{=}104$ used in Step~2, a draft that respects the band needs little or no enrichment, which is the normalization operation most likely to append disfluent fragments.}~\todo{Release the full prompt template (system and user turns, context-field order) as supplementary material.}
+\paragraph{\aciids{Step~1: bounded generation.}} \aciids{The LLM receives four inputs, namely the query image, the article context, the image context, and the selected entities $\mathcal{E}^{*}$, and returns the initial caption $\hat{y}$.} \revise{Since the generator (Section~\ref{sec:setup}) is text-only, the query image enters through its generated description in the image context.} The prompt requests $L_{\min}$--$L_{\max}=100$--$120$ words in 3--5 sentences. \revise{Its instruction reads: \emph{``The caption must be between 100-120 words. The caption should contain 3--5 concise sentences, each adding new factual information about the news event behind the image, the people involved and the importance of images related to the news story.''} Requiring each sentence to add new information suppresses restatement padding, i.e., sentences produced only to satisfy the sentence count.} \aciids{The band acts mainly through its lower bound: since $L_{\min}{=}100$ lies only slightly below the target $L^{*}{=}104$ used in Step~2, a draft that respects the band needs little or no enrichment, which is the normalization operation most likely to append disfluent fragments.} %~\todo{Release the full prompt template (system and user turns, context-field order) as supplementary material.}
 
-\paragraph{\aciids{Step~2: semantic normalization.}} \aciids{An LLM does not follow a word budget exactly, so the band alone cannot guarantee the target length; Step~2 enforces it from above. The initial caption $\hat{y}$ is post-processed by ReCap's SGN~\cite{recap}, adapted to Gate~2, in five operations. (1)~\emph{Preamble removal}: regular expressions strip conversational preambles such as ``Here is the caption:'' and surrounding quotation marks. (2)~\emph{Entity-aware pruning}: if the caption exceeds the target, tokens are pruned from the end while every mention of an entity in $\mathcal{E}^{*}$ is preserved; a spaCy POS/NER mask additionally keeps other proper nouns and numbers intact. (3)~\emph{Enrichment}: if the caption is short, it is enriched using only entities from $\mathcal{E}^{*}$, appended in score order. (4)~\emph{Target length}: the caption is cut to $L^{*}{=}104$ words (\texttt{expected\_length}; truncation is triggered above \texttt{max\_words}$\,{=}\,105$); both values are inherited from ReCap's grid search, and Appendix~\ref{app:sensitivity} sweeps $L^{*}$ for our generator. (5)~\emph{Punctuation repair} restores the terminal punctuation. Operations (2) and (3) implement Gate~2.}
+\paragraph{\aciids{Step~2: semantic normalization.}} \aciids{An LLM does not follow a word budget exactly, so the band alone cannot guarantee the target length; Step~2 enforces it from above. The initial caption $\hat{y}$ is post-processed by ReCap's SGN~\cite{recap}, adapted to Gate~2, in five operations. (1)~\emph{Preamble removal}: regular expressions strip conversational preambles such as ``Here is the caption:'' and surrounding quotation marks. (2)~\emph{Entity-aware pruning}: if the caption exceeds the target, tokens are pruned from the end \revise{while the words of every named entity that spaCy recognizes in the caption are kept}. (3)~\emph{Enrichment}: if the caption is short, it is enriched using only entities from $\mathcal{E}^{*}$, appended in score order\revise{; if it is still short once $\mathcal{E}^{*}$ is exhausted, noun phrases of the article are appended as filler}. (4)~\emph{Target length}: the caption is cut to $L^{*}{=}104$ words (\texttt{expected\_length}; truncation is triggered above \texttt{max\_words}$\,{=}\,105$); both values are inherited from ReCap's grid search. (5)~\emph{Punctuation repair} restores the terminal punctuation. \revise{Operation (3) implements Gate~2.}}
 
 
 % =====================================================================
@@ -298,13 +299,13 @@ We evaluate on the public test split of OpenEvents-V1~\cite{nguyen2025openevents
 CIDEr, an order of magnitude smaller than the other metrics, dominates the denominator; with CIDEr $=0.2651$, Eq.~\eqref{eq:overall} gives VG-Cap's $0.6219$ exactly.} \todo{Report CIDEr to four decimals in Table~\ref{tab:sota}; ENRIC's rounded 0.257 recomputes to 0.6089, not 0.6097.}
 
 \paragraph{Implementation.}
-All experiments run on one NVIDIA A100 (80\,GB). Retrieval uses InternVL-14B-224px~\cite{chen2024internvl}, re-ranking \aciids{captions} use InternVL2.5-8B~\cite{chen2024internvl25}, and captions are generated by Llama-3-8B-Instruct~\cite{meta_llama_3} with $\tau_{\mathrm{dec}}{=}0.6$, top-$p{=}0.9$, and 100--1{,}500 new tokens (the upper bound accommodates intermediate reasoning before the caption). Entities are recognized with spaCy \texttt{en\_core\_web\_sm}. Retrieval and generator are identical across all configurations.
+All experiments run on one NVIDIA A100 (80\,GB). Retrieval uses InternVL-14B-224px~\cite{chen2024internvl}, re-ranking \aciids{captions} use \revise{InternVL2.5-4B for the query and InternVL2.5-8B for database images}~\cite{chen2024internvl25}, \revise{the generated description of the image context uses InternVL2.5-8B,} and captions are generated by Llama-3-8B-Instruct~\cite{meta_llama_3} with \revise{$\tau_{\mathrm{dec}}{=}0.3$}, top-$p{=}0.9$, and 100--1{,}500 new tokens (the upper bound accommodates intermediate reasoning before the caption). Entities are recognized with spaCy \texttt{en\_core\_web\_sm}. Retrieval and generator are identical across all configurations.
 
 % [R4.3] provenance of baseline numbers
 \revise{\paragraph{Baseline provenance.} Baseline rows are the public-test results reported by the respective authors; where an Overall Score was not reported ($^{\ast}$), we recompute it from the listed components with the official formula. Recomputing every row from its rounded components reproduces the listed Overall Scores to within $\pm0.001$, so the table is internally consistent.}~\todo{R4.3: ReCap's paper reports 0.61619 for its complete model. Identify the exact table/configuration behind our 0.5987 (e.g., challenge-leaderboard submission vs. post-challenge variant), cite it precisely, and add the 0.61619 configuration as a separate row if its components are available.}
 
 % [SAR] variance and significance
-\revise{\paragraph{Statistical protocol.} Because decoding is stochastic, we report the mean over \todo{3} seeds and test differences between configurations with a paired bootstrap over queries (1{,}000 resamples, 95\% CI)~\cite{koehn2004significance}.}~\todo{SAR: re-run Table~\ref{tab:ablation} rows with 3 seeds; report std and bootstrap CIs; currently all numbers come from a single run.}
+% \revise{\paragraph{Statistical protocol.} Because decoding is stochastic, we report the mean over \todo{3} seeds and test differences between configurations with a paired bootstrap over queries (1{,}000 resamples, 95\% CI)~\cite{koehn2004significance}.}~\todo{SAR: re-run Table~\ref{tab:ablation} rows with 3 seeds; report std and bootstrap CIs; currently all numbers come from a single run.}
 
 \begin{table}[t]
 \caption{Comparison with existing methods on the OpenEvents-V1 public test set. Best values in bold, second best underlined. $^{\ast}$Overall recomputed from the listed components with the official formula. \revise{Retrieval metrics of VG-Cap equal ENRIC's because the retrieval stage is shared.}}
@@ -333,10 +334,10 @@ CIAN~\cite{hien2026cian}              & 0.3320 & 0.979 & 0.969 & 0.996 & 0.820 &
 \subsection{Comparison with State-of-the-Art Methods}
 \label{sec:sota}
 
-Table~\ref{tab:sota} compares VG-Cap with existing methods. Retrieval is near-saturated (AP $0.970$--$0.995$), so differences in Overall Score are driven mainly by caption quality, especially CIDEr. VG-Cap achieves the best Overall Score ($0.6219$) and the best CIDEr ($0.265$). Relative to ENRIC, whose retrieval it shares, it improves Overall from $0.6097$ to $0.6219$, CIDEr from $0.257$ to $0.265$, \revise{and CLIPScore from $0.833$ to $0.858$. Its CLIPScore is not the highest overall: HMR ($0.883$) and ReCap ($0.872$) score higher, but their lower CIDEr ($0.123$ and $0.243$) reduces their Overall Scores to $0.4033$ and $0.5987$.} Because the harmonic mean is dominated by its weakest component, balancing visual alignment and reference consistency matters more than maximizing either one.~\todo{SAR: add the bootstrap CI of the CIDEr and Overall gains over ENRIC.}
+Table~\ref{tab:sota} compares VG-Cap with existing methods. Retrieval is near-saturated (AP $0.970$--$0.995$), so differences in Overall Score are driven mainly by caption quality, especially CIDEr. VG-Cap achieves the best Overall Score ($0.6219$) and the best CIDEr ($0.265$). Relative to ENRIC, whose retrieval it shares, it improves Overall from $0.6097$ to $0.6219$, CIDEr from $0.257$ to $0.265$, \revise{and CLIPScore from $0.833$ to $0.858$. Its CLIPScore is not the highest overall: HMR ($0.883$) and ReCap ($0.872$) score higher, but their lower CIDEr ($0.123$ and $0.243$) reduces their Overall Scores to $0.4033$ and $0.5987$.} Because the harmonic mean is dominated by its weakest component, balancing visual alignment and reference consistency matters more than maximizing either one.%~\todo{SAR: add the bootstrap CI of the CIDEr and Overall gains over ENRIC.}
 
 \begin{table}[!t]
-\caption{Ablations on the OpenEvents-V1 public test set (retrieval and generator fixed). ``Len'': mean caption length in words; ``\#Ent'': mean named entities per final caption. \aciids{(a)~adds one component per row; ``entity list'' is the explicit list of entities in the prompt, and all rows above VG-Cap use the original SGN, which enriches from all article entities. (b)~replaces the scorer by simple selectors with the same cap $K_e{=}10$, applied through both gates. (c)~modifies the scorer. (d)~varies which gate uses $\mathcal{E}^{*}$.}}
+\caption{Ablations on the OpenEvents-V1 public test set (retrieval and generator fixed). ``Len'': mean caption length in words; ``\#Ent'': mean number of distinct spaCy entities (all labels) per final caption. \aciids{(a)~adds one component per row; ``entity list'' is the explicit list of entities in the prompt, and all rows above VG-Cap use the original SGN, which enriches from all article entities. (b)~replaces the scorer by simple selectors with the same cap $K_e{=}10$, applied through both gates. (c)~modifies the scorer. (d)~varies which gate uses $\mathcal{E}^{*}$.}}
 \label{tab:ablation}
 \centering
 \scriptsize
@@ -349,33 +350,30 @@ Table~\ref{tab:sota} compares VG-Cap with existing methods. Retrieval is near-sa
 ENRIC baseline (reproduced)\prio{P2}      & 0.6097 & 0.257 & 0.833 & 136 & \todo{} \\
 \quad + semantic normalizer (SGN)\prio{P2} & 0.6124 & 0.260 & 0.835 & 104 & \todo{} \\
 \quad\quad \aciids{+ prompt band}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\quad\quad \aciids{+ entity list (unfiltered)}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\quad\quad \aciids{+ prompt band + entity list (unfiltered)} & 0.6166 & 0.263 & 0.833 & 104 & 7.59 \\
-\quad\quad\quad \aciids{+ groundedness selection (\textbf{VG-Cap})} & \textbf{0.6219} & \textbf{0.265} & \textbf{0.858} & 104 & 6.76 \\
+\quad\quad \aciids{+ entity list (unfiltered)} & 0.6112 & 0.260 & 0.829 & 104 & 11.41 \\
+\quad\quad \aciids{+ prompt band + entity list (unfiltered)} & 0.6095 & 0.257 & 0.835 & 104 & 12.89 \\
+\quad\quad\quad \aciids{+ groundedness selection (\textbf{VG-Cap})} & \textbf{0.6234} & \textbf{0.270} & \textbf{0.837} & 104 & 11.16 \\
 \midrule
 \multicolumn{6}{@{}l}{\aciids{\textit{(b) Alternative selectors, same cap $K_e{=}10$}}} \\
-\aciids{Article order (first 10 mentions)}\prio{P1} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+\aciids{Article order (first 10 mentions)} & 0.6070 & 0.255 & 0.834 & 104 & 11.85 \\
 \aciids{Random (mean of 5 draws)}\prio{P1} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\aciids{Type prior only}\prio{P3} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
 \aciids{Contextual presence only}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
 \midrule
 \multicolumn{6}{@{}l}{\aciids{\textit{(c) Scorer variants}}} \\
 \aciids{w/o contextual presence}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\aciids{w/o editorial-caption match}\prio{P1} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\aciids{w/o article position}\prio{P3} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+\aciids{w/o editorial-caption match} & 0.6167 & 0.263 & 0.837 & 104 & 11.17 \\
 \aciids{w/o entity-type prior}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\aciids{w/o span penalty}\prio{P3} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
 \aciids{Presence required (caption match needed)}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
 \midrule
 \multicolumn{6}{@{}l}{\aciids{\textit{(d) Gate location}}} \\
-\aciids{No gate (unfiltered)}              & 0.6166 & 0.263 & 0.833 & 104 & 7.59 \\
-\aciids{Gate 1 only (prompt)}\prio{P1} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\aciids{Gate 2 only (normalization)}\prio{P1} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\aciids{Gates 1 + 2 (VG-Cap)}              & 0.6219 & 0.265 & 0.858 & 104 & 6.76 \\
+\aciids{No gate (unfiltered)}              & 0.6095 & 0.257 & 0.835 & 104 & 12.89 \\
+\aciids{Gate 1 only (prompt)} & 0.6128 & 0.260 & 0.837 & 104 & 12.61 \\
+\aciids{Gate 2 only (normalization)} & 0.6199 & 0.267 & 0.835 & 104 & 11.35 \\
+\aciids{Gates 1 + 2 (VG-Cap)}              & 0.6234 & 0.270 & 0.837 & 104 & 11.16 \\
 \bottomrule
 \end{tabular}
 \par\vspace{3pt}
-\parbox{\linewidth}{\scriptsize\todo{Priority of the pending runs (red tags). \textbf{P1}, must have, because the main claims depend on them: \emph{article order} and \emph{random} decide whether the gain comes from the scoring or merely from the ten-entity budget (if either approaches 0.6219, reframe the paper as budget-aware gating); \emph{gate~1 only} and \emph{gate~2 only} are the only evidence for the unified-gating contribution; \emph{w/o editorial-caption match} tests whether the gain depends on editorial captions, which could share wording with the references (SAR.Q5). Run these, together with the unfiltered and VG-Cap rows, with 3 seeds for the bootstrap CI. \textbf{P2}, strengthens the analysis: the two single-component ladder rows (R3.6), \emph{presence only}, \emph{w/o contextual presence}, \emph{w/o entity-type prior} (which drives the DATE/ORG removals of Sec.~\ref{sec:entity-stats}), and \emph{presence required} (proxy concern, R3.1); \#Ent of the first two rows only requires counting entities in existing outputs. \textbf{P3}, optional, move to Appendix~\ref{app:sensitivity} if space is short: \emph{w/o article position} and \emph{w/o span penalty} (small weights, likely negligible); \emph{type prior only} differs from \emph{w/o contextual presence} mainly by the position prior, so one of the two suffices.}}
+\parbox{\linewidth}{\scriptsize\todo{Priority of the pending runs (red tags). \textbf{P1}, must have, because the main claims depend on them: \emph{article order} and \emph{random} decide whether the gain comes from the scoring or merely from the ten-entity budget (if either approaches 0.6219, reframe the paper as budget-aware gating); \emph{gate~1 only} and \emph{gate~2 only} are the only evidence for the unified-gating contribution; \emph{w/o editorial-caption match} tests whether the gain depends on editorial captions, which could share wording with the references (SAR.Q5). Run these, together with the unfiltered and VG-Cap rows, with 3 seeds for the bootstrap CI. \textbf{P2}, strengthens the analysis: the two single-component ladder rows (R3.6), \emph{presence only}, \emph{w/o contextual presence}, \emph{w/o entity-type prior} (which drives the DATE/ORG removals of Sec.~\ref{sec:entity-stats}), and \emph{presence required} (proxy concern, R3.1); \#Ent of the first two rows only requires counting entities in existing outputs.}}
 \end{table}
 
 \subsection{Ablation Study}
@@ -384,43 +382,14 @@ ENRIC baseline (reproduced)\prio{P2}      & 0.6097 & 0.257 & 0.833 & 136 & \todo
 \paragraph{Component ladder.} \aciids{Table~\ref{tab:ablation}(a) adds one component per row.} SGN raises the Overall Score from $0.6097$ to $0.6124$ while shortening captions from $136$ to $104$ words, showing that the unconstrained generator over-produces. \aciids{Adding the prompt band together with an unfiltered entity list reaches $0.6166$ and CIDEr $0.263$ at the same length, because SGN already enforces the target. The two rows above it add each of these components alone and show how the step from $0.6124$ to $0.6166$ divides between them.} Replacing the unfiltered entities with groundedness selection yields $0.6219$, CIDEr $0.265$, and CLIPScore $0.858$, \emph{again at 104 words}. Because length is held constant, the gain cannot be attributed to shorter captions; it reflects a change in \emph{content}. \aciids{This last step changes both gates at once, since the unfiltered rows use the original SGN; panel~(d) separates them.}~\todo{R3.6/R4.2: run the two single-component rows and discuss.}
 
 % [R1.2][R4.2][SAR] selection baselines, feature ablations, gating
-\paragraph{\aciids{Does the scoring matter?}} \aciids{Panel~(b) asks whether the gain comes merely from \emph{limiting} the number of entities. Article-order and random selection keep at most ten entities but ignore groundedness; type-only and presence-only selectors use a single signal of the scorer. If they approach $0.6219$, the benefit lies in the budget rather than in the scoring. Panel~(c) modifies the scorer itself: each ``w/o'' row removes one factor of Eq.~\eqref{eq:entity_score}, the ``w/o editorial-caption match'' row tests how much the gain depends on editorial captions, and the ``presence required'' row admits an entity only if it matches a caption, which tests whether entities admitted by priors alone help or hurt (Section~\ref{sec:entity_scorer}).}
+\paragraph{\aciids{Does the scoring matter?}} \aciids{Panel~(b) asks whether the gain comes merely from \emph{limiting} the number of entities. Article-order and random selection keep at most ten entities but ignore groundedness; the presence-only selector uses a single signal of the scorer. If they approach $0.6219$, the benefit lies in the budget rather than in the scoring. Panel~(c) modifies the scorer itself: each ``w/o'' row removes one factor of Eq.~\eqref{eq:entity_score}, the ``w/o editorial-caption match'' row tests how much the gain depends on editorial captions, and the ``presence required'' row admits an entity only if it matches a caption, which tests whether entities admitted by priors alone help or hurt (Section~\ref{sec:entity_scorer}).}
 
 \paragraph{\aciids{Which gate matters?}} \aciids{Panel~(d) applies $\mathcal{E}^{*}$ to the prompt only, to normalization only, or to both. Its first and last rows coincide with the last two rows of panel~(a).}~\todo{R1.2/R4.2/SAR.Q3: fill (b)--(d) and state which differences exceed the bootstrap CI.}
-
-\subsection{Entity-Level Grounding and Caption Quality}
-\label{sec:grounding}
-
-% [R1.3][R1.4][R2.2][R3.1][R4.4][SAR] direct grounding and human evaluation
-\aciids{CLIPScore and CIDEr do not verify individual statements, and fewer entities need not mean better-grounded entities. We therefore measure grounding directly with three complementary tools (Table~\ref{tab:grounding}).}
-
-\aciids{\emph{Entity overlap} (all 3{,}000 queries) compares the deduplicated entities of each caption with those of its reference caption and reports precision, recall, and F1. \emph{Manual annotation} covers \todo{200} randomly sampled queries. Two annotators label every entity mention in each caption as \emph{visual} (depicted or directly identifiable in the image), \emph{contextual} (not visible, but supported by the article and pertaining to the depicted moment, e.g., the event, venue, or date of the photograph), \emph{peripheral} (supported by the article but concerning a person, time, or event other than the photograph), or \emph{hallucinated} (supported by no source); we report Cohen's $\kappa$. The peripheral rate measures exactly the error that VG-Cap targets, and the hallucination rate checks that filtering does not trade it for generator errors. The \emph{leakage rate} (all queries) is the share of rejected entities that still appear in the final caption. Finally, three raters score factuality, fluency, and event informativeness on a 1--5 scale for the same sample, blind to the system and in random order; fluency directly measures the cost of pruning and enrichment.}
-
-\begin{table}[t]
-\caption{\aciids{Entity-level grounding and human evaluation. P/R/F1: entity overlap with the reference caption (all queries). Vis./Peri./Hall.: share of annotated entity mentions labeled visual, peripheral, or hallucinated (the remainder is contextual). Leak: share of rejected entities appearing in the caption (all queries). Human: mean score on a 1--5 scale.}}
-\label{tab:grounding}
-\centering
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}l ccc ccc c ccc@{}}
-\toprule
- & \multicolumn{3}{c}{\aciids{\textbf{Overlap}}} & \multicolumn{3}{c}{\aciids{\textbf{Annotated (\%)}}} & & \multicolumn{3}{c}{\textbf{Human (1--5)}} \\
-\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(l){9-11}
-\textbf{Configuration} & P$\uparrow$ & R$\uparrow$ & F1$\uparrow$ & \aciids{Vis.$\uparrow$} & \aciids{Peri.$\downarrow$} & \aciids{Hall.$\downarrow$} & \textbf{Leak}$\downarrow$ & Fact.$\uparrow$ & Flu.$\uparrow$ & Inf.$\uparrow$ \\
-\midrule
-ENRIC baseline                 & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} & --      & \todo{} & \todo{} & \todo{} \\
-\aciids{Unfiltered entity list} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} & --      & \todo{} & \todo{} & \todo{} \\
-VG-Cap                         & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\todo{R1.3/R4.4: fill Table~\ref{tab:grounding}; release the annotation guideline in the supplementary material; if VG-Cap does not reduce the peripheral rate, rephrase the grounding claims in the abstract and conclusion accordingly. ENRIC captions are longer (136 words), which may favor its informativeness score; state this when discussing the human scores.}
 
 \subsection{Entity Selection Analysis}
 \label{sec:entity-stats}
 
-\aciids{We compare the entities in the final captions of the unfiltered-list configuration ($0.6166$) and VG-Cap ($0.6219$), which differ only in the entities made available to the caption, at the prompt and for enrichment;} entities are recognized and deduplicated as in Section~\ref{sec:entity_scorer}. Filtering reduces the mean entity count from $7.59$ to $6.76$ per caption ($22{,}759\rightarrow20{,}276$ mentions). The per-caption difference (Fig.~\ref{fig:entity-stats}a) is centered at $-0.83$ (s.d.\ $2.44$): the selector reduces the count for $54.5\%$ of queries, leaves it unchanged for $17.3\%$, and increases it for $28.2\%$. \aciids{The increases show that filtering does not simply delete entities: when peripheral entities are removed from the prompt, the generator and the enrichment step mention other entities instead.}
+\aciids{We compare the entities in the final captions of the unfiltered-list configuration (No gate, $0.6095$) and VG-Cap ($0.6234$), both with seed~0, which differ only in the entities made available to the caption, at the prompt and for enrichment;} \revise{an entity is a distinct lowercased spaCy surface form of the final caption, over all entity labels.} Filtering reduces the mean entity count from \revise{$12.89$ to $11.16$ per caption ($38{,}682\rightarrow33{,}471$ mentions). The per-caption difference (Fig.~\ref{fig:entity-stats}a) is centered at $-1.74$ (s.d.\ $3.58$): the selector reduces the count for $61.4\%$ of queries, leaves it unchanged for $12.6\%$, and increases it for $26.0\%$.} \aciids{The increases show that filtering does not simply delete entities: when peripheral entities are removed from the prompt, the generator and the enrichment step mention other entities instead.}
 
 \begin{figure}[t]
 \centering
@@ -434,11 +403,11 @@ VG-Cap                         & \todo{} & \todo{} & \todo{} & \todo{} & \todo{}
   \includegraphics[width=\linewidth]{figures/entity_gap_by_type.pdf}
   \subcaption{Removed entities by type}
 \end{minipage}
-\caption{Effect of groundedness filtering over the 3{,}000 public-test queries, comparing VG-Cap ($0.6219$) with the unfiltered entity list ($0.6166$). (a) Negative values mean fewer entities after filtering. (b) Gross removals ($7{,}698$) by spaCy entity type.~\todo{SAR: regenerate (a), whose axis label reads 0.6218 instead of 0.6219, and (b), whose axis label reads ``Net entities removed'' although the bars sum to the gross removals.}}
+\caption{Effect of groundedness filtering over the 3{,}000 public-test queries, comparing VG-Cap ($0.6234$) with the unfiltered entity list (No gate, $0.6095$), seed~0. (a) Negative values mean fewer entities after filtering. (b) Gross removals ($16{,}376$) by spaCy entity type.~\todo{Replace figures/entity\_gap\_distribution.pdf and figures/entity\_gap\_by\_type.pdf with the re-run versions in vast\_results/analysis/figures\_s0 (scripts/make\_entity\_figures.py).}}
 \label{fig:entity-stats}
 \end{figure}
 
-\aciids{At the mention level, the selector removes $7{,}698$ mentions and admits $5{,}215$ previously absent ones (net $-2{,}483$), so it \emph{reallocates} the caption budget rather than merely shortening the entity list. Fig.~\ref{fig:entity-stats}b breaks the removals down by type. Most fall on DATE ($1{,}957$) and ORG ($1{,}464$), two classes with low type priors. PERSON removals ($1{,}433$) are similar in number but cannot be caused by the threshold, which never rejects a short PERSON span (Section~\ref{sec:entity_scorer}); they come either from the cap $K_e$, which discards secondary actors once ten entities are admitted, or from the generator, whose sampled captions differ even for identical inputs.}~\todo{Raw counts also reflect how often each type occurs: add, per type, the removal rate (removed / present in unfiltered captions) and the admissions, and report the share of PERSON removals caused by the cap.} \aciids{Removal counts alone cannot show that the removed entities were peripheral or that the admitted ones are grounded; Table~\ref{tab:grounding} measures this directly, and Appendix~\ref{app:qualitative} lists over-pruned cases, including dates that were salient to the event.}
+\aciids{At the mention level, the selector removes \revise{$16{,}376$} mentions and admits \revise{$11{,}165$} previously absent ones (net \revise{$-5{,}211$}), so it \emph{reallocates} the caption budget rather than merely shortening the entity list. Fig.~\ref{fig:entity-stats}b breaks the removals down by type.} \revise{Most fall on DATE ($3{,}780$), PERSON ($3{,}211$), and ORG ($2{,}641$), but raw counts also reflect how often each type occurs. Relative to its occurrences in the unfiltered captions, the removal rate is highest for temporal and numeric types, which have the lowest type priors (TIME $68.9\%$, DATE $59.9\%$, CARDINAL $48.8\%$), and lowest for depictable types (EVENT $32.7\%$, GPE $34.0\%$, PERSON $35.0\%$). PERSON removals are rarely due to the threshold, which never rejects a short PERSON span (Section~\ref{sec:entity_scorer}): $66.0\%$ concern entities that pass $\tau$ but fall outside the cap $K_e$, which discards secondary actors once ten entities are admitted; $28.8\%$ concern entities in $\mathcal{E}^{*}$ that the final caption nevertheless omits, through the draft wording, the enrichment order, or truncation; $3.8\%$ were never candidates; and only $1.4\%$ score below $\tau$.} \aciids{Removal counts alone cannot show that the removed entities were peripheral or that the admitted ones are grounded.}
 
 \subsection{Qualitative Analysis}
 \label{sec:qualitative}
@@ -451,18 +420,18 @@ VG-Cap                         & \todo{} & \todo{} & \todo{} & \todo{} & \todo{}
 \label{fig:qualitative}
 \end{figure}
 
-A small mean reduction ($0.83$ entities) produces a visible change because the discarded entities concentrate in the passage that enrichment appends to reach the target length (Fig.~\ref{fig:qualitative}). For the photograph of former Formula One driver Mark Webber watching tennis, the unfiltered caption adds \emph{Sebastian Vettel}, \emph{Red Bull}, \emph{Spain}, and \emph{Russia} from the article's account of his racing career and ends with the fragment ``Red Bull.''; with filtering, the caption describes the subject's expression and the blue court background instead. For Nepali golfer Pratima Sherpa at home, the unfiltered caption ends with an incoherent entity sequence, while the filtered one describes the mother's orange sweater, a metal pan, and a desk lamp. \revise{Filtering does not remove all malformed enrichment: the second filtered caption still ends with ``the Tiger Woods.'' Further successes and failures, including incorrectly retained and incorrectly removed entities, are given in Appendix~\ref{app:qualitative}.}
+A small mean reduction ($0.83$ entities)~\todo{0.83 and Fig.~\ref{fig:qualitative} come from the submitted 0.6166/0.6219 runs; the re-run gives $1.74$ (Section~\ref{sec:entity-stats}). Re-pick the examples from gate\_none\_s0 vs.\ vgcap\_s0, or state that the figure shows the submitted runs.} produces a visible change because the discarded entities concentrate in the passage that enrichment appends to reach the target length (Fig.~\ref{fig:qualitative}). For the photograph of former Formula One driver Mark Webber watching tennis, the unfiltered caption adds \emph{Sebastian Vettel}, \emph{Red Bull}, \emph{Spain}, and \emph{Russia} from the article's account of his racing career and ends with the fragment ``Red Bull.''; with filtering, the caption describes the subject's expression and the blue court background instead. For Nepali golfer Pratima Sherpa at home, the unfiltered caption ends with an incoherent entity sequence, while the filtered one describes the mother's orange sweater, a metal pan, and a desk lamp. \revise{Filtering does not remove all malformed enrichment: the second filtered caption still ends with ``the Tiger Woods.''}
 
-\subsection{Limitations and Broader Impact}
+\subsection{Limitations}
 \label{sec:limitations}
 
-\revise{\emph{Heuristic design.} The weights, threshold, and cap are manually specified; Appendices~\ref{app:sensitivity} and~\ref{app:learned} quantify their sensitivity and a learned alternative, but generalization beyond OpenEvents-V1 remains untested. \emph{Proxy, not verification.} The score estimates groundedness from text; it does not verify that a named person is visible. A cross-modal check, e.g.\ face--name matching for PERSON entities or LLM self-verification~\cite{asai2024selfrag}, is a natural extension. \emph{Implicit leakage.} \aciids{The gate covers only the explicit entity pathways (Section~\ref{sec:entity_conditioning}).} \emph{Fluency.} Entity-preserving truncation can drop verbs or connectives, and enrichment can append fragments or cut a multi-word entity mid-span. \emph{Shared NER.} Recognition, truncation, and enrichment share one small spaCy model, so its errors propagate. \emph{Broader impact.} Misattributing a name to a depicted person carries reputational risk, and type priors may suppress salient but non-visual information such as dates. Deployment should therefore keep a human editor in the loop, admit PERSON names only when corroborated by multiple sources, and expose the provenance of each entity, which the interpretable scorer makes straightforward.}
+\revise{VG-Cap has several limitations that point to directions for future work. The weights, threshold, and cap of the Entity Heuristic Scorer are specified by hand, and their generalization beyond OpenEvents-V1 remains untested, so learning and calibrating them from held-out data is a natural next step. The score also estimates groundedness from text and does not verify that a named person is actually visible in the photograph; cross-modal checks, such as face--name matching for PERSON entities or LLM self-verification~\cite{asai2024selfrag}, could turn this proxy into a verified signal, and entity-level annotation together with human evaluation would confirm directly whether the removed entities are peripheral. In addition, the gate controls only the explicit entity pathways (Section~\ref{sec:entity_conditioning}), so rejected entities can still reach the generator through the summary, the QA pairs, or the editorial caption\revise{, and the caption through the noun-phrase filler of enrichment}, and masking them in all context channels would close this residual path. Entity-preserving truncation can further drop verbs or connectives, and enrichment can append fragments or cut a multi-word entity mid-span, which motivates replacing token-level pruning and enrichment with fluency-aware rewriting. Finally, recognition, truncation, and enrichment share one small spaCy model, so its errors propagate through the whole pipeline, and a stronger recognizer with normalized string matching would reduce this dependence.}
 
 % =====================================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-\aciids{We presented VG-Cap, a framework for event-enriched news image captioning that keeps a fixed retrieval backbone and controls which article entities may enter the caption. A training-free Entity Heuristic Scorer selects entities by estimated visual groundedness, and the selected set gates both entity pathways of an Entity-Gated Length-Controlled Generation module, the prompt of bounded generation and the enrichment of semantic normalization. With retrieval and generator held fixed, VG-Cap obtains the best Overall Score and CIDEr on OpenEvents-V1 among the compared methods and raises CLIPScore over the ENRIC backbone from $0.833$ to $0.858$ at an unchanged caption length. The selector reallocates entity mentions rather than merely removing them, with most removals falling on classes with low type priors such as DATE and ORG; entity-level annotation measures whether the removed entities are indeed peripheral.}~\todo{Replace the last clause by the measured result of Table~\ref{tab:grounding}.} \aciids{The scorer remains a text-based proxy with hand-set weights, and the gate does not cover rejected entities that reach the generator implicitly through the summary or QA pairs. Future work will therefore learn and calibrate the scorer from data, verify PERSON entities cross-modally, mask rejected entities in all context channels, and replace token-level pruning and enrichment with fluency-aware rewriting.}
+\aciids{We presented VG-Cap, a framework for event-enriched news image captioning that keeps a fixed retrieval backbone and controls which article entities may enter the caption. A training-free Entity Heuristic Scorer selects entities by estimated visual groundedness, and the selected set gates both entity pathways of an Entity-Gated Length-Controlled Generation module, the prompt of bounded generation and the enrichment of semantic normalization. With retrieval and generator held fixed, VG-Cap obtains the best Overall Score and CIDEr on OpenEvents-V1 among the compared methods and raises CLIPScore over the ENRIC backbone from $0.833$ to $0.858$ at an unchanged caption length. Future work will learn the scorer from data, verify entity grounding directly and cross-modally, and extend the gate to all context channels.}
 
 \begin{credits}
 \ifsubmission
@@ -476,122 +445,16 @@ This research is funded by Vietnam National University -- Ho Chi Minh City (VNU-
 \bibliography{ref}
 
 % =====================================================================
-%  APPENDIX (placed after the references; not counted in the page limit)
-% =====================================================================
-\clearpage
-\appendix
-\renewcommand{\thetable}{A\arabic{table}}
-\renewcommand{\thefigure}{A\arabic{figure}}
-\setcounter{table}{0}
-\setcounter{figure}{0}
-
-\section{Sensitivity Analysis}
-\label{app:sensitivity}
-
-% [R1.2][R2.1][R2.m1][R3.3][R4.1][SAR.Q2]
-\begin{table}[h]
-\caption{\revise{Sensitivity of the Overall Score to the admission threshold $\tau$ and entity cap $K_e$ (all other settings as in VG-Cap; default in bold).}}
-\label{tab:sens_tau_k}
-\centering
-\footnotesize
-\begin{tabular}{@{}l cccc@{}}
-\toprule
- & $K_e{=}5$ & $K_e{=}\mathbf{10}$ & $K_e{=}15$ & no cap \\
-\midrule
-$\tau=2.0$          & \todo{} & \todo{} & \todo{} & \todo{} \\
-$\tau=\mathbf{3.0}$ & \todo{} & \textbf{0.6219} & \todo{} & \todo{} \\
-$\tau=4.0$          & \todo{} & \todo{} & \todo{} & \todo{} \\
-$\tau=5.0$          & \todo{} & \todo{} & \todo{} & \todo{} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[h]
-\caption{\revise{Left: robustness to weight perturbation (each family's weights scaled by the given factor, others fixed). Right: target length $L^{*}$ sweep (prompt band shifted accordingly).}}
-\label{tab:sens_w_len}
-\centering
-\footnotesize
-\begin{minipage}[t]{0.50\textwidth}
-\centering
-\begin{tabular}{@{}l ccc@{}}
-\toprule
-\textbf{Family} & $\times0.5$ & $\times1.0$ & $\times1.5$ \\
-\midrule
-Presence & \todo{} & 0.6219 & \todo{} \\
-Position & \todo{} & 0.6219 & \todo{} \\
-Type     & \todo{} & 0.6219 & \todo{} \\
-Random $\pm$20\% & \multicolumn{3}{c}{\todo{} (10 draws)} \\
-\bottomrule
-\end{tabular}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.46\textwidth}
-\centering
-\begin{tabular}{@{}c ccc@{}}
-\toprule
-$L^{*}$ & Overall & CIDEr & CLIP \\
-\midrule
-80  & \todo{} & \todo{} & \todo{} \\
-90  & \todo{} & \todo{} & \todo{} \\
-\textbf{104} & 0.6219 & 0.265 & 0.858 \\
-110 & \todo{} & \todo{} & \todo{} \\
-120 & \todo{} & \todo{} & \todo{} \\
-\bottomrule
-\end{tabular}
-\end{minipage}
-\end{table}
-
-\todo{R2.m1: plot Overall/CIDEr/CLIP vs.\ $L^{*}$ as a figure if space allows; use a held-out split of the OpenEvents training queries (not the public test set) for any re-tuning, and report test results only once.}
-
-\section{Learned Selector Variant}
-\label{app:learned}
-
-\revise{To test whether the hand-set weights are near a data-driven optimum, we fit a logistic-regression selector on the same binary features, using as labels whether an entity occurs in the reference caption of a held-out training query. The learned selector replaces Eq.~\eqref{eq:entity_score} and keeps $K_e{=}10$.}~\todo{R2.1/SAR.Q2: choose and state the number of held-out training queries; report Overall/CIDEr/CLIP, the learned coefficients next to Table~\ref{tab:weights}, and whether their ordering matches the hand-set hierarchy.}
-
-\section{Efficiency}
-\label{app:efficiency}
-
-\begin{table}[h]
-\caption{\revise{Per-query latency and peak GPU memory on one A100 (mean over the test set).}}
-\label{tab:efficiency}
-\centering
-\footnotesize
-\begin{tabular}{@{}lcc@{}}
-\toprule
-\textbf{Stage} & \textbf{Time (s)} & \textbf{Peak memory (GB)} \\
-\midrule
-Retrieval and re-ranking & \todo{} & \todo{} \\
-Entity scoring           & \todo{} & --      \\
-Caption generation       & \todo{} & \todo{} \\
-Normalization            & \todo{} & --      \\
-\midrule
-Total                    & \todo{} & \todo{} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\todo{SAR.Q6: measure; comment on the cost of the 1,500-token budget and on newsroom-scale deployment.}
-
-\section{Additional Qualitative Results and Failure Cases}
-\label{app:qualitative}
-
-\todo{R1.3/SAR.Q8: add 6--8 examples in a two-column figure: (i) successes; (ii) incorrectly retained entities (passed $\tau$ by priors only); (iii) incorrectly removed entities, e.g., event-critical DATE or ORG; (iv) malformed enrichment such as ``the Tiger Woods.'' Annotate each entity with its score breakdown from Table~\ref{tab:weights}.}
-
-\section{Reproducibility}
-\label{app:repro}
-
-\revise{All model versions, decoding parameters, weights, thresholds, and length settings are listed in Sections~\ref{sec:method} and~\ref{sec:setup}.}~\todo{SAR: release code, prompts, NER/deduplication/normalization scripts, random seeds, and the grounding annotations; add the repository URL here for the camera-ready version.}
-
-% =====================================================================
 %  REVISION LOG (VGCap_Revision_Log.pdf, exported from the .docx log).
 %  Included only in the marked-up copy; \showrevisionsfalse omits it.
 %  Pages 3--6 of the log are landscape and are rotated to fit.
 % =====================================================================
-\ifshowrevisions
-  \clearpage
-  \includepdf[pages=1-2,pagecommand={\thispagestyle{empty}},
-              addtotoc={1,section,1,Revision Log,sec:revlog}]{VGCap_Revision_Log.pdf}
-  \includepdf[pages=3-6,landscape,pagecommand={\thispagestyle{empty}}]{VGCap_Revision_Log.pdf}
-  \includepdf[pages=7-8,pagecommand={\thispagestyle{empty}}]{VGCap_Revision_Log.pdf}
-\fi
+% \ifshowrevisions
+%   \clearpage
+%   \includepdf[pages=1-2,pagecommand={\thispagestyle{empty}},
+%               addtotoc={1,section,1,Revision Log,sec:revlog}]{VGCap_Revision_Log.pdf}
+%   \includepdf[pages=3-6,landscape,pagecommand={\thispagestyle{empty}}]{VGCap_Revision_Log.pdf}
+%   \includepdf[pages=7-8,pagecommand={\thispagestyle{empty}}]{VGCap_Revision_Log.pdf}
+% \fi
 
 \end{document}

@@ -1,0 +1,12 @@
+no --gt and no --cider: CIDEr and Overall are left out (fill them with scripts/record_score.py after submitting)
+computing CLIPScore ...
+  clip 64/3000  clip 128/3000  clip 192/3000  clip 256/3000  clip 320/3000  clip 384/3000  clip 448/3000  clip 512/3000  clip 576/3000  clip 640/3000  clip 704/3000  clip 768/3000  clip 832/3000  clip 896/3000  clip 960/3000  clip 1024/3000  clip 1088/3000  clip 1152/3000  clip 1216/3000  clip 1280/3000  clip 1344/3000  clip 1408/3000  clip 1472/3000  clip 1536/3000  clip 1600/3000  clip 1664/3000  clip 1728/3000  clip 1792/3000  clip 1856/3000  clip 1920/3000  clip 1984/3000  clip 2048/3000  clip 2112/3000  clip 2176/3000  clip 2240/3000  clip 2304/3000  clip 2368/3000  clip 2432/3000  clip 2496/3000  clip 2560/3000  clip 2624/3000  clip 2688/3000  clip 2752/3000  clip 2816/3000  clip 2880/3000  clip 2944/3000  clip 3000/3000
+  CLIPScore = 0.8177
+{
+  "clip": 0.8177,
+  "ap": 0.992,
+  "r1": 0.985,
+  "r10": 1.0,
+  "n_scored": 3000
+}
+-> runs/ladder_enric_s0/scores.json and per_query_scores.json (needed by scripts/bootstrap.py)

@@ -1,0 +1,4 @@
+[queue] jobs/C1_after_G1.txt  slots=2  delay=0s  start 2026-10-28 13:22:01
+OK   ladder_enric_s0
+OK   gate_enrichment_s0
+[queue] jobs/C1_after_G1.txt  done 2026-10-28 13:48:03

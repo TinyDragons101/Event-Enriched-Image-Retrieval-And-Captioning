@@ -1,0 +1,41 @@
+[smoke_gpu] gate=unified selector=heuristic queries=20
+[smoke_gpu] selecting entities:   0%|          | 0/20 [00:00<?, ?it/s][smoke_gpu] selecting entities:   5%|▌         | 1/20 [00:00<00:12,  1.47it/s][smoke_gpu] selecting entities:  10%|█         | 2/20 [00:00<00:07,  2.35it/s][smoke_gpu] selecting entities:  15%|█▌        | 3/20 [00:01<00:05,  2.91it/s][smoke_gpu] selecting entities:  20%|██        | 4/20 [00:01<00:07,  2.23it/s][smoke_gpu] selecting entities:  25%|██▌       | 5/20 [00:01<00:04,  3.07it/s][smoke_gpu] selecting entities:  30%|███       | 6/20 [00:02<00:05,  2.37it/s][smoke_gpu] selecting entities:  35%|███▌      | 7/20 [00:03<00:06,  1.86it/s][smoke_gpu] selecting entities:  40%|████      | 8/20 [00:03<00:06,  1.82it/s][smoke_gpu] selecting entities:  45%|████▌     | 9/20 [00:04<00:04,  2.20it/s][smoke_gpu] selecting entities:  55%|█████▌    | 11/20 [00:04<00:02,  3.06it/s][smoke_gpu] selecting entities:  60%|██████    | 12/20 [00:04<00:02,  3.56it/s][smoke_gpu] selecting entities:  65%|██████▌   | 13/20 [00:05<00:02,  3.14it/s][smoke_gpu] selecting entities:  70%|███████   | 14/20 [00:05<00:02,  2.69it/s][smoke_gpu] selecting entities:  75%|███████▌  | 15/20 [00:05<00:01,  2.83it/s][smoke_gpu] selecting entities:  80%|████████  | 16/20 [00:06<00:01,  3.14it/s][smoke_gpu] selecting entities:  85%|████████▌ | 17/20 [00:06<00:00,  3.39it/s][smoke_gpu] selecting entities:  90%|█████████ | 18/20 [00:06<00:00,  2.87it/s][smoke_gpu] selecting entities:  95%|█████████▌| 19/20 [00:07<00:00,  3.04it/s][smoke_gpu] selecting entities: 100%|██████████| 20/20 [00:07<00:00,  3.23it/s][smoke_gpu] selecting entities: 100%|██████████| 20/20 [00:07<00:00,  2.72it/s]
+You are offline and the cache for model files in Transformers v4.22.0 has been updated while your local cache seems to be the one of a previous version. It is very likely that all your calls to any `from_pretrained()` method will fail. Remove the offline mode and enable internet connection to have your cache be updated automatically, then you can go back to offline mode.
+[smoke_gpu] mean entities selected: 10.000
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+[smoke_gpu] prompt template: cot_5_things_fact_more_event.j2 (entities=True, length_band=True, temperature=0.3)
+🔥 Using llama3-8b: meta-llama/Meta-Llama-3-8B-Instruct
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.24s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.17s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:03<00:01,  1.11s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.23it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.06it/s]
+[smoke_gpu] generating:   0%|          | 0/20 [00:00<?, ?it/s]Starting from v4.46, the `logits` model output will have the same type as the model (except at train time, where it will always be FP32)
+[smoke_gpu] generating:   5%|▌         | 1/20 [00:03<01:03,  3.36s/it][smoke_gpu] generating:  10%|█         | 2/20 [00:08<01:19,  4.43s/it][smoke_gpu] generating:  15%|█▌        | 3/20 [00:11<01:02,  3.70s/it][smoke_gpu] generating:  20%|██        | 4/20 [00:15<00:59,  3.71s/it][smoke_gpu] generating:  25%|██▌       | 5/20 [00:18<00:54,  3.62s/it][smoke_gpu] generating:  30%|███       | 6/20 [00:21<00:46,  3.36s/it][smoke_gpu] generating:  35%|███▌      | 7/20 [00:24<00:43,  3.33s/it][smoke_gpu] generating:  40%|████      | 8/20 [00:28<00:40,  3.38s/it][smoke_gpu] generating:  45%|████▌     | 9/20 [00:31<00:37,  3.40s/it][smoke_gpu] generating:  50%|█████     | 10/20 [00:34<00:31,  3.16s/it]You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+[smoke_gpu] generating:  55%|█████▌    | 11/20 [00:36<00:27,  3.00s/it][smoke_gpu] generating:  60%|██████    | 12/20 [00:40<00:25,  3.23s/it][smoke_gpu] generating:  65%|██████▌   | 13/20 [00:43<00:22,  3.27s/it][smoke_gpu] generating:  70%|███████   | 14/20 [00:46<00:18,  3.10s/it][smoke_gpu] generating:  75%|███████▌  | 15/20 [00:49<00:15,  3.09s/it][smoke_gpu] generating:  80%|████████  | 16/20 [00:52<00:11,  2.95s/it][smoke_gpu] generating:  85%|████████▌ | 17/20 [00:55<00:09,  3.02s/it][smoke_gpu] generating:  90%|█████████ | 18/20 [00:58<00:05,  2.98s/it][smoke_gpu] generating:  95%|█████████▌| 19/20 [01:01<00:03,  3.07s/it][smoke_gpu] generating: 100%|██████████| 20/20 [01:04<00:00,  3.01s/it][smoke_gpu] generating: 100%|██████████| 20/20 [01:04<00:00,  3.23s/it]
+Normalizing captions:   0%|          | 0/20 [00:00<?, ?it/s]Normalizing captions:   5%|▌         | 1/20 [00:00<00:02,  7.89it/s]Normalizing captions:  10%|█         | 2/20 [00:00<00:02,  6.85it/s]Normalizing captions:  15%|█▌        | 3/20 [00:00<00:02,  6.84it/s]Normalizing captions:  20%|██        | 4/20 [00:00<00:04,  3.45it/s]Normalizing captions:  30%|███       | 6/20 [00:01<00:04,  3.39it/s]Normalizing captions:  35%|███▌      | 7/20 [00:02<00:05,  2.55it/s]Normalizing captions:  40%|████      | 8/20 [00:02<00:05,  2.35it/s]Normalizing captions:  45%|████▌     | 9/20 [00:02<00:03,  2.77it/s]Normalizing captions:  55%|█████▌    | 11/20 [00:03<00:02,  3.71it/s]Normalizing captions:  60%|██████    | 12/20 [00:03<00:01,  4.18it/s]Normalizing captions:  65%|██████▌   | 13/20 [00:03<00:01,  3.70it/s]Normalizing captions:  70%|███████   | 14/20 [00:04<00:01,  3.19it/s]Normalizing captions:  75%|███████▌  | 15/20 [00:04<00:01,  3.42it/s]Normalizing captions:  80%|████████  | 16/20 [00:04<00:01,  3.77it/s]Normalizing captions:  85%|████████▌ | 17/20 [00:04<00:00,  4.04it/s]Normalizing captions:  90%|█████████ | 18/20 [00:05<00:00,  3.49it/s]Normalizing captions:  95%|█████████▌| 19/20 [00:05<00:00,  3.66it/s]Normalizing captions: 100%|██████████| 20/20 [00:05<00:00,  3.89it/s]Normalizing captions: 100%|██████████| 20/20 [00:05<00:00,  3.55it/s]
+
+==================================================
+Caption Normalization Statistics:
+==================================================
+Total captions processed: 20
+Mean length: 104.00 words
+Min length: 104 words
+Max length: 104 words
+==================================================
+submission -> runs/smoke_gpu/submission.csv (3000 rows, 2980 without a caption)
+stats:   0%|          | 0/20 [00:00<?, ?it/s]stats:  20%|██        | 4/20 [00:00<00:00, 36.51it/s]stats:  40%|████      | 8/20 [00:00<00:00, 38.48it/s]stats:  60%|██████    | 12/20 [00:00<00:00, 38.54it/s]stats:  85%|████████▌ | 17/20 [00:00<00:00, 39.37it/s]stats: 100%|██████████| 20/20 [00:00<00:00, 39.09it/s]
+{
+  "n_captions": 20,
+  "mean_length_words": 104,
+  "mean_entities_per_caption": 12.05,
+  "total_entity_mentions": 241,
+  "mean_entities_selected": 10,
+  "leakage_rate": 0.0337,
+  "rejected_entities_total": 1336,
+  "tag": "smoke_gpu",
+  "gate": "unified",
+  "selector": "heuristic",
+  "seed": 0,
+  "timings": {
+    "entity_scoring_s": 7.39,
+    "generation_s": 70.81,
+    "normalization_s": 6.29
+  }
+}

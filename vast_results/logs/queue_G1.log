@@ -1,0 +1,6 @@
+[queue] jobs/G1_core_s0.txt  slots=4  delay=240s  start 2026-10-28 02:22:37
+OK   gate_none_s0
+OK   vgcap_s0
+OK   gate_prompt_s0
+OK   ladder_kw_noband_s0
+[queue] jobs/G1_core_s0.txt  done 2026-10-28 13:13:21
