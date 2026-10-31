@@ -347,23 +347,23 @@ Table~\ref{tab:sota} compares VG-Cap with existing methods. Retrieval is near-sa
 \textbf{Configuration} & \textbf{Overall}$\uparrow$ & \textbf{CIDEr}$\uparrow$ & \textbf{CLIP}$\uparrow$ & \textbf{Len} & \textbf{\#Ent} \\
 \midrule
 \multicolumn{6}{@{}l}{\textit{(a) Component ladder}} \\
-ENRIC baseline (reproduced)\prio{P2}      & 0.6097 & 0.257 & 0.833 & 136 & \todo{} \\
-\quad + semantic normalizer (SGN)\prio{P2} & 0.6124 & 0.260 & 0.835 & 104 & \todo{} \\
-\quad\quad \aciids{+ prompt band}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+ENRIC baseline (reproduced)      & 0.6097 & 0.257 & 0.833 & 136 & 12.04 \\
+\quad + semantic normalizer (SGN) & 0.6123 & 0.260 & 0.833 & 104 & 11.01 \\
+\quad\quad \aciids{+ prompt band} & 0.6088 & 0.257 & 0.835 & 104 & 12.09 \\
 \quad\quad \aciids{+ entity list (unfiltered)} & 0.6112 & 0.260 & 0.829 & 104 & 11.41 \\
 \quad\quad \aciids{+ prompt band + entity list (unfiltered)} & 0.6095 & 0.257 & 0.835 & 104 & 12.89 \\
 \quad\quad\quad \aciids{+ groundedness selection (\textbf{VG-Cap})} & \textbf{0.6234} & \textbf{0.270} & \textbf{0.837} & 104 & 11.16 \\
 \midrule
 \multicolumn{6}{@{}l}{\aciids{\textit{(b) Alternative selectors, same cap $K_e{=}10$}}} \\
 \aciids{Article order (first 10 mentions)} & 0.6070 & 0.255 & 0.834 & 104 & 11.85 \\
-\aciids{Random (mean of 5 draws)}\prio{P1} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\aciids{Contextual presence only}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+\aciids{Random (mean of 5 draws)} & 0.6071 & 0.255 & 0.835 & 104 & 11.80 \\
+\aciids{Contextual presence only} & 0.6214 & 0.268 & 0.837 & 104 & 11.09 \\
 \midrule
 \multicolumn{6}{@{}l}{\aciids{\textit{(c) Scorer variants}}} \\
-\aciids{w/o contextual presence}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+\aciids{w/o contextual presence} & 0.6231 & 0.269 & 0.837 & 104 & 11.71 \\
 \aciids{w/o editorial-caption match} & 0.6167 & 0.263 & 0.837 & 104 & 11.17 \\
-\aciids{w/o entity-type prior}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
-\aciids{Presence required (caption match needed)}\prio{P2} & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+\aciids{w/o entity-type prior} & 0.6247 & 0.271 & 0.838 & 104 & 11.09 \\
+\aciids{Presence required (caption match needed)} & 0.6015 & 0.250 & 0.836 & 104 & 11.00 \\
 \midrule
 \multicolumn{6}{@{}l}{\aciids{\textit{(d) Gate location}}} \\
 \aciids{No gate (unfiltered)}              & 0.6095 & 0.257 & 0.835 & 104 & 12.89 \\
