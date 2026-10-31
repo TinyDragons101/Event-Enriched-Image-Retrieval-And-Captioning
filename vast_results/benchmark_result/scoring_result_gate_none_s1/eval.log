@@ -1,0 +1,3 @@
+2026-10-31 11:04:53,172 - DEBUG - groundtruth_root: /app/input/ref/eventa_track_1/public/ref
+2026-10-31 11:04:53,172 - DEBUG - predicted_root: /app/input/res
+2026-10-31 11:04:53,172 - INFO - ['submission.csv', 'metadata']
